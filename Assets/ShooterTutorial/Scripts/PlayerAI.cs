@@ -7,6 +7,7 @@ namespace TopShooter
 {
     public class PlayerAI : Player
     {
+        private DecisionTree decisionTree;
         private NavMeshAgent pathfinder;
         //[SerializeField] private float moveSpeed = 5;
         //[SerializeField] private float scaleeTime = 0.2f;

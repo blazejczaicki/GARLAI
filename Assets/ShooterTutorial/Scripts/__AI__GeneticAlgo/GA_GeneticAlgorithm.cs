@@ -11,7 +11,12 @@ public class GA_GeneticAlgorithm : MonoBehaviour
 
     public void UpdateAlgorithm()
     {
-
+        Fitness();
+        CalculateFitnessSum();
+        AppendBestResult();
+        Selection();
+        TryMutation();
+        NextGenerationGenes();
     }
 
     public void Fitness()
@@ -19,6 +24,7 @@ public class GA_GeneticAlgorithm : MonoBehaviour
 
 
     }
+
     public void CalculateFitnessSum()
     {
 
@@ -31,7 +37,10 @@ public class GA_GeneticAlgorithm : MonoBehaviour
 
     public void Selection()
     {
+        foreach (var chrom in chromosomes)
+        {
 
+        }
     }
 
     public void Crossover()
@@ -39,7 +48,7 @@ public class GA_GeneticAlgorithm : MonoBehaviour
 
     }
 
-    public void Mutate()
+    public void TryMutation()
     {
 
     }
