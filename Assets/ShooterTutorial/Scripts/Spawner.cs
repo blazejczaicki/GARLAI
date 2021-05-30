@@ -6,6 +6,8 @@ namespace TopShooter
 {
     public class Spawner : MonoBehaviour
     {
+        [SerializeField] private PlayerAI playerAI;
+
         public bool devMode;
         public Wave[] waves;
         public Enemy enemy;
@@ -104,6 +106,8 @@ namespace TopShooter
             }
 
             Enemy spawnedEnemy = Instantiate(enemy, spawnTile.position + Vector3.up, Quaternion.identity) as Enemy;
+            playerAI.Enemies.Add(spawnedEnemy);
+            spawnedEnemy.PlayerAI = playerAI;
             spawnedEnemy.OnDeath += OnEnemyDeath;
             spawnedEnemy.SetCharacteristics(currentWave.moveSpeed, currentWave.hitsToKillPlayer, currentWave.enemyHealth, currentWave.skinColour);
         }

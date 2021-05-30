@@ -27,7 +27,7 @@ namespace TopShooter
 
         public void FixedUpdate()
         {
-            Debug.Log(velocity * Time.fixedDeltaTime);
+            //Debug.Log(velocity * Time.fixedDeltaTime);
             rb.MovePosition(rb.position + velocity * Time.fixedDeltaTime);
         }
     }

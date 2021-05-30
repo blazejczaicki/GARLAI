@@ -5,13 +5,22 @@ using UnityEngine;
 
 public class IsEnemiesTooCloseDecision : DT_Decision
 {
-    public override void GetBranch(PlayerAiKnowledgeData playerAiKnowledgeData)
+    public override DT_IGameTreeNode GetBranch(PlayerAI player)
     {
-        throw new System.NotImplementedException();
+        if (IsEnemiesTooClose(player))
+        {
+            Debug.Log("IsClose");
+            return TrueNode.MakeDecision(player);
+        }
+        else
+        {
+            Debug.Log("NOT IsClose");
+            return FalseNode.MakeDecision(player);
+        }
     }
 
-    public override DT_IGameTreeNode MakeDecision(PlayerAI player)
+    private bool IsEnemiesTooClose(PlayerAI player)
     {
-        throw new System.NotImplementedException();
+        return player.Enemies.Exists(x=>player.MinEnemyDistance > Vector3.Distance(player.transform.position, x.transform.position));
     }
 }

@@ -5,13 +5,20 @@ using UnityEngine;
 
 public class IsTooCloseBorderDecision : DT_Decision
 {
-    public override void GetBranch(PlayerAiKnowledgeData playerAiKnowledgeData)
+    public override DT_IGameTreeNode GetBranch(PlayerAI player)
     {
-        throw new System.NotImplementedException();
+        if (IsTooCloseBorder(player))
+        {
+            return TrueNode.MakeDecision(player);
+        }
+        else
+        {
+            return FalseNode.MakeDecision(player);
+        }
     }
 
-    public override DT_IGameTreeNode MakeDecision(PlayerAI player)
+    private bool IsTooCloseBorder(PlayerAI player)
     {
-        throw new System.NotImplementedException();
+        return true;
     }
 }

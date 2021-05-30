@@ -106,7 +106,7 @@ namespace TopShooter
             activeMusicSourceIndex = 1 - activeMusicSourceIndex;
             musicSources[activeMusicSourceIndex].clip = clip;
             musicSources[activeMusicSourceIndex].Play();
-            Debug.Log(musicSources[activeMusicSourceIndex].name);
+            //Debug.Log(musicSources[activeMusicSourceIndex].name);
 
             StartCoroutine(AnimateMusicCrossfade(fadeDuration));
         }

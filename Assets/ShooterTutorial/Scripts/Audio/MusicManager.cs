@@ -14,7 +14,6 @@ namespace TopShooter
 
         void Start()
         {
-            Debug.Log("xd");
             OnLevelWasLoaded(0);
         }
 
@@ -41,7 +40,7 @@ namespace TopShooter
             {
                 clipToPlay = mainTheme;
             }
-            Debug.Log(clipToPlay.name);
+            //Debug.Log(clipToPlay.name);
             if (clipToPlay != null)
             {
                 AudioManager.instance.PlayMusic(clipToPlay, 2);

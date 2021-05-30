@@ -14138,6 +14138,7 @@ GameObject:
   - component: {fileID: 1355382861}
   - component: {fileID: 1355382863}
   - component: {fileID: 1355382862}
+  - component: {fileID: 1355382864}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -14299,6 +14300,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementPosition: {x: 0, y: 0, z: 0}
+  minEnemyDistance: 3
+  decisionUpdateTime: 3
+  enemies: []
 --- !u!195 &1355382863
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -14321,6 +14325,18 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &1355382864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1355382853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d87b20af16db95b4998af2c76f0d9963, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1357829074
 GameObject:
   m_ObjectHideFlags: 0
@@ -18002,13 +18018,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba10a8cb303a25e4dbaefb825ed33160, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerAI: {fileID: 1355382862}
   devMode: 1
   waves:
   - infinite: 0
-    enemyCount: 3
+    enemyCount: 6
     timeBetweenSpawns: 0.5
     moveSpeed: 3
-    hitsToKillPlayer: 8
+    hitsToKillPlayer: 100
     enemyHealth: 1
     skinColour: {r: 0.7264151, g: 0.14733891, b: 0.14733891, a: 0}
   enemy: {fileID: 808130400482571157, guid: 9686cadad25c4d444a7c0ecb25324671, type: 3}

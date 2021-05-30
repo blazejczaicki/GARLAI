@@ -5,10 +5,13 @@ using UnityEngine;
 
 public abstract class DT_Decision : DT_IGameTreeNode
 {
-    DT_IGameTreeNode trueNode;
-    DT_IGameTreeNode falseNode;
+    protected DT_IGameTreeNode trueNode;
+    protected DT_IGameTreeNode falseNode;
 
-    public abstract void GetBranch(PlayerAiKnowledgeData playerAiKnowledgeData);//tu warunek testu jest sprawdzany
+    public DT_IGameTreeNode TrueNode { get => trueNode; set => trueNode = value; }
+    public DT_IGameTreeNode FalseNode { get => falseNode; set => falseNode = value; }
+
+    public abstract DT_IGameTreeNode GetBranch(PlayerAI player);//tu warunek testu jest sprawdzany
 
 
     public void InitDecisionValues()
@@ -16,7 +19,11 @@ public abstract class DT_Decision : DT_IGameTreeNode
         throw new System.NotImplementedException();
     }
 
-    public abstract DT_IGameTreeNode MakeDecision(PlayerAI player);
+    public DT_IGameTreeNode MakeDecision(PlayerAI player)
+    {
+        return GetBranch(player);
+    }
+
     public Vector3 MakeAction(PlayerAI player)
     {
         throw new System.NotImplementedException();

@@ -13,6 +13,8 @@ namespace TopShooter
         }
         State currentState;
 
+        [SerializeField] private PlayerAI playerAI;
+
         public ParticleSystem deathEffect;
         public static event System.Action OnDeathStatic;
 
@@ -33,6 +35,8 @@ namespace TopShooter
 
         bool hasTarget;
 
+        public PlayerAI PlayerAI { get => playerAI; set => playerAI = value; }
+
         private void Awake()
         {
             pathfinder = GetComponent<NavMeshAgent>();
@@ -52,7 +56,7 @@ namespace TopShooter
         protected override void Start()
         {
             base.Start();
-
+            OnDeath += OnDeadThis;
             if (hasTarget)
             {
                 currentState = State.Chasing;
@@ -76,6 +80,11 @@ namespace TopShooter
             //skinMaterial = GetComponent<Renderer>().sharedMaterial;
             skinMaterial.color = skinColour;
             originalColor = skinMaterial.color;
+        }
+
+        void OnDeadThis()
+        {
+            PlayerAI.Enemies.Remove(this);
         }
 
         void OnTargetDeath()

@@ -5,13 +5,43 @@ using UnityEngine;
 
 public class IsSouroundedDecision : DT_Decision
 {
-    public override void GetBranch(PlayerAiKnowledgeData playerAiKnowledgeData)
+    public override DT_IGameTreeNode GetBranch(PlayerAI player)
     {
-        throw new System.NotImplementedException();
+        if (IsSourounded(player))
+        {
+            Debug.Log("IsSourounded");
+            return TrueNode.MakeDecision(player);
+        }
+        else
+        {
+            Debug.Log("NOT IsSourounded");
+            return FalseNode.MakeDecision(player);
+        }
     }
 
-    public override DT_IGameTreeNode MakeDecision(PlayerAI player)
+    private bool IsSourounded(PlayerAI player)
     {
-        throw new System.NotImplementedException();
+        float angleOffset = 90;
+        float startAngle = 0;
+        var tooCloseEnemies = player.Enemies.FindAll(x => player.MinEnemyDistance > Vector3.Distance(player.transform.position, x.transform.position));
+        for (int i = 0; i < 4; i++)
+        {
+            startAngle += angleOffset;
+            float minAngle = startAngle - angleOffset*0.5f;
+            float maxAngle = startAngle + angleOffset * 0.5f;
+            var dirAngleFurstum = Utility.DirectionFromAngle(startAngle);
+
+            Debug.DrawRay(player.transform.position, dirAngleFurstum, Color.green, 4);
+            if (!( tooCloseEnemies.Exists(x=> Vector3.Angle((player.transform.position-x.transform.position).normalized, dirAngleFurstum)>angleOffset*0.5f)))
+            {//IsWall(player, startAngle) ||
+
+                return false;
+            }
+        }
+        return true;
     }
+    //private bool IsWall(PlayerAI player, float angle)
+    //{
+
+    //}
 }

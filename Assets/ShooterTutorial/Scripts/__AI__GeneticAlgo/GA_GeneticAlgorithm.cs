@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GA_GeneticAlgorithm : MonoBehaviour
@@ -21,26 +22,51 @@ public class GA_GeneticAlgorithm : MonoBehaviour
 
     public void Fitness()
     {
-
-
+        foreach (var chrom in chromosomes)
+        {
+            chrom.CalculateFitness();
+        }
     }
 
     public void CalculateFitnessSum()
     {
-
+        foreach (var chrom in chromosomes)
+        {
+            fitnessSum += chrom.Fitness;
+        }
     }
 
     public void AppendBestResult()
     {
-
+        chromosomes=chromosomes.OrderBy(c => c.Fitness).ToList();
+        var best = chromosomes.First();
+        // i tu zapis
     }
 
     public void Selection()
     {
+        List<GA_Chromosome> newChromosomes = new List<GA_Chromosome>();
         foreach (var chrom in chromosomes)
         {
-
+            newChromosomes.Add(SelectParent());
         }
+        chromosomes = newChromosomes;
+    }
+
+    public GA_Chromosome SelectParent()
+    {
+        float rand = Random.Range(0, fitnessSum);
+        rand = Random.Range(0, rand);
+        float runningSum = 0;
+        for (int i = 0; i < chromosomes.Count; i++)
+        {
+            runningSum += chromosomes[i].Fitness;
+            if (runningSum>=rand)
+            {
+                return chromosomes[i];
+            }
+        }
+        return null;
     }
 
     public void Crossover()
