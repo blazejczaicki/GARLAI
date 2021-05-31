@@ -9,8 +9,10 @@ public class GA_Chromosome : MonoBehaviour
     /// </summary>
     private List<DT_Decision> genes;
     private float fitness = 0;
+    private float mutationRate = 0.05f;
 
     public float Fitness { get => fitness; set => fitness = value; }
+    public float MutationRate { get => mutationRate; set => mutationRate = value; }
 
     public void InitChromosome()
     {

@@ -14301,7 +14301,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementPosition: {x: 0, y: 0, z: 0}
   minEnemyDistance: 3
-  decisionUpdateTime: 3
+  decisionUpdateTime: 2
+  minimalGoBackDistance: 6
   enemies: []
 --- !u!195 &1355382863
 NavMeshAgent:
@@ -18024,7 +18025,7 @@ MonoBehaviour:
   - infinite: 0
     enemyCount: 6
     timeBetweenSpawns: 0.5
-    moveSpeed: 3
+    moveSpeed: 1.5
     hitsToKillPlayer: 100
     enemyHealth: 1
     skinColour: {r: 0.7264151, g: 0.14733891, b: 0.14733891, a: 0}

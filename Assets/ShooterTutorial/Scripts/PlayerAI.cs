@@ -23,17 +23,19 @@ namespace TopShooter
         //AI datas
         [SerializeField] private float minEnemyDistance=3;
         [SerializeField] private float decisionUpdateTime=0.25f;
+        [SerializeField] private float minimalGoBackDistance=6;
         private float previousUpdateTime = 0;
         [SerializeField] private List<Enemy> enemies;
 
 
         public List<Enemy> Enemies { get => enemies; set => enemies = value; }
         public float MinEnemyDistance { get => minEnemyDistance; set => minEnemyDistance = value; }
+        public float MinimalGoBackDistance { get => minimalGoBackDistance; set => minimalGoBackDistance = value; }
 
         private void Awake()
         {
             pathfinder = GetComponent<NavMeshAgent>();
-            pathfinder.enabled = false;
+            //pathfinder.enabled = false;
             Enemies = new List<Enemy>();
             decisionTree = GetComponent<DecisionTree>();
             decisionTree.CreateTmpTree();
@@ -47,7 +49,7 @@ namespace TopShooter
         private void Update()
         {
             UpdateDecisions();
-            //Move();
+            Move();
         }
 
         private void UpdateDecisions()
@@ -55,7 +57,7 @@ namespace TopShooter
             if (Time.time-previousUpdateTime>decisionUpdateTime)
             {
                 previousUpdateTime = Time.time;
-                decisionTree.MakeDecision(this);
+                movementPosition = decisionTree.MakeDecision(this);
             }
         }
 

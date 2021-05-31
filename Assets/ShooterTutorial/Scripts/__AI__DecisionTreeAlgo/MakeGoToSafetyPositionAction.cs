@@ -8,6 +8,6 @@ public class MakeGoToSafetyPositionAction : DT_Action
     public override Vector3 MakeAction(PlayerAI player)
     {
         Debug.Log("Safety Act");
-        return Vector3.zero;
+        return player.transform.position;
     }
 }
