@@ -24,6 +24,6 @@ public class MakeGoBackAction : DT_Action
         }
         averageDirection += averageDirection / (float)enemiesTooClose.Count;
         Debug.Log("GoBack Act");
-        return averageDirection*player.MinimalGoBackDistance;
+        return averageDirection*player.MinimalRetreatDistance;
     }
 }

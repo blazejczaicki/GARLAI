@@ -22,15 +22,19 @@ namespace TopShooter
 
         //AI datas
         [SerializeField] private float minEnemyDistance=3;
+        [SerializeField] private float minSouroundingDistance=3;
         [SerializeField] private float decisionUpdateTime=0.25f;
-        [SerializeField] private float minimalGoBackDistance=6;
+        [SerializeField] private float minimalRetreatDistance=6;
         private float previousUpdateTime = 0;
         [SerializeField] private List<Enemy> enemies;
+        [SerializeField] private AreaManager areaManager;
 
 
         public List<Enemy> Enemies { get => enemies; set => enemies = value; }
         public float MinEnemyDistance { get => minEnemyDistance; set => minEnemyDistance = value; }
-        public float MinimalGoBackDistance { get => minimalGoBackDistance; set => minimalGoBackDistance = value; }
+        public float MinimalRetreatDistance { get => minimalRetreatDistance; set => minimalRetreatDistance = value; }
+        public AreaManager AreaManager { get => areaManager; set => areaManager = value; }
+        public float MinSouroundingDistance { get => minSouroundingDistance; set => minSouroundingDistance = value; }
 
         private void Awake()
         {
@@ -64,6 +68,12 @@ namespace TopShooter
         public void Move()
         {
             pathfinder.SetDestination(movementPosition);
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawSphere(movementPosition, 0.5f);
         }
     }
 }

@@ -23,7 +23,7 @@ public class IsSouroundedDecision : DT_Decision
     {
         float angleOffset = 90;
         float startAngle = 0;
-        var tooCloseEnemies = player.Enemies.FindAll(x => player.MinEnemyDistance > Vector3.Distance(player.transform.position, x.transform.position));
+        var tooCloseEnemies = player.Enemies.FindAll(x => player.MinSouroundingDistance > Vector3.Distance(player.transform.position, x.transform.position));
         for (int i = 0; i < 4; i++)
         {
             startAngle += angleOffset;

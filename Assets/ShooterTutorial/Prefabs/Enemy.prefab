@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 808130400482571158}
   - component: {fileID: 808130400482571157}
   - component: {fileID: 808130400482571156}
+  - component: {fileID: -4323157727135277104}
   m_Layer: 11
   m_Name: Enemy
   m_TagString: Untagged
@@ -58,6 +59,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -82,6 +84,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!136 &808130400482571158
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -109,8 +112,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingHealth: 5
-  deathEffect: {fileID: 665360695301788648, guid: 6ed391b55ec559d4e9c9c7a9864ed461,
-    type: 3}
+  playerAI: {fileID: 0}
+  deathEffect: {fileID: 665360695301788648, guid: 6ed391b55ec559d4e9c9c7a9864ed461, type: 3}
 --- !u!195 &808130400482571156
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -133,3 +136,19 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!208 &-4323157727135277104
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 808130400482571115}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5

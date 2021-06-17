@@ -60,7 +60,7 @@ namespace TopShooter
 
             //}
             Vector3 moveVelocity = moveInput.normalized * moveSpeed;
-            controller.Move(moveVelocity);
+            //controller.Move(moveVelocity);
 
             Ray ray = viewCamera.ScreenPointToRay(Input.mousePosition);
             Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
