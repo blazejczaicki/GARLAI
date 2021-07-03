@@ -52,8 +52,8 @@ namespace TopShooter
 
         private void Update()
         {
-            UpdateDecisions();
-            Move();
+            //UpdateDecisions();
+            //Move();
         }
 
         private void UpdateDecisions()
@@ -61,7 +61,7 @@ namespace TopShooter
             if (Time.time-previousUpdateTime>decisionUpdateTime)
             {
                 previousUpdateTime = Time.time;
-                movementPosition = decisionTree.MakeDecision(this);
+                //movementPosition = decisionTree.MakeDecision(this);
             }
         }
 

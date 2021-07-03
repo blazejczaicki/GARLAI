@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class MakeGoBackAction : DT_Action
 {
-    public override Vector3 MakeAction(PlayerAI player)
+    public override List<Vector3> MakeAction(PlayerAI player)
     {
         var count = player.Enemies.Count;
         List<Enemy> enemiesTooClose = new List<Enemy>();
@@ -23,7 +23,9 @@ public class MakeGoBackAction : DT_Action
             averageDirection = (etc.transform.position - player.transform.position).normalized;
         }
         averageDirection += averageDirection / (float)enemiesTooClose.Count;
-        Debug.Log("GoBack Act");
-        return averageDirection*player.MinimalRetreatDistance;
+        Debug.Log("GoBack Act");//averageDirection*player.MinimalRetreatDistance
+
+        List<Vector3> road = new List<Vector3>() { player.transform.position };
+        return road;
     }
 }

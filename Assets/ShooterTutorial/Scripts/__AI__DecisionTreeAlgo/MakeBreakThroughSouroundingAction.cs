@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MakeBreakThroughSouroundingAction : DT_Action
 {
-    public override Vector3 MakeAction(PlayerAI player)
+    public override List<Vector3> MakeAction(PlayerAI player)
     {
         //float angleOffset = 90;
         //float startAngle = 0;
@@ -37,17 +37,17 @@ public class MakeBreakThroughSouroundingAction : DT_Action
 
         //    }
         //}
-        var avgPos = Vector3.zero;
-        foreach (var en in player.Enemies)
-        {
-            avgPos += en.transform.position;
-        }
-        avgPos /= player.Enemies.Count;
-        avgPos *= -1;
-        avgPos[1]= 0;
-        Debug.Log("Break Act");
-        Debug.Log(avgPos);
-        return avgPos;
+        List<Vector3> road = new List<Vector3>() { player.transform.position };
+        //foreach (var en in player.Enemies)
+        //{
+        //    avgPos += en.transform.position;
+        //}
+        //avgPos /= player.Enemies.Count;
+        //avgPos *= -1;
+        //avgPos[1]= 0;
+        //Debug.Log("Break Act");
+        //Debug.Log(avgPos);
+        return road;
     }
 
     private float CalculateMaxDistBetween(List<Enemy> enemiesQuart)

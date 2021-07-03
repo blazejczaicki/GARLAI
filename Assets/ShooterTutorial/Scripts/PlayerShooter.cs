@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Diagnostics;
 
 namespace TopShooter
 {
@@ -13,19 +14,25 @@ namespace TopShooter
         PlayerControllerShooter controller;
         GunController gunController;
 
-        public Crosshairs crosshairs;
+        private Stopwatch stopWatch;
+
+        //public Crosshairs crosshairs;
 
         private void Awake()
         {
             controller = GetComponent<PlayerControllerShooter>();
             gunController = GetComponent<GunController>();
             viewCamera = Camera.main;
-            FindObjectOfType<Spawner>().OnNewWave += OnNewWave;
+            //FindObjectOfType<Spawner>().OnNewWave += OnNewWave;
+            stopWatch = new Stopwatch();
         }
 
         protected override void Start()
         {
+            stopWatch.Start();
             base.Start();
+            gunController.EquipGun(0);
+            health = startingHealth;
         }
 
         void OnNewWave(int waveNumber)
@@ -39,28 +46,9 @@ namespace TopShooter
             Time.timeScale = scaleeTime;
 
             Vector3 moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-            //if (Input.GetKey(KeyCode.W))
-            //{
-            //    moveInput = Vector3.forward;
-            //}
-            //else if (Input.GetKey(KeyCode.S))
-            //{
-            //    moveInput = Vector3.back;
-            //}
-            //else
-            //{
-            //    moveInput = Vector3.zero;
-            //}
-            //if (Input.GetKey(KeyCode.A))
-            //{
 
-            //}
-            //if (Input.GetKey(KeyCode.D))
-            //{
-
-            //}
             Vector3 moveVelocity = moveInput.normalized * moveSpeed;
-            //controller.Move(moveVelocity);
+            controller.Move(moveVelocity);
 
             Ray ray = viewCamera.ScreenPointToRay(Input.mousePosition);
             Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
@@ -68,10 +56,10 @@ namespace TopShooter
             if (groundPlane.Raycast(ray, out float rayDistance))
             {
                 Vector3 point = ray.GetPoint(rayDistance);
-                Debug.DrawLine(ray.origin, point, Color.red);
+                UnityEngine.Debug.DrawLine(ray.origin, point, Color.red);
                 controller.LookAtMouse(point);
-                crosshairs.transform.position = point;
-                crosshairs.DetectTargets(ray);
+                //crosshairs.transform.position = point;
+                //crosshairs.DetectTargets(ray);
                 if ((new Vector2(point.x, point.z) - new Vector2(transform.position.x, transform.position.z)).sqrMagnitude > 1)
                 {
                     gunController.Aim(point);
@@ -101,6 +89,8 @@ namespace TopShooter
         public override void Die()
         {
             AudioManager.instance.PlaySound("Player Death", transform.position);
+            stopWatch.Stop();
+            UnityEngine.Debug.Log("Tyle przeżył: " + stopWatch.ElapsedMilliseconds);
             base.Die();
         }
     }

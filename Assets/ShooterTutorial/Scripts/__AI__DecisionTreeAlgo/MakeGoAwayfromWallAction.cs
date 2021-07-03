@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MakeGoAwayfromWallAction : DT_Action
 {
-    public override Vector3 MakeAction(PlayerAI player)
+    public override List<Vector3> MakeAction(PlayerAI player)
     {
         throw new System.NotImplementedException();
     }

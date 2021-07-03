@@ -24,7 +24,7 @@ public abstract class DT_Decision : DT_IGameTreeNode
         return GetBranch(player);
     }
 
-    public Vector3 MakeAction(PlayerAI player)
+    public List<Vector3> MakeAction(PlayerAI player)
     {
         throw new System.NotImplementedException();
     }
