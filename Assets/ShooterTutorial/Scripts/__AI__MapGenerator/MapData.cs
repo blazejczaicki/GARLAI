@@ -12,32 +12,55 @@ public class MapData : MonoBehaviour
     private List<List<AstarNode>> astarNodesMap;
     private Queue<AstarNode> shuffledTileCoords;
 
+    [SerializeField] private Transform debugTileTemplate;
+    [SerializeField] private Transform debugTileParent;
+    private List<List<Transform>> debugMap = new List<List<Transform>>();
+
     public List<List<AstarNode>> AstarNodesMap { get => astarNodesMap; set => astarNodesMap = value; }
     public Vector3 OriginPoint { get => originPoint; set => originPoint = value; }
+	public int Height { get => height; set => height = value; }
+	public int Width { get => width; set => width = value; }
 
-    private void Awake()
+	private void Awake()
     {
         astarNodesMap = new List<List<AstarNode>>();
 
         Vector2 offsetPos = Vector2.zero;
         offsetPos.x = originPoint.x;        
-        for (int i = 0; i < width; i++)
+        for (int i = 0; i < Width; i++)
         {
             offsetPos.y = originPoint.z;
             astarNodesMap.Add(new List<AstarNode>());
-            for (int j = 0; j < height; j++)
-            {
-                offsetPos.y += 1;
+
+            debugMap.Add(new List<Transform>());
+
+            for (int j = 0; j < Height; j++)
+            {                
                 astarNodesMap[i].Add(new AstarNode(offsetPos, new Vector2(i, j),true));
+                var debugTile = Instantiate(debugTileTemplate);
+                debugTile.transform.position = new Vector3(offsetPos.y+0.5f, 0.1f,offsetPos.x + 0.5f);
+                debugTile.transform.SetParent(debugTileParent);
+                astarNodesMap[i][j].debugTile = debugTile.GetComponent<MeshRenderer>();
+                astarNodesMap[i][j].debugTile.sharedMaterial = new Material(astarNodesMap[i][j].debugTile.sharedMaterial);
+                astarNodesMap[i][j].debugTile.sharedMaterial.color=Color.blue;
+                debugMap[i].Add(debugTile);
+                offsetPos.y += 1;
             }
             offsetPos.x += 1;
         }
+		for (int i = 0; i < Width; i++)
+		{
+			for (int j = 0; j < Height; j++)
+			{
+                astarNodesMap[i][j].SetNeighbours(astarNodesMap, this);
+            }
+		}
         shuffledTileCoords = new Queue<AstarNode>(TopShooter.Utility.ShuffleArray(AstarNodesMap.SelectMany(d => d).ToArray(), seed));
     }
 
-    public Vector3 GetMapCenter()
+	public Vector3 GetMapCenter()
     {
-        return new Vector3(OriginPoint.x + width * 0.5f, 0, OriginPoint.z + height * 0.5f);
+        return new Vector3(OriginPoint.x + Width * 0.5f, 0, OriginPoint.z + Height * 0.5f);
     }
 
     public Vector3 GetRandomPlace()
@@ -46,4 +69,9 @@ public class MapData : MonoBehaviour
         shuffledTileCoords.Enqueue(randomNode);
         return new Vector3(randomNode.position.x,0, randomNode.position.y);
     }
+
+    public Vector2Int ConvertToMapGridPos(Vector3 position)
+	{
+        return new Vector2Int((int)position.x,(int)position.z);
+	}
 }

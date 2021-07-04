@@ -7,10 +7,10 @@ public class Astar
     private List<AstarNode> openList;
     private List<AstarNode> closedList;
 
-    public List<AstarNode> FindPath(Vector2 startPos, Vector2 endPos)
+    public List<AstarNode> FindPath(Vector2Int startPos, Vector2Int endPos, List<List<AstarNode>> astarNodes, MapData mapData)
     {
-        AstarNode start = new AstarNode(startPos, true);
-        AstarNode end = new AstarNode(endPos, true);
+        AstarNode start =astarNodes[startPos.x][startPos.y];
+        AstarNode end = astarNodes[endPos.x][endPos.y];
 
         openList = new List<AstarNode> { start };
         closedList = new List<AstarNode>();
@@ -28,7 +28,8 @@ public class Astar
             }
             openList.Remove(currentNode);
             closedList.Add(currentNode);
-            foreach (var neighbourNode in GetNeighbours(currentNode))
+            var neighbours = currentNode.neighbours;
+            foreach (var neighbourNode in neighbours)
             {
                 if (closedList.Exists((x) => x.position == neighbourNode.position) != true && neighbourNode.isMoveable)
                 {
@@ -75,22 +76,6 @@ public class Astar
         }
         path.Reverse();
         return path;
-    }
-
-    private List<AstarNode> GetNeighbours(AstarNode current)
-    {
-        List<AstarNode> neighbourList = new List<AstarNode>();
-        for (int i = -1; i <= 1; i++)
-        {
-            for (int j = -1; j <= 1; j++)
-            {
-                if (true)
-                {
-                    //neighbourList.Add();
-                }
-            }
-        }
-        return neighbourList;
     }
 
     private int DistanceCost(AstarNode start, AstarNode end)

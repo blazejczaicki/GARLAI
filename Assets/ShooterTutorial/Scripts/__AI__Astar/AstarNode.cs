@@ -15,6 +15,10 @@ public class AstarNode
     public bool isMoveable { get; set; }
     public AstarNode previousNode { get; set; }
 
+    public MeshRenderer debugTile { get; set; }
+
+    public List<AstarNode> neighbours { get; set; }
+
     public AstarNode(Vector2 position, Vector2 mapPosition, bool moveable)
     {
         g = gDefaultValue;
@@ -34,13 +38,37 @@ public class AstarNode
         previousNode = null;
         position = new Vector2((int)position.x, (int)position.y);
         position = _position;
-        ConvertPosToMapPos();
     }
 
-    public void ConvertPosToMapPos()
-    {
-
-    }
+    public void SetNeighbours(List<List<AstarNode>> astarNodes, MapData mapData)
+	{
+		if (position.x>0)
+		{
+            neighbours.Add(astarNodes[(int)position.x - 1][(int)position.y]);
+			if (position.y > 0)
+			{
+                neighbours.Add(astarNodes[(int)position.x - 1][(int)position.y-1]);
+                neighbours.Add(astarNodes[(int)position.x][(int)position.y-1]);
+            }
+			else if (position.y < mapData.Height)
+			{
+                neighbours.Add(astarNodes[(int)position.x - 1][(int)position.y + 1]);
+                neighbours.Add(astarNodes[(int)position.x][(int)position.y + 1]);
+            }
+		}
+		if (position.x < mapData.Width)
+		{
+            neighbours.Add(astarNodes[(int)position.x + 1][(int)position.y]);
+			if (position.y > 0)
+			{
+                neighbours.Add(astarNodes[(int)position.x + 1][(int)position.y-1]);
+            }
+			else if (position.y < mapData.Height)
+			{
+                neighbours.Add(astarNodes[(int)position.x + 1][(int)position.y + 1]);
+            }
+		}
+	}
 
     public void CalculateF()
     {

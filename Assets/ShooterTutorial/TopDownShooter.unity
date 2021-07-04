@@ -2720,6 +2720,8 @@ MonoBehaviour:
   width: 15
   height: 15
   seed: 20
+  debugTileTemplate: {fileID: 0}
+  debugTileParent: {fileID: 0}
 --- !u!1 &226829608
 GameObject:
   m_ObjectHideFlags: 0
@@ -6388,7 +6390,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d866f0261f0d5e846a2bb57980f82d6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetPosition: {x: 0, y: 0, z: 0}
   movementPosition: {x: 0, y: 0, z: 0}
+  mapData: {fileID: 6894719256789927860}
+  debugTargetPos: {x: 0, y: 0, z: 0}
   minEnemyDistance: 8.7
   minSouroundingDistance: 3
   decisionUpdateTime: 2
@@ -14741,7 +14746,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d866f0261f0d5e846a2bb57980f82d6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetPosition: {x: 0, y: 0, z: 0}
   movementPosition: {x: 0, y: 0, z: 0}
+  mapData: {fileID: 0}
+  debugTargetPos: {x: 0, y: 0, z: 0}
   minEnemyDistance: 8.7
   minSouroundingDistance: 3
   decisionUpdateTime: 2
@@ -17240,6 +17248,36 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1497235799}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1500910871
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1500910872}
+  m_Layer: 0
+  m_Name: debugTiles
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1500910872
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1500910871}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6894719256789927862}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1511264318
 GameObject:
   m_ObjectHideFlags: 0
@@ -24553,6 +24591,14 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7102117550276662901, guid: 1994ee5847cb1f84cb39dc27bed54bc0, type: 3}
+      propertyPath: debugTileParent
+      value: 
+      objectReference: {fileID: 1500910872}
+    - target: {fileID: 7102117550276662901, guid: 1994ee5847cb1f84cb39dc27bed54bc0, type: 3}
+      propertyPath: debugTileTemplate
+      value: 
+      objectReference: {fileID: 7425016246348203177, guid: e8c60d0cbe25aa242ab6f8285d51b41e, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1994ee5847cb1f84cb39dc27bed54bc0, type: 3}
 --- !u!1 &6894719256789927859 stripped
@@ -24587,7 +24633,7 @@ MonoBehaviour:
   mapData: {fileID: 6894719256789927860}
   tileSpawnTemplate: {fileID: 7425016246348203177, guid: e8c60d0cbe25aa242ab6f8285d51b41e, type: 3}
   enemyTemplate: {fileID: 808130400482571157, guid: 9686cadad25c4d444a7c0ecb25324671, type: 3}
-  enemiesRemainingToSpawn: 10
+  enemiesRemainingToSpawn: 0
   currentWave:
     infinite: 0
     enemyCount: 10
@@ -24596,3 +24642,8 @@ MonoBehaviour:
     hitsToKillPlayer: 30
     enemyHealth: 5
     skinColour: {r: 1, g: 0, b: 0, a: 0}
+--- !u!4 &6894719256789927862 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2888604738913219347, guid: 1994ee5847cb1f84cb39dc27bed54bc0, type: 3}
+  m_PrefabInstance: {fileID: 6894719256789927858}
+  m_PrefabAsset: {fileID: 0}

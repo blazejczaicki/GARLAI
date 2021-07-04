@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,11 +11,15 @@ namespace TopShooter
     {
         private DecisionTree decisionTree;
         private NavMeshAgent pathfinder;
+        private Astar astarPathfinding;
+        private List<AstarNode> astarNodes= new List<AstarNode>();
         //[SerializeField] private float moveSpeed = 5;
         //[SerializeField] private float scaleeTime = 0.2f;
+        [SerializeField] private Vector3 targetPosition;
         [SerializeField] private Vector3 movementPosition;
+        [SerializeField] private MapData mapData;
 
-
+        [SerializeField] private Vector3 debugTargetPos;
 
         private float refreshMovementRate = 0.25f;
 
@@ -38,6 +43,7 @@ namespace TopShooter
 
         private void Awake()
         {
+            astarPathfinding = new Astar();
             pathfinder = GetComponent<NavMeshAgent>();
             //pathfinder.enabled = false;
             Enemies = new List<Enemy>();
@@ -54,6 +60,7 @@ namespace TopShooter
         {
             //UpdateDecisions();
             //Move();
+
         }
 
         private void UpdateDecisions()
@@ -61,9 +68,33 @@ namespace TopShooter
             if (Time.time-previousUpdateTime>decisionUpdateTime)
             {
                 previousUpdateTime = Time.time;
-                //movementPosition = decisionTree.MakeDecision(this);
+                targetPosition = decisionTree.MakeDecision(this).First(); // tu tylko pozycjê ostateczn¹
+                CalculatePath(targetPosition);
             }
         }
+
+        [EasyButtons.Button]
+        private void CalculatePath()
+        {
+            astarNodes.ForEach(x => x.debugTile.sharedMaterial.color = Color.black);
+            astarNodes = astarPathfinding.FindPath(mapData.ConvertToMapGridPos(transform.position), mapData.ConvertToMapGridPos(targetPosition), mapData.AstarNodesMap, mapData);
+            for (int i = 0; i < astarNodes.Count; i++)
+            {
+                astarNodes[i].debugTile.sharedMaterial.color = Color.yellow;
+            }
+            Debug.Log(astarNodes.Count);
+        }
+
+        private void CalculatePath(Vector3 targetPosition)
+		{
+            astarNodes.ForEach(x => x.debugTile.sharedMaterial.color = Color.black);
+            astarNodes= astarPathfinding.FindPath(mapData.ConvertToMapGridPos(transform.position), mapData.ConvertToMapGridPos(targetPosition), mapData.AstarNodesMap, mapData);
+		}
+
+        private void MoveOnPath() //wykonuje ruch po œcie¿ce
+		{
+
+		}
 
         public void Move()
         {
