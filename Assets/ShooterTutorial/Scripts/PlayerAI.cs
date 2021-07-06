@@ -12,10 +12,17 @@ namespace TopShooter
         private DecisionTree decisionTree;
         private NavMeshAgent pathfinder;
         private Astar astarPathfinding;
+
+
+        [SerializeField] private Vector3 targetPosition;
         private List<AstarNode> astarNodes= new List<AstarNode>();
+        private Queue<Vector3> path = new Queue<Vector3>();
+        [SerializeField] private Vector3 currentTarget;
+        [SerializeField] private float radius = 0.1f;
+
         //[SerializeField] private float moveSpeed = 5;
         //[SerializeField] private float scaleeTime = 0.2f;
-        [SerializeField] private Vector3 targetPosition;
+        
         [SerializeField] private Vector3 movementPosition;
         [SerializeField] private MapData mapData;
 
@@ -40,9 +47,10 @@ namespace TopShooter
         public float MinimalRetreatDistance { get => minimalRetreatDistance; set => minimalRetreatDistance = value; }
         public AreaManager AreaManager { get => areaManager; set => areaManager = value; }
         public float MinSouroundingDistance { get => minSouroundingDistance; set => minSouroundingDistance = value; }
+		public Vector3 CurrentTarget { get => currentTarget; set => currentTarget = value; }
 
-        private void Awake()
-        {
+		private void Awake()
+        {            
             astarPathfinding = new Astar();
             pathfinder = GetComponent<NavMeshAgent>();
             //pathfinder.enabled = false;
@@ -54,13 +62,14 @@ namespace TopShooter
         private void Start()
         {
             movementPosition = transform.position;
+            
         }
 
         private void Update()
         {
             //UpdateDecisions();
-            //Move();
-
+            MoveOnPath();
+            Move();
         }
 
         private void UpdateDecisions()
@@ -76,13 +85,24 @@ namespace TopShooter
         [EasyButtons.Button]
         private void CalculatePath()
         {
-            astarNodes.ForEach(x => x.debugTile.sharedMaterial.color = Color.black);
+            path.Clear();
+			for (int i = 0; i < astarNodes.Count; i++)
+			{
+                astarNodes[i].debugTile.sharedMaterial.color = Color.blue;
+			}
             astarNodes = astarPathfinding.FindPath(mapData.ConvertToMapGridPos(transform.position), mapData.ConvertToMapGridPos(targetPosition), mapData.AstarNodesMap, mapData);
+            astarNodes.ForEach(x => path.Enqueue(x.position3d));
+			if (path.Count>1)
+			{
+                CurrentTarget = path.Dequeue();
+                CurrentTarget = path.Dequeue();
+			}
             for (int i = 0; i < astarNodes.Count; i++)
             {
                 astarNodes[i].debugTile.sharedMaterial.color = Color.yellow;
             }
             Debug.Log(astarNodes.Count);
+            StartCoroutine(mapData.ResetMapData());
         }
 
         private void CalculatePath(Vector3 targetPosition)
@@ -93,12 +113,16 @@ namespace TopShooter
 
         private void MoveOnPath() //wykonuje ruch po œcie¿ce
 		{
-
+			if (path.Count>0 && (transform.position-CurrentTarget).sqrMagnitude<radius)
+			{
+                Debug.Log("xdmop");
+                CurrentTarget = path.Dequeue();
+			}
 		}
 
         public void Move()
         {
-            pathfinder.SetDestination(movementPosition);
+            pathfinder.SetDestination(CurrentTarget);
         }
 
         private void OnDrawGizmos()

@@ -43,6 +43,7 @@ public class NewSpawner : MonoBehaviour
     void ResetPlayerPosition()
     {
         playerAI.transform.position = mapData.GetMapCenter();
+        playerAI.CurrentTarget = playerT.position;
     }
 
     private void Update()

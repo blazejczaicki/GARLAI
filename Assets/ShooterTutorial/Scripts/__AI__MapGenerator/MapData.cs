@@ -40,6 +40,8 @@ public class MapData : MonoBehaviour
                 var debugTile = Instantiate(debugTileTemplate);
                 debugTile.transform.position = new Vector3(offsetPos.y+0.5f, 0.1f,offsetPos.x + 0.5f);
                 debugTile.transform.SetParent(debugTileParent);
+                var nCon = debugTile.GetComponent<NodeController>();
+                nCon.node = astarNodesMap[i][j];
                 astarNodesMap[i][j].debugTile = debugTile.GetComponent<MeshRenderer>();
                 astarNodesMap[i][j].debugTile.sharedMaterial = new Material(astarNodesMap[i][j].debugTile.sharedMaterial);
                 astarNodesMap[i][j].debugTile.sharedMaterial.color=Color.blue;
@@ -53,9 +55,20 @@ public class MapData : MonoBehaviour
 			for (int j = 0; j < Height; j++)
 			{
                 astarNodesMap[i][j].SetNeighbours(astarNodesMap, this);
-            }
+             }
 		}
         shuffledTileCoords = new Queue<AstarNode>(TopShooter.Utility.ShuffleArray(AstarNodesMap.SelectMany(d => d).ToArray(), seed));
+    }
+    public IEnumerator ResetMapData()
+	{
+        yield return null;
+        for (int i = 0; i < Width; i++)
+        {
+            for (int j = 0; j < Height; j++)
+            {
+                astarNodesMap[i][j].ResetData();
+            }
+        }
     }
 
 	public Vector3 GetMapCenter()
@@ -67,7 +80,7 @@ public class MapData : MonoBehaviour
     {
         AstarNode randomNode = shuffledTileCoords.Dequeue();
         shuffledTileCoords.Enqueue(randomNode);
-        return new Vector3(randomNode.position.x,0, randomNode.position.y);
+        return new Vector3(randomNode.position2d.x,0, randomNode.position2d.y);
     }
 
     public Vector2Int ConvertToMapGridPos(Vector3 position)

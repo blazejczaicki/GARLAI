@@ -9,8 +9,8 @@ public class Astar
 
     public List<AstarNode> FindPath(Vector2Int startPos, Vector2Int endPos, List<List<AstarNode>> astarNodes, MapData mapData)
     {
-        AstarNode start =astarNodes[startPos.x][startPos.y];
-        AstarNode end = astarNodes[endPos.x][endPos.y];
+        AstarNode start =astarNodes[startPos.y][startPos.x];
+        AstarNode end = astarNodes[endPos.y][endPos.x];
 
         openList = new List<AstarNode> { start };
         closedList = new List<AstarNode>();
@@ -21,7 +21,7 @@ public class Astar
         while (openList.Count > 0)
         {
             AstarNode currentNode = GetLowestF(openList);
-            if (currentNode.position == end.position)
+            if (currentNode.position2d == end.position2d)
             {
                 end = currentNode;
                 return ComputePath(end);
@@ -31,7 +31,7 @@ public class Astar
             var neighbours = currentNode.neighbours;
             foreach (var neighbourNode in neighbours)
             {
-                if (closedList.Exists((x) => x.position == neighbourNode.position) != true && neighbourNode.isMoveable)
+                if (closedList.Exists((x) => x.position2d == neighbourNode.position2d) != true && neighbourNode.isMoveable)
                 {
                     int tentativeG = currentNode.g + DistanceCost(currentNode, neighbourNode);
                     if (tentativeG < neighbourNode.g)
@@ -40,7 +40,7 @@ public class Astar
                         neighbourNode.g = tentativeG;
                         neighbourNode.h = DistanceCost(neighbourNode, end);
                         neighbourNode.CalculateF();
-                        if (openList.Exists((x) => x.position == neighbourNode.position) != true)
+                        if (openList.Exists((x) => x.position2d == neighbourNode.position2d) != true)
                         {
                             openList.Add(neighbourNode);
                         }
@@ -80,6 +80,6 @@ public class Astar
 
     private int DistanceCost(AstarNode start, AstarNode end)
     {
-        return (int)(Vector2.Distance(start.position, end.position) * 10.0f);
+        return (int)(Vector2.Distance(start.position2d, end.position2d) * 10.0f);
     }
 }
