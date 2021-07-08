@@ -10,7 +10,7 @@ public class NodeController : MonoBehaviour
     //public Vector2 mapPosition;
     //public int g;
     //public int h;
-    //public int f;
+    public int f;
     //public bool isMoveable;
 
    // public MeshRenderer debugTile;
@@ -23,6 +23,7 @@ public class NodeController : MonoBehaviour
 	{
         neighbours.Clear();
         position = node.position2d;
+        f = node.f;
         node.neighbours.ForEach(x=>neighbours.Add(x.debugTile));
 	}
 }

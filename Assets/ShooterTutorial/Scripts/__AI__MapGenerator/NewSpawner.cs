@@ -88,6 +88,7 @@ public class NewSpawner : MonoBehaviour
         Destroy(spawnTile.gameObject);
         Enemy spawnedEnemy = Instantiate(enemyTemplate, spawnTile.position + Vector3.up, Quaternion.identity) as Enemy;
         playerAI.Enemies.Add(spawnedEnemy);
+        mapData.Enemies.Add(spawnedEnemy);
         spawnedEnemy.PlayerAI = playerAI;
         spawnedEnemy.OnDeath += OnEnemyDeath;
         spawnedEnemy.SetCharacteristics(currentWave.moveSpeed, currentWave.hitsToKillPlayer, currentWave.enemyHealth, currentWave.skinColour);

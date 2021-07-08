@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TopShooter;
 using UnityEngine;
 
 public class MapData : MonoBehaviour
@@ -9,6 +10,9 @@ public class MapData : MonoBehaviour
     [SerializeField] private int width =20;
     [SerializeField] private int height =20;
     [SerializeField] private int seed =20;
+    [SerializeField] private int enemyInfluenceRadius =5;
+    [SerializeField] private int unitInfluenceLimit =25;
+    private List<Enemy> enemies= new List<Enemy>();
     private List<List<AstarNode>> astarNodesMap;
     private Queue<AstarNode> shuffledTileCoords;
 
@@ -20,6 +24,7 @@ public class MapData : MonoBehaviour
     public Vector3 OriginPoint { get => originPoint; set => originPoint = value; }
 	public int Height { get => height; set => height = value; }
 	public int Width { get => width; set => width = value; }
+	public List<Enemy> Enemies { get => enemies; set => enemies = value; }
 
 	private void Awake()
     {
@@ -44,7 +49,7 @@ public class MapData : MonoBehaviour
                 nCon.node = astarNodesMap[i][j];
                 astarNodesMap[i][j].debugTile = debugTile.GetComponent<MeshRenderer>();
                 astarNodesMap[i][j].debugTile.sharedMaterial = new Material(astarNodesMap[i][j].debugTile.sharedMaterial);
-                astarNodesMap[i][j].debugTile.sharedMaterial.color=Color.blue;
+                astarNodesMap[i][j].debugTile.sharedMaterial.color=Color.black;
                 debugMap[i].Add(debugTile);
                 offsetPos.y += 1;
             }
@@ -59,7 +64,28 @@ public class MapData : MonoBehaviour
 		}
         shuffledTileCoords = new Queue<AstarNode>(TopShooter.Utility.ShuffleArray(AstarNodesMap.SelectMany(d => d).ToArray(), seed));
     }
-    public IEnumerator ResetMapData()
+
+	private void Update()
+	{
+        UpdateHeightMap();
+    }
+
+	public void UpdateHeightMap()
+	{
+        float sqrRad = enemyInfluenceRadius * enemyInfluenceRadius;
+        float scaler = sqrRad / unitInfluenceLimit;
+        for (int i = 0; i < Width; i++)
+        {
+            for (int j = 0; j < Height; j++)
+            {
+                astarNodesMap[i][j].UpdateEnemyInfluence(enemies, sqrRad, scaler, unitInfluenceLimit, enemies.Count);
+            }
+        }
+    }
+
+
+
+	public IEnumerator ResetMapData()
 	{
         yield return null;
         for (int i = 0; i < Width; i++)

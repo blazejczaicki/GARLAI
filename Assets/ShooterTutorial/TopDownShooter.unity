@@ -2801,6 +2801,8 @@ MonoBehaviour:
   width: 15
   height: 15
   seed: 20
+  enemyInfluenceRadius: 5
+  unitInfluenceLimit: 25
   debugTileTemplate: {fileID: 0}
   debugTileParent: {fileID: 0}
 --- !u!1 &226829608
@@ -6438,6 +6440,7 @@ GameObject:
   - component: {fileID: 540785844}
   - component: {fileID: 540785843}
   - component: {fileID: 540785842}
+  - component: {fileID: 540785850}
   m_Layer: 0
   m_Name: PlayerAI
   m_TagString: Player
@@ -6472,6 +6475,7 @@ MonoBehaviour:
   targetPosition: {x: 0, y: 0, z: 0}
   currentTarget: {x: 0, y: 0, z: 0}
   radius: 0.1
+  speed: 4
   movementPosition: {x: 0, y: 0, z: 0}
   mapData: {fileID: 6894719256789927860}
   debugTargetPos: {x: 0, y: 0, z: 0}
@@ -6538,8 +6542,8 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
@@ -6550,11 +6554,11 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 540785841}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 2
   m_Speed: 3.5
-  m_Acceleration: 30
+  m_Acceleration: 9999999
   avoidancePriority: 84
   m_AngularSpeed: 720
   m_StoppingDistance: 0
@@ -6562,7 +6566,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: 1
+  m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!136 &540785849
@@ -6578,6 +6582,24 @@ CapsuleCollider:
   m_Radius: 0.5
   m_Height: 2
   m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
+--- !u!143 &540785850
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 540785841}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 2
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!4 &540785852
 Transform:
@@ -14782,6 +14804,7 @@ MonoBehaviour:
   targetPosition: {x: 0, y: 0, z: 0}
   currentTarget: {x: 0, y: 0, z: 0}
   radius: 0.1
+  speed: 10
   movementPosition: {x: 0, y: 0, z: 0}
   mapData: {fileID: 0}
   debugTargetPos: {x: 0, y: 0, z: 0}
@@ -24634,6 +24657,14 @@ PrefabInstance:
       propertyPath: debugTileTemplate
       value: 
       objectReference: {fileID: 7425016246348203177, guid: e8c60d0cbe25aa242ab6f8285d51b41e, type: 3}
+    - target: {fileID: 7102117550276662901, guid: 1994ee5847cb1f84cb39dc27bed54bc0, type: 3}
+      propertyPath: unitInfluenceLimit
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7102117550276662901, guid: 1994ee5847cb1f84cb39dc27bed54bc0, type: 3}
+      propertyPath: enemyInfluenceRadius
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1994ee5847cb1f84cb39dc27bed54bc0, type: 3}
 --- !u!1 &6894719256789927859 stripped
@@ -24668,7 +24699,7 @@ MonoBehaviour:
   mapData: {fileID: 6894719256789927860}
   tileSpawnTemplate: {fileID: 7425016246348203177, guid: e8c60d0cbe25aa242ab6f8285d51b41e, type: 3}
   enemyTemplate: {fileID: 808130400482571157, guid: 9686cadad25c4d444a7c0ecb25324671, type: 3}
-  enemiesRemainingToSpawn: 0
+  enemiesRemainingToSpawn: 2
   currentWave:
     infinite: 0
     enemyCount: 10
@@ -24676,7 +24707,7 @@ MonoBehaviour:
     moveSpeed: 1
     hitsToKillPlayer: 30
     enemyHealth: 5
-    skinColour: {r: 1, g: 0, b: 0, a: 0}
+    skinColour: {r: 0.49230143, g: 0.21092917, b: 0.5660378, a: 0}
 --- !u!4 &6894719256789927862 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2888604738913219347, guid: 1994ee5847cb1f84cb39dc27bed54bc0, type: 3}

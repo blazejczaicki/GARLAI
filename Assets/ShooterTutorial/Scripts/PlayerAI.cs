@@ -11,6 +11,7 @@ namespace TopShooter
     {
         private DecisionTree decisionTree;
         private NavMeshAgent pathfinder;
+        private CharacterController characterController;
         private Astar astarPathfinding;
 
 
@@ -19,6 +20,7 @@ namespace TopShooter
         private Queue<Vector3> path = new Queue<Vector3>();
         [SerializeField] private Vector3 currentTarget;
         [SerializeField] private float radius = 0.1f;
+        [SerializeField] private float speed = 10f;
 
         //[SerializeField] private float moveSpeed = 5;
         //[SerializeField] private float scaleeTime = 0.2f;
@@ -50,7 +52,8 @@ namespace TopShooter
 		public Vector3 CurrentTarget { get => currentTarget; set => currentTarget = value; }
 
 		private void Awake()
-        {            
+        {
+            characterController = GetComponent<CharacterController>();
             astarPathfinding = new Astar();
             pathfinder = GetComponent<NavMeshAgent>();
             //pathfinder.enabled = false;
@@ -61,15 +64,15 @@ namespace TopShooter
 
         private void Start()
         {
-            movementPosition = transform.position;
-            
+            movementPosition = transform.position;            
         }
 
         private void Update()
         {
             //UpdateDecisions();
             MoveOnPath();
-            Move();
+            MoveCR();
+            //Move();
         }
 
         private void UpdateDecisions()
@@ -88,7 +91,7 @@ namespace TopShooter
             path.Clear();
 			for (int i = 0; i < astarNodes.Count; i++)
 			{
-                astarNodes[i].debugTile.sharedMaterial.color = Color.blue;
+                astarNodes[i].debugTile.sharedMaterial.color = Color.black;
 			}
             astarNodes = astarPathfinding.FindPath(mapData.ConvertToMapGridPos(transform.position), mapData.ConvertToMapGridPos(targetPosition), mapData.AstarNodesMap, mapData);
             astarNodes.ForEach(x => path.Enqueue(x.position3d));
@@ -118,6 +121,12 @@ namespace TopShooter
                 Debug.Log("xdmop");
                 CurrentTarget = path.Dequeue();
 			}
+		}
+
+        private void MoveCR()
+		{
+            var moveVec = (currentTarget - transform.position).normalized * speed;// * Time.deltaTime;
+            characterController.SimpleMove(new Vector3(moveVec.x,0,moveVec.z));
 		}
 
         public void Move()
