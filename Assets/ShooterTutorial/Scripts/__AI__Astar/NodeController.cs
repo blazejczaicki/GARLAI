@@ -11,6 +11,7 @@ public class NodeController : MonoBehaviour
     //public int g;
     //public int h;
     public int f;
+    public int enemyInfluence;
     //public bool isMoveable;
 
    // public MeshRenderer debugTile;
@@ -24,6 +25,7 @@ public class NodeController : MonoBehaviour
         neighbours.Clear();
         position = node.position2d;
         f = node.f;
+        enemyInfluence = node.enemyInfluence;
         node.neighbours.ForEach(x=>neighbours.Add(x.debugTile));
 	}
 }

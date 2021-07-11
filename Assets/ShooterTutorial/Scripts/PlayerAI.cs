@@ -11,6 +11,7 @@ namespace TopShooter
     {
         private DecisionTree decisionTree;
         private NavMeshAgent pathfinder;
+        private PlayerShooter playerShooter;
         private CharacterController characterController;
         private Astar astarPathfinding;
 
@@ -21,10 +22,11 @@ namespace TopShooter
         [SerializeField] private Vector3 currentTarget;
         [SerializeField] private float radius = 0.1f;
         [SerializeField] private float speed = 10f;
+        public float LifeTime { get; set; }
 
         //[SerializeField] private float moveSpeed = 5;
         //[SerializeField] private float scaleeTime = 0.2f;
-        
+
         [SerializeField] private Vector3 movementPosition;
         [SerializeField] private MapData mapData;
 
@@ -43,6 +45,8 @@ namespace TopShooter
         [SerializeField] private List<Enemy> enemies;
         [SerializeField] private AreaManager areaManager;
 
+        [SerializeField] private List<DataAI> dataAI;
+
 
         public List<Enemy> Enemies { get => enemies; set => enemies = value; }
         public float MinEnemyDistance { get => minEnemyDistance; set => minEnemyDistance = value; }
@@ -50,6 +54,7 @@ namespace TopShooter
         public AreaManager AreaManager { get => areaManager; set => areaManager = value; }
         public float MinSouroundingDistance { get => minSouroundingDistance; set => minSouroundingDistance = value; }
 		public Vector3 CurrentTarget { get => currentTarget; set => currentTarget = value; }
+		public List<DataAI> DataAI { get => dataAI; set => dataAI = value; }
 
 		private void Awake()
         {
@@ -60,19 +65,24 @@ namespace TopShooter
             Enemies = new List<Enemy>();
             decisionTree = GetComponent<DecisionTree>();
             decisionTree.CreateTmpTree();
+            playerShooter = GetComponent<PlayerShooter>();
         }
 
         private void Start()
         {
-            movementPosition = transform.position;            
+            movementPosition = transform.position;
+        }
+
+        public float GetAverageHealth()
+        {
+            return playerShooter.HealthOnSeconds;
         }
 
         private void Update()
         {
-            //UpdateDecisions();
+            UpdateDecisions();
             MoveOnPath();
             MoveCR();
-            //Move();
         }
 
         private void UpdateDecisions()
@@ -80,9 +90,20 @@ namespace TopShooter
             if (Time.time-previousUpdateTime>decisionUpdateTime)
             {
                 previousUpdateTime = Time.time;
-                targetPosition = decisionTree.MakeDecision(this).First(); // tu tylko pozycjê ostateczn¹
-                CalculatePath(targetPosition);
+                var decisionQueue = decisionTree.MakeDecision(this);
+				if (decisionQueue.Count>0)
+				{
+                    targetPosition = decisionQueue.Dequeue(); 
+				}
+                StartCoroutine(FindPath());                
             }
+        }
+
+        private IEnumerator FindPath()
+		{
+            mapData.ResetMapData();
+            yield return null;
+            CalculatePath();
         }
 
         [EasyButtons.Button]
@@ -104,15 +125,8 @@ namespace TopShooter
             {
                 astarNodes[i].debugTile.sharedMaterial.color = Color.yellow;
             }
-            Debug.Log(astarNodes.Count);
-            StartCoroutine(mapData.ResetMapData());
+            Debug.Log("xd");
         }
-
-        private void CalculatePath(Vector3 targetPosition)
-		{
-            astarNodes.ForEach(x => x.debugTile.sharedMaterial.color = Color.black);
-            astarNodes= astarPathfinding.FindPath(mapData.ConvertToMapGridPos(transform.position), mapData.ConvertToMapGridPos(targetPosition), mapData.AstarNodesMap, mapData);
-		}
 
         private void MoveOnPath() //wykonuje ruch po œcie¿ce
 		{
@@ -129,6 +143,7 @@ namespace TopShooter
             characterController.SimpleMove(new Vector3(moveVec.x,0,moveVec.z));
 		}
 
+
         public void Move()
         {
             pathfinder.SetDestination(CurrentTarget);
@@ -140,4 +155,20 @@ namespace TopShooter
             Gizmos.DrawSphere(movementPosition, 0.5f);
         }
     }
+
+    public enum DecisionName
+	{
+        IsBetterPos,
+        IsEnemiesTooClose,
+        IsSourounded
+	}
+
+    [Serializable]
+    public struct DataAI
+	{
+        public DecisionName nameVal;
+        public float currentVal;
+        public float maxVal;
+        public float minVal;
+	}
 }

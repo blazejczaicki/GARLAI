@@ -15,10 +15,14 @@ namespace TopShooter
         GunController gunController;
 
         private Stopwatch stopWatch;
+        private float previousUpdateTime = 0;
+        private float dataTime = 1f;
 
-        //public Crosshairs crosshairs;
+        private float healthOnSeconds = 0;
 
-        private void Awake()
+		public float HealthOnSeconds { get => healthOnSeconds; set => healthOnSeconds = value; }
+
+		private void Awake()
         {
             controller = GetComponent<PlayerControllerShooter>();
             gunController = GetComponent<GunController>();
@@ -43,7 +47,14 @@ namespace TopShooter
 
         private void Update()
         {
-            Time.timeScale = scaleeTime;
+            if (Time.time - previousUpdateTime > dataTime)
+            {
+                previousUpdateTime = Time.time;
+                healthOnSeconds += health;
+            }
+
+
+                Time.timeScale = scaleeTime;
 
             Vector3 moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
 

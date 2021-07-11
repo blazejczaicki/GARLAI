@@ -28,6 +28,12 @@ public class MapData : MonoBehaviour
 
 	private void Awake()
     {
+        CreateBoardContent(originPoint);
+    }
+
+    public void CreateBoardContent(Vector3 originPt)
+	{
+        originPoint = originPt;
         astarNodesMap = new List<List<AstarNode>>();
 
         Vector2 offsetPos = Vector2.zero;
@@ -63,7 +69,7 @@ public class MapData : MonoBehaviour
              }
 		}
         shuffledTileCoords = new Queue<AstarNode>(TopShooter.Utility.ShuffleArray(AstarNodesMap.SelectMany(d => d).ToArray(), seed));
-    }
+	}
 
 	private void Update()
 	{
@@ -85,9 +91,8 @@ public class MapData : MonoBehaviour
 
 
 
-	public IEnumerator ResetMapData()
+	public void ResetMapData()
 	{
-        yield return null;
         for (int i = 0; i < Width; i++)
         {
             for (int j = 0; j < Height; j++)

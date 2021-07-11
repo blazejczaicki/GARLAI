@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1500910871
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1500910872}
+  m_Layer: 0
+  m_Name: debugTiles
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1500910872
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1500910871}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2888604738913219347}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &17073826050130388
 GameObject:
   m_ObjectHideFlags: 0
@@ -29647,6 +29677,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2888604738913219347}
   - component: {fileID: 7102117550276662901}
+  - component: {fileID: 6894719256789927861}
   m_Layer: 0
   m_Name: NewBoard
   m_TagString: Untagged
@@ -29662,13 +29693,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5718405594472956401}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 43.23, y: 0, z: 1.1499996}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8216715560117024336}
   - {fileID: 5614684955239170071}
   - {fileID: 857300118782672574}
   - {fileID: 9151231035332401989}
+  - {fileID: 1500910872}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -29684,9 +29716,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb52b49ab65f20140b7e69af3a159b8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  originPoint: {fileID: 0}
+  originPoint: {x: 0, y: 0, z: 0}
   width: 20
   height: 20
+  seed: 20
+  enemyInfluenceRadius: 5
+  unitInfluenceLimit: 25
+  debugTileTemplate: {fileID: 7425016246348203177, guid: e8c60d0cbe25aa242ab6f8285d51b41e, type: 3}
+  debugTileParent: {fileID: 1500910872}
+--- !u!114 &6894719256789927861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5718405594472956401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d3e50d0aabba66439c07cbadd563247, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerAI: {fileID: 0}
+  mapData: {fileID: 7102117550276662901}
+  tileSpawnTemplate: {fileID: 7425016246348203177, guid: e8c60d0cbe25aa242ab6f8285d51b41e, type: 3}
+  enemyTemplate: {fileID: 808130400482571157, guid: 9686cadad25c4d444a7c0ecb25324671, type: 3}
+  enemiesRemainingToSpawn: 2
+  currentWave:
+    infinite: 0
+    enemyCount: 10
+    timeBetweenSpawns: 3
+    moveSpeed: 1
+    hitsToKillPlayer: 30
+    enemyHealth: 5
+    skinColour: {r: 0.49230143, g: 0.21092917, b: 0.5660378, a: 0}
 --- !u!1 &5718423278108266157
 GameObject:
   m_ObjectHideFlags: 0

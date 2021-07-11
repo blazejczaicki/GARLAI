@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TopShooter;
 using UnityEngine;
 
 public class GA_Chromosome : MonoBehaviour
@@ -11,10 +12,14 @@ public class GA_Chromosome : MonoBehaviour
     private float fitness = 0;
     private float mutationRate = 0.05f;
 
+    [SerializeField] private PlayerAI playerAI;
+    [SerializeField] private GameManager gameManager;
+
+
     public float Fitness { get => fitness; set => fitness = value; }
     public float MutationRate { get => mutationRate; set => mutationRate = value; }
 
-    public void InitChromosome()
+	public void InitChromosome()
     {
         foreach (var gen in genes)
         {
@@ -30,6 +35,6 @@ public class GA_Chromosome : MonoBehaviour
 
     public void CalculateFitness()
     {
-
+        fitness =(playerAI.GetAverageHealth())/(gameManager.SimTime * gameManager.MaxPlayerHealth);//playerAI.LifeTime *
     }
 }

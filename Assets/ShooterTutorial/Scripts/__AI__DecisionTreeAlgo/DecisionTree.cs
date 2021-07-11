@@ -23,7 +23,7 @@ public class DecisionTree : MonoBehaviour
         isSouroundedDec.FalseNode = makeGoBackAct;
     }
 
-    public List<Vector3> MakeDecision(PlayerAI player)
+    public Queue<Vector3> MakeDecision(PlayerAI player)
     {
         DT_IGameTreeNode actionNode = root.MakeDecision(player);
         return actionNode.MakeAction(player);
