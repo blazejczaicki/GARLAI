@@ -27,11 +27,13 @@ public class NewSpawner : MonoBehaviour
 
     private bool isDisabled;
 
-    public event System.Action<int> OnNewWave;
+	public PlayerAI PlayerAI { get => playerAI; set => playerAI = value; }
+
+	public event System.Action<int> OnNewWave;
 
     private void Start()
     {
-        playerEntity = playerAI.GetComponent<PlayerShooter>();
+        playerEntity = PlayerAI.GetComponent<PlayerShooter>();
         playerT = playerEntity.transform;
 
         nextCampCheckTime = timeBetweenCampingChecks + Time.time;
@@ -42,8 +44,8 @@ public class NewSpawner : MonoBehaviour
 
     void ResetPlayerPosition()
     {
-        playerAI.transform.position = mapData.GetMapCenter();
-        playerAI.CurrentTarget = playerT.position;
+        PlayerAI.transform.position = mapData.GetMapCenter();
+        PlayerAI.CurrentTarget = playerT.position;
     }
 
     private void Update()
@@ -87,9 +89,9 @@ public class NewSpawner : MonoBehaviour
         }
         Destroy(spawnTile.gameObject);
         Enemy spawnedEnemy = Instantiate(enemyTemplate, spawnTile.position + Vector3.up, Quaternion.identity) as Enemy;
-        playerAI.Enemies.Add(spawnedEnemy);
+        PlayerAI.Enemies.Add(spawnedEnemy);
         mapData.Enemies.Add(spawnedEnemy);
-        spawnedEnemy.PlayerAI = playerAI;
+        spawnedEnemy.PlayerAI = PlayerAI;
         spawnedEnemy.OnDeath += OnEnemyDeath;
         spawnedEnemy.SetCharacteristics(currentWave.moveSpeed, currentWave.hitsToKillPlayer, currentWave.enemyHealth, currentWave.skinColour);
     }

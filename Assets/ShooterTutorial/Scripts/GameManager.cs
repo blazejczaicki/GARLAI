@@ -26,11 +26,14 @@ public class GameManager : MonoBehaviour
 
 	private void Awake()
 	{
-		CreateTestWorld();
+		//CreateTestWorld();
 	}
 
+	[EasyButtons.Button]
 	private void CreateTestWorld()
 	{
+		boards.Clear();
+		players.Clear();
 		for (int i = 0; i < width; i++)
 		{
 			for (int j = 0; j < height; j++)
@@ -38,13 +41,18 @@ public class GameManager : MonoBehaviour
 				var newBoard = Instantiate(boardTemplate) as MapData;
 				boards.Add(newBoard);
 				newBoard.transform.SetParent(boardsParent);
-				newBoard.CreateBoardContent(new Vector3(j*25,0,i*25));
+				newBoard.OriginPoint = new Vector3(j * 25, 0, i * 25);
+				//newBoard.CreateBoardContent(new Vector3(j*25,0,i*25));
 				newBoard.transform.position = new Vector3(newBoard.OriginPoint.x+ newBoard.Width*0.5f, 0, newBoard.OriginPoint.z + newBoard.Height * 0.5f);
-
-
+				
 				var newPlayerAI = Instantiate(playerAiTemplate) as PlayerAI;
 				players.Add(newPlayerAI);
 				newPlayerAI.transform.SetParent(playersParent);
+
+				var newSpawner = newBoard.GetComponent<NewSpawner>();
+				newSpawner.PlayerAI = newPlayerAI;
+
+
 			}
 		}
 	}

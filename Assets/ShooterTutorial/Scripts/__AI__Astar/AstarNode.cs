@@ -7,7 +7,8 @@ public class AstarNode
 {
     public Vector2 position2d;
     public Vector3 position3d;
-    public Vector2 mapPosition;
+    public Vector2Int mapPosition;
+    public Vector2 offsetPos;
     private const int gDefaultValue = 9999999;
 
     public int g;
@@ -22,7 +23,7 @@ public class AstarNode
 
     public List<AstarNode> neighbours;
 
-    public AstarNode(Vector2 position, Vector2 mapPosition, bool moveable)
+    public AstarNode(Vector2 position, Vector2Int mapPosition, bool moveable, Vector3 offsetPos)
     {
         g = gDefaultValue;
         enemyInfluence = h = f = 0;
@@ -32,6 +33,7 @@ public class AstarNode
         this.position2d = position;
         this.position3d = new Vector3(position.y+0.5f, 0, position.x + 0.5f);
         this.mapPosition = mapPosition;
+        this.offsetPos = offsetPos;
         neighbours = new List<AstarNode>();
     }
 
@@ -65,37 +67,37 @@ public class AstarNode
 
     public void SetNeighbours(List<List<AstarNode>> astarNodes, MapData mapData)
 	{
-		if ((int)position2d.x>0)
+		if (mapPosition.x>0)
 		{
-            neighbours.Add(astarNodes[(int)position2d.x - 1][(int)position2d.y]);
-			if ((int)position2d.y > 0)
+            neighbours.Add(astarNodes[mapPosition.x - 1][mapPosition.y]);
+			if (mapPosition.y > 0)
 			{
-                neighbours.Add(astarNodes[(int)position2d.x - 1][(int)position2d.y-1]);
+                neighbours.Add(astarNodes[mapPosition.x - 1][mapPosition.y-1]);
             }
-			if ((int)position2d.y < mapData.Height-1)
+			if (mapPosition.y < mapData.Height-1)
 			{
-                neighbours.Add(astarNodes[(int)position2d.x - 1][(int)position2d.y + 1]);
+                neighbours.Add(astarNodes[mapPosition.x - 1][mapPosition.y + 1]);
             }
 		}
-		if ((int)position2d.x < mapData.Width-1)
+		if (mapPosition.x < mapData.Width-1)
 		{
-            neighbours.Add(astarNodes[(int)position2d.x + 1][(int)position2d.y]);
-			if ((int)position2d.y > 0)
+            neighbours.Add(astarNodes[mapPosition.x + 1][mapPosition.y]);
+			if (mapPosition.y > 0)
 			{
-                neighbours.Add(astarNodes[(int)position2d.x + 1][(int)position2d.y-1]);
+                neighbours.Add(astarNodes[mapPosition.x + 1][mapPosition.y-1]);
             }
-			if ((int)position2d.y < mapData.Height-1)
+			if (mapPosition.y < mapData.Height-1)
 			{
-                neighbours.Add(astarNodes[(int)position2d.x + 1][(int)position2d.y + 1]);
+                neighbours.Add(astarNodes[mapPosition.x + 1][mapPosition.y + 1]);
             }
 		}
-		if ((int)position2d.y>0)
+		if (mapPosition.y>0)
 		{
-            neighbours.Add(astarNodes[(int)position2d.x][(int)position2d.y - 1]);
+            neighbours.Add(astarNodes[mapPosition.x][mapPosition.y - 1]);
         }
-		if ((int)position2d.y< mapData.Height-1)
+		if (mapPosition.y< mapData.Height-1)
 		{
-            neighbours.Add(astarNodes[(int)position2d.x][(int)position2d.y + 1]);
+            neighbours.Add(astarNodes[mapPosition.x][mapPosition.y + 1]);
         }
 	}
 }

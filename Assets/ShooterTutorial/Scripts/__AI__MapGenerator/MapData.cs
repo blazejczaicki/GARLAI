@@ -16,9 +16,9 @@ public class MapData : MonoBehaviour
     private List<List<AstarNode>> astarNodesMap;
     private Queue<AstarNode> shuffledTileCoords;
 
+
     [SerializeField] private Transform debugTileTemplate;
     [SerializeField] private Transform debugTileParent;
-    private List<List<Transform>> debugMap = new List<List<Transform>>();
 
     public List<List<AstarNode>> AstarNodesMap { get => astarNodesMap; set => astarNodesMap = value; }
     public Vector3 OriginPoint { get => originPoint; set => originPoint = value; }
@@ -27,10 +27,11 @@ public class MapData : MonoBehaviour
 	public List<Enemy> Enemies { get => enemies; set => enemies = value; }
 
 	private void Awake()
-    {
-        CreateBoardContent(originPoint);
-    }
+	{
+		CreateBoardContent(originPoint);
+	}
 
+	[EasyButtons.Button]
     public void CreateBoardContent(Vector3 originPt)
 	{
         originPoint = originPt;
@@ -43,20 +44,17 @@ public class MapData : MonoBehaviour
             offsetPos.y = originPoint.z;
             astarNodesMap.Add(new List<AstarNode>());
 
-            debugMap.Add(new List<Transform>());
-
             for (int j = 0; j < Height; j++)
             {                
-                astarNodesMap[i].Add(new AstarNode(offsetPos, new Vector2(i, j),true));
+                astarNodesMap[i].Add(new AstarNode(offsetPos, new Vector2Int(i, j),true, offsetPos));
                 var debugTile = Instantiate(debugTileTemplate);
-                debugTile.transform.position = new Vector3(offsetPos.y+0.5f, 0.1f,offsetPos.x + 0.5f);
                 debugTile.transform.SetParent(debugTileParent);
+                debugTile.transform.localPosition = new Vector3(j+0.5f, 0.1f,i + 0.5f);
                 var nCon = debugTile.GetComponent<NodeController>();
                 nCon.node = astarNodesMap[i][j];
                 astarNodesMap[i][j].debugTile = debugTile.GetComponent<MeshRenderer>();
                 astarNodesMap[i][j].debugTile.sharedMaterial = new Material(astarNodesMap[i][j].debugTile.sharedMaterial);
                 astarNodesMap[i][j].debugTile.sharedMaterial.color=Color.black;
-                debugMap[i].Add(debugTile);
                 offsetPos.y += 1;
             }
             offsetPos.x += 1;
