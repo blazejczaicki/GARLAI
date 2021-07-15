@@ -89,6 +89,7 @@ public class NewSpawner : MonoBehaviour
         }
         Destroy(spawnTile.gameObject);
         Enemy spawnedEnemy = Instantiate(enemyTemplate, spawnTile.position + Vector3.up, Quaternion.identity) as Enemy;
+        spawnedEnemy.SetTarget(playerAI);
         PlayerAI.Enemies.Add(spawnedEnemy);
         mapData.Enemies.Add(spawnedEnemy);
         spawnedEnemy.PlayerAI = PlayerAI;

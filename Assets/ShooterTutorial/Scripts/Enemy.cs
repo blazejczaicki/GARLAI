@@ -40,17 +40,15 @@ namespace TopShooter
         private void Awake()
         {
             pathfinder = GetComponent<NavMeshAgent>();
+            myCollisionRadius = GetComponent<CapsuleCollider>().radius;
+            hasTarget = true;
+        }
 
-            if (GameObject.FindGameObjectWithTag("Player") != null)
-            {
-                hasTarget = true;
-
-                target = GameObject.FindGameObjectWithTag("Player").transform;
-                livingEntityTarget = target.GetComponent<LivingEntity>();
-
-                myCollisionRadius = GetComponent<CapsuleCollider>().radius;
-                targetCollisionRadius = target.GetComponent<CapsuleCollider>().radius;
-            }
+        public void SetTarget(PlayerAI target)
+		{
+            this.target = target.transform;
+            livingEntityTarget = target.GetComponent<LivingEntity>();
+            targetCollisionRadius = target.GetComponent<CapsuleCollider>().radius;
         }
 
         protected override void Start()

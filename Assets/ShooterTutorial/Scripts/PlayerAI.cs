@@ -55,6 +55,7 @@ namespace TopShooter
         public float MinSouroundingDistance { get => minSouroundingDistance; set => minSouroundingDistance = value; }
 		public Vector3 CurrentTarget { get => currentTarget; set => currentTarget = value; }
 		public List<DataAI> DataAI { get => dataAI; set => dataAI = value; }
+		public MapData MapData { get => mapData; set => mapData = value; }
 
 		private void Awake()
         {
@@ -101,7 +102,7 @@ namespace TopShooter
 
         private IEnumerator FindPath()
 		{
-            mapData.ResetMapData();
+            MapData.ResetMapData();
             yield return null;
             CalculatePath();
         }
@@ -114,7 +115,7 @@ namespace TopShooter
 			{
                 astarNodes[i].debugTile.sharedMaterial.color = Color.black;
 			}
-            astarNodes = astarPathfinding.FindPath(mapData.ConvertToMapGridPos(transform.position), mapData.ConvertToMapGridPos(targetPosition), mapData.AstarNodesMap, mapData);
+            astarNodes = astarPathfinding.FindPath(MapData.ConvertToMapGridPos(transform.position), MapData.ConvertToMapGridPos(targetPosition), MapData.AstarNodesMap, MapData);
             astarNodes.ForEach(x => path.Enqueue(x.position3d));
 			if (path.Count>1)
 			{
@@ -125,14 +126,12 @@ namespace TopShooter
             {
                 astarNodes[i].debugTile.sharedMaterial.color = Color.yellow;
             }
-            Debug.Log("xd");
         }
 
         private void MoveOnPath() //wykonuje ruch po œcie¿ce
 		{
 			if (path.Count>0 && (transform.position-CurrentTarget).sqrMagnitude<radius)
 			{
-                Debug.Log("xdmop");
                 CurrentTarget = path.Dequeue();
 			}
 		}

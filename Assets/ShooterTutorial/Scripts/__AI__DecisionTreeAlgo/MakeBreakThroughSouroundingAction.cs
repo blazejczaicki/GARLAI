@@ -33,7 +33,7 @@ public class MakeBreakThroughSouroundingAction : DT_Action
 
         Queue<Vector3> road = new Queue<Vector3>();
         Vector3 avgPos = Vector3.zero;
-        Vector3 mapCenter = new Vector3(10, 0, 10);
+        Vector3 mapCenter = player.MapData.GetMapCenter();// new Vector3(10, 0, 10);
         float rad = 10;
 		foreach (var en in player.Enemies)
 		{
@@ -48,7 +48,9 @@ public class MakeBreakThroughSouroundingAction : DT_Action
 		}
 		Debug.Log("Break Act");
         //Debug.Log(avgPos);
-        avgPos = new Vector3(Mathf.Clamp(avgPos.x, 0, 19.5f), 0, Mathf.Clamp(avgPos.z, 0, 19.5f));
+        //avgPos = new Vector3(Mathf.Clamp(avgPos.x, 0, 19.5f), 0, Mathf.Clamp(avgPos.z, 0, 19.5f));
+        avgPos = new Vector3(Mathf.Clamp(avgPos.x, 0 + player.MapData.OriginPoint.x, 19.5f + player.MapData.OriginPoint.x), 0, 
+            Mathf.Clamp(avgPos.z, 0 + player.MapData.OriginPoint.z, 19.5f + player.MapData.OriginPoint.z));
         road.Enqueue(avgPos);
         return road;
     }

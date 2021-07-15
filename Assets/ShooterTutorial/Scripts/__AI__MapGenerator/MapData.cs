@@ -38,26 +38,28 @@ public class MapData : MonoBehaviour
         astarNodesMap = new List<List<AstarNode>>();
 
         Vector2 offsetPos = Vector2.zero;
-        offsetPos.x = originPoint.x;        
+             
+            offsetPos.y = originPoint.z;
         for (int i = 0; i < Width; i++)
         {
-            offsetPos.y = originPoint.z;
+            offsetPos.x = originPoint.x;
+
             astarNodesMap.Add(new List<AstarNode>());
 
             for (int j = 0; j < Height; j++)
-            {                
-                astarNodesMap[i].Add(new AstarNode(offsetPos, new Vector2Int(i, j),true, offsetPos));
+            {
+                astarNodesMap[i].Add(new AstarNode(offsetPos, new Vector2Int(i, j), true));
                 var debugTile = Instantiate(debugTileTemplate);
                 debugTile.transform.SetParent(debugTileParent);
-                debugTile.transform.localPosition = new Vector3(j+0.5f, 0.1f,i + 0.5f);
+                debugTile.transform.localPosition = new Vector3(j + 0.5f, 0.1f, i + 0.5f);
                 var nCon = debugTile.GetComponent<NodeController>();
                 nCon.node = astarNodesMap[i][j];
                 astarNodesMap[i][j].debugTile = debugTile.GetComponent<MeshRenderer>();
                 astarNodesMap[i][j].debugTile.sharedMaterial = new Material(astarNodesMap[i][j].debugTile.sharedMaterial);
-                astarNodesMap[i][j].debugTile.sharedMaterial.color=Color.black;
-                offsetPos.y += 1;
+                astarNodesMap[i][j].debugTile.sharedMaterial.color = Color.black;
+                offsetPos.x += 1;
             }
-            offsetPos.x += 1;
+            offsetPos.y += 1;
         }
 		for (int i = 0; i < Width; i++)
 		{
@@ -74,6 +76,7 @@ public class MapData : MonoBehaviour
         UpdateHeightMap();
     }
 
+    [EasyButtons.Button]
 	public void UpdateHeightMap()
 	{
         float sqrRad = enemyInfluenceRadius * enemyInfluenceRadius;
@@ -114,6 +117,6 @@ public class MapData : MonoBehaviour
 
     public Vector2Int ConvertToMapGridPos(Vector3 position)
 	{
-        return new Vector2Int((int)position.x,(int)position.z);
+        return new Vector2Int((int)(position.x - originPoint.x),(int)(position.z- originPoint.z));
 	}
 }

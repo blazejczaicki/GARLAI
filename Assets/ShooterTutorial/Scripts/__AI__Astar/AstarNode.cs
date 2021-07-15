@@ -23,17 +23,16 @@ public class AstarNode
 
     public List<AstarNode> neighbours;
 
-    public AstarNode(Vector2 position, Vector2Int mapPosition, bool moveable, Vector3 offsetPos)
+    public AstarNode(Vector2 position, Vector2Int mapPosition, bool moveable)
     {
         g = gDefaultValue;
         enemyInfluence = h = f = 0;
         isMoveable = moveable;
         previousNode = null;
-        this.position2d = new Vector2((int)position.x, (int)position.y);
         this.position2d = position;
-        this.position3d = new Vector3(position.y+0.5f, 0, position.x + 0.5f);
+        this.position3d = new Vector3(position.x+0.5f, 0, position.y + 0.5f);
         this.mapPosition = mapPosition;
-        this.offsetPos = offsetPos;
+        this.offsetPos = position;
         neighbours = new List<AstarNode>();
     }
 
@@ -56,10 +55,10 @@ public class AstarNode
 		{
             enemyInfluence +=(int)(System.Math.Max(0,influenceRadiusSqr - (enemies[i].transform.position - position3d).sqrMagnitude)/scaler);
 		}
-		if (enemyInfluence>0)
-		{
-            Debug.Log("xd");
-		}
+		//if (enemyInfluence>0)
+		//{
+  //          Debug.Log("xd");
+		//}
         enemyInfluence *= booster;
         float max = unitval * enemiesCount*booster;
         debugTile.sharedMaterial.color =(debugTile.sharedMaterial.color==Color.yellow)? Color.yellow: new Color(enemyInfluence / max, 0, 0);
