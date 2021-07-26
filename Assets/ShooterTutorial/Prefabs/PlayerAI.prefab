@@ -197,19 +197,19 @@ MonoBehaviour:
   areaManager: {fileID: 0}
   dataAI:
   - nameVal: 0
-    currentVal: 0
+    currentVal: 4
     maxVal: 0
     minVal: 0
-  - nameVal: 0
-    currentVal: 0
+  - nameVal: 1
+    currentVal: 4
     maxVal: 0
     minVal: 0
-  - nameVal: 0
-    currentVal: 0
+  - nameVal: 2
+    currentVal: 2
     maxVal: 0
     minVal: 0
-  - nameVal: 0
-    currentVal: 0
+  - nameVal: 3
+    currentVal: 2
     maxVal: 0
     minVal: 0
 --- !u!114 &1501778884641341349
@@ -254,8 +254,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2639fc8944decd84683da517f841474b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerAI: {fileID: 0}
-  gameManager: {fileID: 0}
 --- !u!1 &1501778885190113819
 GameObject:
   m_ObjectHideFlags: 0

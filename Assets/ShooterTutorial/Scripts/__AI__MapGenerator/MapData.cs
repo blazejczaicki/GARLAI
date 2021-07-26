@@ -14,6 +14,7 @@ public class MapData : MonoBehaviour
     [SerializeField] private int unitInfluenceLimit =25;
     private List<Enemy> enemies= new List<Enemy>();
     private List<List<AstarNode>> astarNodesMap;
+    private Queue<AstarNode> defaultShuffledTileCoords;
     private Queue<AstarNode> shuffledTileCoords;
 
 
@@ -69,7 +70,8 @@ public class MapData : MonoBehaviour
              }
 		}
         shuffledTileCoords = new Queue<AstarNode>(TopShooter.Utility.ShuffleArray(AstarNodesMap.SelectMany(d => d).ToArray(), seed));
-	}
+        defaultShuffledTileCoords = new Queue<AstarNode>(shuffledTileCoords);
+    }
 
 	private void Update()
 	{
@@ -90,7 +92,13 @@ public class MapData : MonoBehaviour
         }
     }
 
-
+    public void ResetMapWorld()
+	{
+        ResetMapData();
+        enemies.ForEach(x => { x.StopAllCoroutines(); Destroy(x.gameObject); });
+        enemies.Clear();
+        shuffledTileCoords = new Queue<AstarNode>(defaultShuffledTileCoords);
+	}
 
 	public void ResetMapData()
 	{

@@ -2,67 +2,101 @@ using System.Collections;
 using System.Collections.Generic;
 using TopShooter;
 using UnityEngine;
-
-public class GameManager : MonoBehaviour
+namespace TopShooter
 {
-	[SerializeField] private MapData boardTemplate;
-	[SerializeField] private PlayerAI playerAiTemplate;
-
-	[SerializeField] private Transform boardsParent;
-	[SerializeField] private Transform playersParent;
-
-	private List<MapData> boards = new List<MapData>();
-	private List<PlayerAI> players = new List<PlayerAI>();
-
-
-    [SerializeField] private float simTime = 60;
-    [SerializeField] private float maxPlayerHealth = 20;
-
-    [SerializeField] private int width = 3;
-    [SerializeField] private int height = 3;
-
-	public float SimTime { get => simTime; set => simTime = value; }
-	public float MaxPlayerHealth { get => maxPlayerHealth; set => maxPlayerHealth = value; }
-
-	private void Awake()
+	public class GameManager : MonoBehaviour
 	{
-		//CreateTestWorld();
-	}
+		public static GameManager instance;
 
-	private void SetPlayers()
-	{
+		[SerializeField] private MapData boardTemplate;
+		[SerializeField] private PlayerAI playerAiTemplate;
 
-	}
+		[SerializeField] private Transform boardsParent;
+		[SerializeField] private Transform playersParent;
 
-	[EasyButtons.Button]
-	private void CreateTestWorld()
-	{
-		boards.Clear();
-		players.Clear();
-		for (int i = 0; i < width; i++)
+		[SerializeField] [HideInInspector] private List<MapData> boards = new List<MapData>();
+		[SerializeField] [HideInInspector] private List<PlayerAI> players = new List<PlayerAI>();
+		[SerializeField] [HideInInspector] private List<NewSpawner> spawners = new List<NewSpawner>();
+
+		[SerializeField] private float simTime = 60;
+		[SerializeField] private float maxPlayerHealth = 20;
+
+		[SerializeField] private float resetTimeSpan = 10;
+		private float nextResetTime = 0;
+
+		[SerializeField] private int width = 3;
+		[SerializeField] private int height = 3;
+
+		private GA_GeneticAlgorithm geneticAlgorithm;
+
+		public float SimTime { get => simTime; set => simTime = value; }
+		public float MaxPlayerHealth { get => maxPlayerHealth; set => maxPlayerHealth = value; }
+
+		private void Awake()
 		{
-			for (int j = 0; j < height; j++)
+			if (instance == null)
 			{
-				var newBoard = Instantiate(boardTemplate) as MapData;
-				boards.Add(newBoard);
-				newBoard.transform.SetParent(boardsParent);
-				newBoard.OriginPoint = new Vector3(j * 25, 0, i * 25); //j to x, i to z
-				//newBoard.CreateBoardContent(new Vector3(j*25,0,i*25));
-				newBoard.transform.position = new Vector3(newBoard.OriginPoint.x+ newBoard.Width*0.5f, 0, newBoard.OriginPoint.z + newBoard.Height * 0.5f);
-				
-				var newPlayerAI = Instantiate(playerAiTemplate) as PlayerAI;
-				players.Add(newPlayerAI);
-				newPlayerAI.transform.SetParent(playersParent);
-				newPlayerAI.MapData = newBoard;
-
-				var newSpawner = newBoard.GetComponent<NewSpawner>();
-				newSpawner.PlayerAI = newPlayerAI;
+				instance = this;
+			}
+			else
+			{
+				Destroy(gameObject);
 			}
 		}
-	}
 
-	private void Update()
-	{
-		
+		private void Start()
+		{
+			nextResetTime = resetTimeSpan;
+			geneticAlgorithm = GetComponent<GA_GeneticAlgorithm>();
+			//geneticAlgorithm.Init(players);
+		}
+
+		private void Update()
+		{
+			players.ForEach(x => x.OnUpdate());
+			boards.ForEach(x => x.Enemies.ForEach(e => e.OnUpdate()));
+
+			if (Time.time > nextResetTime)
+			{
+				nextResetTime = Time.time + resetTimeSpan;
+				//geneticAlgorithm.UpdateAlgorithm();
+				//ResetWorld();
+			}
+		}
+
+		[EasyButtons.Button]
+		private void CreateTestWorld()
+		{
+			boards.Clear();
+			players.Clear();
+			for (int i = 0; i < width; i++)
+			{
+				for (int j = 0; j < height; j++)
+				{
+					var newBoard = Instantiate(boardTemplate) as MapData;
+					boards.Add(newBoard);
+					newBoard.transform.SetParent(boardsParent);
+					newBoard.OriginPoint = new Vector3(j * 25, 0, i * 25); //j to x, i to z
+																		   //newBoard.CreateBoardContent(new Vector3(j*25,0,i*25));
+					newBoard.transform.position = new Vector3(newBoard.OriginPoint.x + newBoard.Width * 0.5f, 0, newBoard.OriginPoint.z + newBoard.Height * 0.5f);
+
+					var newPlayerAI = Instantiate(playerAiTemplate) as PlayerAI;
+					players.Add(newPlayerAI);
+					newPlayerAI.transform.SetParent(playersParent);
+					newPlayerAI.MapData = newBoard;
+
+					var newSpawner = newBoard.GetComponent<NewSpawner>();
+					newSpawner.PlayerAI = newPlayerAI;
+					spawners.Add(newSpawner);
+				}
+			}
+		}
+
+		private void ResetWorld()
+		{
+			boards.ForEach(x => x.ResetMapWorld());
+			spawners.ForEach(x => x.ResetSpawnersWorld());
+			players.ForEach(x => x.Enemies.Clear());
+		}
 	}
 }

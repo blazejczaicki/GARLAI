@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -14,6 +15,7 @@ namespace TopShooter
         private PlayerShooter playerShooter;
         private CharacterController characterController;
         private Astar astarPathfinding;
+        private GA_Chromosome chromosome;
 
 
         [SerializeField] private Vector3 targetPosition;
@@ -23,6 +25,8 @@ namespace TopShooter
         [SerializeField] private float radius = 0.1f;
         [SerializeField] private float speed = 10f;
         public float LifeTime { get; set; }
+        public float escapeDistance = 5;
+        List<Enemy> enemiesTooClose = new List<Enemy>();
 
         //[SerializeField] private float moveSpeed = 5;
         //[SerializeField] private float scaleeTime = 0.2f;
@@ -56,17 +60,20 @@ namespace TopShooter
 		public Vector3 CurrentTarget { get => currentTarget; set => currentTarget = value; }
 		public List<DataAI> DataAI { get => dataAI; set => dataAI = value; }
 		public MapData MapData { get => mapData; set => mapData = value; }
+		public CharacterController CharController { get => characterController; set => characterController = value; }
+		public List<Enemy> EnemiesTooClose { get => enemiesTooClose; set => enemiesTooClose = value; }
 
 		private void Awake()
         {
-            characterController = GetComponent<CharacterController>();
-            astarPathfinding = new Astar();
+            chromosome = GetComponent<GA_Chromosome>();
+            CharController = GetComponent<CharacterController>();
             pathfinder = GetComponent<NavMeshAgent>();
-            //pathfinder.enabled = false;
-            Enemies = new List<Enemy>();
             decisionTree = GetComponent<DecisionTree>();
-            decisionTree.CreateTmpTree();
             playerShooter = GetComponent<PlayerShooter>();
+
+            astarPathfinding = new Astar();
+            Enemies = new List<Enemy>();
+            decisionTree.CreateWalkModeTree();
         }
 
         private void Start()
@@ -79,7 +86,20 @@ namespace TopShooter
             return playerShooter.HealthOnSeconds;
         }
 
-        private void Update()
+        public void ResetPlayerWorld()
+		{
+            this.StopAllCoroutines();
+            targetPosition = transform.position;
+            previousUpdateTime = Time.time;
+            path.Clear();
+            for (int i = 0; i < astarNodes.Count; i++)
+            {
+                astarNodes[i].debugTile.sharedMaterial.color = Color.black;
+            }
+            astarNodes.Clear();
+        }
+
+        public void OnUpdate()
         {
             UpdateDecisions();
             MoveOnPath();
@@ -139,7 +159,7 @@ namespace TopShooter
         private void MoveCR()
 		{
             var moveVec = (currentTarget - transform.position).normalized * speed;// * Time.deltaTime;
-            characterController.SimpleMove(new Vector3(moveVec.x,0,moveVec.z));
+            CharController.SimpleMove(new Vector3(moveVec.x,0,moveVec.z));
 		}
 
 
@@ -148,18 +168,48 @@ namespace TopShooter
             pathfinder.SetDestination(CurrentTarget);
         }
 
+        public void UpdateCloseEnemies(float minEnemyDistance)
+        {
+            var count = Enemies.Count;
+            for (int i = 0; i < count; i++)
+            {
+                if (minEnemyDistance > Vector3.Distance(transform.position, Enemies[i].transform.position))
+                {
+                    enemiesTooClose.Add(Enemies[i]);
+                }
+            }
+        }
+
+        public Vector3 GetAverageDirectionByEnemies()
+		{
+            Vector3 averageDirection = Vector3.zero;
+            foreach (var etc in enemiesTooClose)
+            {
+                averageDirection = (averageDirection + (etc.transform.position - transform.position).normalized).normalized;
+            }
+            return averageDirection;
+        }
+
+
+        public Vector3 gobackDir=Vector3.zero;
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.green;
             Gizmos.DrawSphere(movementPosition, 0.5f);
+            Gizmos.color = Color.magenta;
+            Handles.color = Color.magenta;
+            gobackDir[1] = 0;
+            Handles.DrawLine(transform.position, transform.position + gobackDir, 5);
+            //Gizmos.DrawRay(transform.position, gobackDir);
         }
     }
 
     public enum DecisionName
 	{
-        IsBetterPos,
         IsEnemiesTooClose,
-        IsSourounded
+        IsSourounded,
+        IsSafetyAround,
+        IsWallAway
 	}
 
     [Serializable]
@@ -167,6 +217,7 @@ namespace TopShooter
 	{
         public DecisionName nameVal;
         public float currentVal;
+        public float decisionTimeSpan;
         public float maxVal;
         public float minVal;
 	}

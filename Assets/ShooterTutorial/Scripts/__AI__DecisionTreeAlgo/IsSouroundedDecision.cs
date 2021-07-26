@@ -7,7 +7,7 @@ public class IsSouroundedDecision : DT_Decision
 {
     public override DT_IGameTreeNode GetBranch(PlayerAI player)
     {
-        if (IsSourounded(player))
+        if (false)//IsSourounded(player)
         {
             Debug.Log("IsSourounded");
             return TrueNode.MakeDecision(player);

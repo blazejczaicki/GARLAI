@@ -91,7 +91,7 @@ namespace TopShooter
             currentState = State.Idle;
         }
 
-        private void Update()
+        public void OnUpdate()
         {
             if (hasTarget)
             {

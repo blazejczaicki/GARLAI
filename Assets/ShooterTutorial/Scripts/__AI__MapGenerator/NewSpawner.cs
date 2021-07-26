@@ -9,7 +9,8 @@ public class NewSpawner : MonoBehaviour
     [SerializeField] private MapData mapData;
     [SerializeField] private Transform tileSpawnTemplate;
     [SerializeField] private Enemy enemyTemplate;
-    [SerializeField] private int enemiesRemainingToSpawn;
+    [SerializeField] private int enemiesToSpawn=10;
+    private int enemiesRemainingToSpawn;
     private LivingEntity playerEntity;
     private Transform playerT;
 
@@ -19,12 +20,6 @@ public class NewSpawner : MonoBehaviour
     private int enemiesRemainingAlive;
     private float nextSpawnTime;
 
-    float timeBetweenCampingChecks = 2;
-    float campThresholdDistance = 1.5f;
-    float nextCampCheckTime;
-    Vector3 campPositionOld;
-    bool isCamping;
-
     private bool isDisabled;
 
 	public PlayerAI PlayerAI { get => playerAI; set => playerAI = value; }
@@ -33,33 +28,26 @@ public class NewSpawner : MonoBehaviour
 
     private void Start()
     {
+        enemiesRemainingToSpawn = enemiesToSpawn;
         playerEntity = PlayerAI.GetComponent<PlayerShooter>();
         playerT = playerEntity.transform;
 
-        nextCampCheckTime = timeBetweenCampingChecks + Time.time;
-        campPositionOld = playerT.position;
         playerEntity.OnDeath += OnPlayerDeath;
         ResetPlayerPosition();
     }
 
-    void ResetPlayerPosition()
+    private void ResetPlayerPosition()
     {
+        playerAI.CharController.enabled = false;
         PlayerAI.transform.position = mapData.GetMapCenter();
         PlayerAI.CurrentTarget = playerT.position;
+        playerAI.CharController.enabled = true;
     }
 
     private void Update()
     {
         if (!isDisabled)
         {
-            if (Time.time > nextCampCheckTime)
-            {
-                nextCampCheckTime = Time.time + timeBetweenCampingChecks;
-
-                isCamping = (Vector3.Distance(playerT.position, campPositionOld) < campThresholdDistance);
-                campPositionOld = playerT.position;
-            }
-
             if (enemiesRemainingToSpawn > 0 && Time.time > nextSpawnTime)
             {
                 enemiesRemainingToSpawn--;
@@ -95,6 +83,15 @@ public class NewSpawner : MonoBehaviour
         spawnedEnemy.PlayerAI = PlayerAI;
         spawnedEnemy.OnDeath += OnEnemyDeath;
         spawnedEnemy.SetCharacteristics(currentWave.moveSpeed, currentWave.hitsToKillPlayer, currentWave.enemyHealth, currentWave.skinColour);
+    }
+
+    public void ResetSpawnersWorld()
+	{
+        this.StopAllCoroutines();
+        nextSpawnTime = Time.time + currentWave.timeBetweenSpawns;
+        enemiesRemainingToSpawn = enemiesToSpawn;
+        ResetPlayerPosition();
+        playerAI.ResetPlayerWorld();
     }
 
     void OnPlayerDeath()

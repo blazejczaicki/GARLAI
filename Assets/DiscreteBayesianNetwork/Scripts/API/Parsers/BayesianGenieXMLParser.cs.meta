@@ -1,7 +1,14 @@
 fileFormatVersion: 2
-guid: ded18c1e118deb8478a5132c6351c058
+guid: bc2d9b2239c16be4e9ca81ef04cd6418
+labels:
+- Code
+- ArtificialIntelligence
+- AI
+- BayesianNetwork
+- Bayesianet
+timeCreated: 1461150718
+licenseType: Store
 MonoImporter:
-  externalObjects: {}
   serializedVersion: 2
   defaultReferences: []
   executionOrder: 0

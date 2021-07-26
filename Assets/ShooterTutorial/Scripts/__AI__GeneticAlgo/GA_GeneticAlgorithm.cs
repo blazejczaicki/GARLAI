@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TopShooter;
 using UnityEngine;
 
 public class GA_GeneticAlgorithm : MonoBehaviour
 {
+    [SerializeField] private SaverCSV saverCSV;
     private List<GA_Chromosome> chromosomes;
     private int chromosomeNumber = 100;
     private int genesNumber = 5;
@@ -13,19 +15,29 @@ public class GA_GeneticAlgorithm : MonoBehaviour
 
 	public List<GA_Chromosome> Chromosomes { get => chromosomes; set => chromosomes = value; }
 
-	//coœ do zapisu danych do excela np.    
+    //coœ do zapisu danych do excela np.    
+
+    public void Init(List<PlayerAI> players)
+    {
+
+    }
 
     public void InitChromosomes()//to po generacji plansz i graczy
     {
         chromosomes.ForEach(crom => crom.InitChromosome());
 	}
 
+    public void SaveToFile()
+	{
+        saverCSV.WriteToCSV(this);
+    }
+
 	public void UpdateAlgorithm()
     {
         ComputeFitness();
         CalculateFitnessSum();
         AppendBestResult();
-        //SaveToFile();
+        SaveToFile();
         Selection();
         //Crossover();
         TryMutation();
@@ -52,11 +64,6 @@ public class GA_GeneticAlgorithm : MonoBehaviour
         Chromosomes=Chromosomes.OrderBy(c => c.Fitness).ToList();
         bestResult = Chromosomes.First();
     }
-
-    public void SaveToFile() //todo
-	{
-
-	}
      
     public void CalculateAverageResult() //todo
     {
