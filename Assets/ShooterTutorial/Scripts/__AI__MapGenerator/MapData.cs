@@ -123,6 +123,13 @@ public class MapData : MonoBehaviour
         return new Vector3(randomNode.position2d.x,0, randomNode.position2d.y);
     }
 
+    public AstarNode GetRandomNode()
+    {
+        AstarNode randomNode = shuffledTileCoords.Dequeue();
+        shuffledTileCoords.Enqueue(randomNode);
+        return randomNode;
+    }
+
     public Vector2Int ConvertToMapGridPos(Vector3 position)
 	{
         return new Vector2Int((int)(position.x - originPoint.x),(int)(position.z- originPoint.z));

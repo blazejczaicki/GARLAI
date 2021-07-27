@@ -7,7 +7,7 @@ public class IsSouroundedDecision : DT_Decision
 {
     public override DT_IGameTreeNode GetBranch(PlayerAI player)
     {
-        if (false)//IsSourounded(player)
+        if (IsSourounded(player))
         {
             Debug.Log("IsSourounded");
             return TrueNode.MakeDecision(player);
@@ -25,24 +25,30 @@ public class IsSouroundedDecision : DT_Decision
         float startAngle = 0;
         float minSouroundingDistance = player.DataAI.Find(x => x.nameVal == DecisionName.IsSourounded).currentVal;
         var tooCloseEnemies = player.Enemies.FindAll(x => minSouroundingDistance > Vector3.Distance(player.transform.position, x.transform.position));
+        float minAngle = 0;
+        float maxAngle = 90;
+        List<bool> sides = new List<bool>();
         for (int i = 0; i < 4; i++)
-        {
-            startAngle += angleOffset;
-            float minAngle = startAngle - angleOffset*0.5f;
-            float maxAngle = startAngle + angleOffset * 0.5f;
+        {            
             var dirAngleFurstum = Utility.DirectionFromAngle(startAngle);
-
-            Debug.DrawRay(player.transform.position, dirAngleFurstum, Color.green, 4);
-            if (!( tooCloseEnemies.Exists(x=> Vector3.Angle((player.transform.position-x.transform.position).normalized, dirAngleFurstum)>angleOffset*0.5f)))
-            {//IsWall(player, startAngle) ||
-
-                return false;
+            bool iswall = Utility.IsWall(player, dirAngleFurstum, minSouroundingDistance);
+            bool isenemie = false;
+			foreach (var en in tooCloseEnemies)
+			{
+                var dirr = (en.transform.position - player.transform.position).normalized;
+                Debug.DrawRay(player.transform.position, dirr, Color.magenta, 4);
+                dirr[1] = 0;
+                var enAngle = Vector3.SignedAngle(dirAngleFurstum, dirr, Vector3.up);
+                isenemie = enAngle < maxAngle && enAngle>minAngle;
             }
-        }
-        return true;
-    }
-    //private bool IsWall(PlayerAI player, float angle)
-    //{
 
-    //}
+            if (isenemie || iswall)
+            {
+                Debug.DrawRay(player.transform.position, dirAngleFurstum, Color.green, 4);
+                sides.Add(true);
+            }
+            startAngle += angleOffset;
+        }
+        return sides.Count>=3;
+    }
 }
