@@ -11,7 +11,6 @@ namespace TopShooter
     public class PlayerAI : Player
     {
         private DecisionTree decisionTree;
-        private NavMeshAgent pathfinder;
         private PlayerShooter playerShooter;
         private CharacterController characterController;
         private Astar astarPathfinding;
@@ -25,49 +24,35 @@ namespace TopShooter
         [SerializeField] private float radius = 0.1f;
         [SerializeField] private float speed = 10f;
         public float LifeTime { get; set; }
-        public float escapeDistance = 5;
         List<Enemy> enemiesTooClose = new List<Enemy>();
-
-        //[SerializeField] private float moveSpeed = 5;
-        //[SerializeField] private float scaleeTime = 0.2f;
 
         [SerializeField] private Vector3 movementPosition;
         [SerializeField] private MapData mapData;
 
-        [SerializeField] private Vector3 debugTargetPos;
-
-        private float refreshMovementRate = 0.25f;
-
-       
+        [SerializeField] private Vector3 debugTargetPos;       
 
         //AI datas
-        [SerializeField] private float minEnemyDistance=3;
-        [SerializeField] private float minSouroundingDistance=3;
         [SerializeField] private float decisionUpdateTime=0.25f;
-        [SerializeField] private float minimalRetreatDistance=6;
         private float previousUpdateTime = 0;
         [SerializeField] private List<Enemy> enemies;
         [SerializeField] private AreaManager areaManager;
-
+        //retreat
         [SerializeField] private List<DataAI> dataAI;
 
 
         public List<Enemy> Enemies { get => enemies; set => enemies = value; }
-        public float MinEnemyDistance { get => minEnemyDistance; set => minEnemyDistance = value; }
-        public float MinimalRetreatDistance { get => minimalRetreatDistance; set => minimalRetreatDistance = value; }
         public AreaManager AreaManager { get => areaManager; set => areaManager = value; }
-        public float MinSouroundingDistance { get => minSouroundingDistance; set => minSouroundingDistance = value; }
 		public Vector3 CurrentTarget { get => currentTarget; set => currentTarget = value; }
 		public List<DataAI> DataAI { get => dataAI; set => dataAI = value; }
 		public MapData MapData { get => mapData; set => mapData = value; }
 		public CharacterController CharController { get => characterController; set => characterController = value; }
 		public List<Enemy> EnemiesTooClose { get => enemiesTooClose; set => enemiesTooClose = value; }
+		public float DecisionUpdateTime { get => decisionUpdateTime; set => decisionUpdateTime = value; }
 
 		private void Awake()
         {
             chromosome = GetComponent<GA_Chromosome>();
             CharController = GetComponent<CharacterController>();
-            pathfinder = GetComponent<NavMeshAgent>();
             decisionTree = GetComponent<DecisionTree>();
             playerShooter = GetComponent<PlayerShooter>();
 
@@ -101,14 +86,14 @@ namespace TopShooter
 
         public void OnUpdate()
         {
-            UpdateDecisions();
-            MoveOnPath();
-            MoveCR();
-        }
+			UpdateDecisions();
+			MoveOnPath();
+			MoveCR();
+		}
 
         private void UpdateDecisions()
         {
-            if (Time.time-previousUpdateTime>decisionUpdateTime)
+            if (Time.time-previousUpdateTime>DecisionUpdateTime)
             {
                 previousUpdateTime = Time.time;
                 var decisionQueue = decisionTree.MakeDecision(this);
@@ -116,7 +101,8 @@ namespace TopShooter
 				{
                     targetPosition = decisionQueue.Dequeue(); 
 				}
-                StartCoroutine(FindPath());                
+                //StartCoroutine(FindPath());
+                FindPathh();
             }
         }
 
@@ -124,6 +110,16 @@ namespace TopShooter
 		{
             MapData.ResetMapData();
             yield return null;
+			if (gameObject.activeSelf==false)
+			{
+                Debug.Log("xd");
+			}
+            CalculatePath();
+        }
+
+        private void FindPathh()
+		{
+            MapData.ResetMapData();
             CalculatePath();
         }
 
@@ -162,12 +158,6 @@ namespace TopShooter
             CharController.SimpleMove(new Vector3(moveVec.x,0,moveVec.z));
 		}
 
-
-        public void Move()
-        {
-            pathfinder.SetDestination(CurrentTarget);
-        }
-
         public void UpdateCloseEnemies(float minEnemyDistance)
         {
             var count = Enemies.Count;
@@ -204,20 +194,27 @@ namespace TopShooter
         }
     }
 
-    public enum DecisionName
+    public enum VariableName
 	{
-        IsEnemiesTooClose,
-        IsSourounded,
-        IsSafetyAround,
-        IsWallAway
+        EnemiesTooCloseDist,
+        SafetyAroundDist,
+        GoBackEscapeDist,
+        WallBackEscapeDist,
+        SouroundingDist,
+        MinSouroundingDist,
+        SouroundingWallDist,
+        StayTimeUpdate,
+        SafetyTimeUpdate,
+        SouroundingTimeUpdate,
+        RetreatTimeUpdate,
+        WallRetreatTimeUpdate,
 	}
 
     [Serializable]
     public struct DataAI
 	{
-        public DecisionName nameVal;
+        public VariableName nameVal;
         public float currentVal;
-        public float decisionTimeSpan;
         public float maxVal;
         public float minVal;
 	}

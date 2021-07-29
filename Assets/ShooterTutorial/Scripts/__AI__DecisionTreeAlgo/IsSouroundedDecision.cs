@@ -23,7 +23,7 @@ public class IsSouroundedDecision : DT_Decision
     {
         float angleOffset = 90;
         float startAngle = 0;
-        float minSouroundingDistance = player.DataAI.Find(x => x.nameVal == DecisionName.IsSourounded).currentVal;
+        float minSouroundingDistance = player.DataAI.Find(x => x.nameVal == VariableName.MinSouroundingDist).currentVal;
         var tooCloseEnemies = player.Enemies.FindAll(x => minSouroundingDistance > Vector3.Distance(player.transform.position, x.transform.position));
         float minAngle = 0;
         float maxAngle = 90;

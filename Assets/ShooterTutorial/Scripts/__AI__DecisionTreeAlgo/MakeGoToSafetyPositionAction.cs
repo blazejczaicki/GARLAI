@@ -8,7 +8,6 @@ public class MakeGoToSafetyPositionAction : DT_Action
 {
     public override Queue<Vector3> MakeAction(PlayerAI player)
     {
-        List<AstarNode> vecs = new List<AstarNode>();
         Vector3 bestPos = Vector3.zero;
 		for (int i = 0; i < 4; i++)
 		{
@@ -22,7 +21,7 @@ public class MakeGoToSafetyPositionAction : DT_Action
         Debug.Log("Not Safety Act");
         Queue<Vector3> road = new Queue<Vector3>();
         road.Enqueue(bestPos);
-
+        player.DecisionUpdateTime = player.DataAI.Find(x => x.nameVal == VariableName.SafetyTimeUpdate).currentVal;
         //4 strefy kwadratowe i po œrodku ko³owa, wybór odpowiedniej strefy, która ma mniej przeciwników
         return road;
     }

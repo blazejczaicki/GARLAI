@@ -37,7 +37,9 @@ namespace TopShooter
         {
             dead = true;
             OnDeath?.Invoke();
-            Destroy(gameObject);
+            //Destroy(gameObject);
+            StopAllCoroutines();
+            gameObject.SetActive(false);
         }
     }
 }

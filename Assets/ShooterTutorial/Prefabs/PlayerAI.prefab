@@ -189,29 +189,59 @@ MonoBehaviour:
   movementPosition: {x: 0, y: 0, z: 0}
   mapData: {fileID: 0}
   debugTargetPos: {x: 0, y: 0, z: 0}
-  minEnemyDistance: 8.7
-  minSouroundingDistance: 3
   decisionUpdateTime: 2
-  minimalRetreatDistance: 6
   enemies: []
   areaManager: {fileID: 0}
   dataAI:
   - nameVal: 0
     currentVal: 4
-    maxVal: 0
+    maxVal: 20
     minVal: 0
   - nameVal: 1
-    currentVal: 4
-    maxVal: 0
+    currentVal: 2
+    maxVal: 20
     minVal: 0
   - nameVal: 2
-    currentVal: 2
-    maxVal: 0
+    currentVal: 4
+    maxVal: 20
     minVal: 0
   - nameVal: 3
-    currentVal: 2
-    maxVal: 0
+    currentVal: 8
+    maxVal: 20
     minVal: 0
+  - nameVal: 4
+    currentVal: 8
+    maxVal: 20
+    minVal: 0
+  - nameVal: 5
+    currentVal: 4
+    maxVal: 20
+    minVal: 0
+  - nameVal: 6
+    currentVal: 8
+    maxVal: 8
+    minVal: 0
+  - nameVal: 7
+    currentVal: 0.1
+    maxVal: 4
+    minVal: 0.05
+  - nameVal: 8
+    currentVal: 2
+    maxVal: 4
+    minVal: 0.05
+  - nameVal: 9
+    currentVal: 4
+    maxVal: 4
+    minVal: 0.05
+  - nameVal: 10
+    currentVal: 0.1
+    maxVal: 4
+    minVal: 0.05
+  - nameVal: 11
+    currentVal: 2
+    maxVal: 4
+    minVal: 0.05
+  gobackDir: {x: 0, y: 0, z: 0}
 --- !u!114 &1501778884641341349
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -29,6 +29,8 @@ namespace TopShooter
 
 		private GA_GeneticAlgorithm geneticAlgorithm;
 
+		private bool allPlayersDead = false;
+
 		public float SimTime { get => simTime; set => simTime = value; }
 		public float MaxPlayerHealth { get => maxPlayerHealth; set => maxPlayerHealth = value; }
 
@@ -53,14 +55,39 @@ namespace TopShooter
 
 		private void Update()
 		{
-			players.ForEach(x => x.OnUpdate());
-			boards.ForEach(x => x.Enemies.ForEach(e => e.OnUpdate()));
+			UpdatePlayers();
+			UpdateEnemies();
 
-			if (Time.time > nextResetTime)
+			if (allPlayersDead)//Time.time > nextResetTime || 
 			{
-				nextResetTime = Time.time + resetTimeSpan;
+				Debug.Log("MARTWI AGENTSI");
+				//nextResetTime = Time.time + resetTimeSpan;
 				//geneticAlgorithm.UpdateAlgorithm();
 				//ResetWorld();
+			}
+		}
+
+		private void UpdatePlayers()
+		{
+			allPlayersDead = true;
+			foreach (var player in players)
+			{
+				if (player.gameObject.activeSelf)
+				{
+					allPlayersDead = false;
+					player.OnUpdate();
+				}
+			}
+		}
+
+		private void UpdateEnemies()
+		{
+			foreach (var b in boards)
+			{
+				foreach (var en in b.Enemies)
+				{
+					en.OnUpdate();
+				}
 			}
 		}
 

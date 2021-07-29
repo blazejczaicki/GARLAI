@@ -21,7 +21,7 @@ public class IsEnemiesTooCloseDecision : DT_Decision
 
     private bool IsEnemiesTooClose(PlayerAI player)
     {
-        float minEnemyDistance = player.DataAI.Find(x => x.nameVal == DecisionName.IsEnemiesTooClose).currentVal;
+        float minEnemyDistance = player.DataAI.Find(x => x.nameVal == VariableName.EnemiesTooCloseDist).currentVal;
         return player.Enemies.Exists(x=> minEnemyDistance > Vector3.Distance(player.transform.position, x.transform.position));
     }
 }

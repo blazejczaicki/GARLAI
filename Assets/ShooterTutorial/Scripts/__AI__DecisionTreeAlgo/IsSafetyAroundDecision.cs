@@ -21,8 +21,8 @@ public class IsSafetyAroundDecision : DT_Decision
 
     public bool IsSafetyAround(PlayerAI player)
     {
-        float minEnemyDistance = player.DataAI.Find(x => x.nameVal == DecisionName.IsEnemiesTooClose).currentVal;
-        float minEnemyDistanceSafety = player.DataAI.Find(x => x.nameVal == DecisionName.IsSafetyAround).currentVal;
+        float minEnemyDistance = player.DataAI.Find(x => x.nameVal == VariableName.EnemiesTooCloseDist).currentVal;
+        float minEnemyDistanceSafety = player.DataAI.Find(x => x.nameVal == VariableName.SafetyAroundDist).currentVal;
         float min = minEnemyDistance + minEnemyDistanceSafety;
         return player.Enemies.Exists(x => min < Vector3.Distance(player.transform.position, x.transform.position)); 
     }
