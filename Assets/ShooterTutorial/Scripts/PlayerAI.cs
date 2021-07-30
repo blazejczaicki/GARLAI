@@ -48,10 +48,11 @@ namespace TopShooter
 		public CharacterController CharController { get => characterController; set => characterController = value; }
 		public List<Enemy> EnemiesTooClose { get => enemiesTooClose; set => enemiesTooClose = value; }
 		public float DecisionUpdateTime { get => decisionUpdateTime; set => decisionUpdateTime = value; }
+		public GA_Chromosome Chromosome { get => chromosome; set => chromosome = value; }
 
 		private void Awake()
         {
-            chromosome = GetComponent<GA_Chromosome>();
+            Chromosome = GetComponent<GA_Chromosome>();
             CharController = GetComponent<CharacterController>();
             decisionTree = GetComponent<DecisionTree>();
             playerShooter = GetComponent<PlayerShooter>();
@@ -211,7 +212,7 @@ namespace TopShooter
 	}
 
     [Serializable]
-    public struct DataAI
+    public class DataAI
 	{
         public VariableName nameVal;
         public float currentVal;

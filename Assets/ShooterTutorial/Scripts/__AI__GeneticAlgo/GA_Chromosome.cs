@@ -8,7 +8,7 @@ public class GA_Chromosome : MonoBehaviour
     /// <summary>
     /// all decisions of player decision tree, list should the same order, kind nad number decisions for each ai player
     /// </summary>
-    private List<DT_Decision> genes;
+    private List<DataAI> genes;
     private float fitness = 0;
     private float mutationRate = 0.05f;
     private PlayerAI playerAI;
@@ -20,24 +20,30 @@ public class GA_Chromosome : MonoBehaviour
 	private void Awake()
 	{
         playerAI = GetComponent<PlayerAI>();
+        genes = playerAI.DataAI;
 	}
 
 	public void InitChromosome()
     {
         foreach (var gen in genes)
         {
-            gen.InitDecisionValues();
+            CalculateRandomVal(gen);
         }
     }
 
     public void Mutate()
     {
         var index = (int)Random.Range(0, genes.Count-0.01f);
-        genes[index].InitDecisionValues();
+        CalculateRandomVal(genes[index]);
+    }
+
+    private void CalculateRandomVal(DataAI data)
+	{
+        data.currentVal = Random.Range(data.minVal, data.maxVal);
     }
 
     public void CalculateFitness()
     {
-        fitness =(playerAI.GetAverageHealth())/(TopShooter.GameManager.instance.SimTime * TopShooter.GameManager.instance.MaxPlayerHealth);//playerAI.LifeTime *
+        fitness =(playerAI.GetAverageHealth())/(TopShooter.GameManager.instance.RoundTimeSpan * TopShooter.GameManager.instance.MaxPlayerHealth);//playerAI.LifeTime *
     }
 }

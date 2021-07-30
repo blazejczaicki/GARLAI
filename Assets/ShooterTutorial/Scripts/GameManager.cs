@@ -18,10 +18,11 @@ namespace TopShooter
 		[SerializeField] [HideInInspector] private List<PlayerAI> players = new List<PlayerAI>();
 		[SerializeField] [HideInInspector] private List<NewSpawner> spawners = new List<NewSpawner>();
 
-		[SerializeField] private float simTime = 60;
+		[SerializeField] private float simRounds = 60;
+		[SerializeField] private float currentRound = 0;
 		[SerializeField] private float maxPlayerHealth = 20;
 
-		[SerializeField] private float resetTimeSpan = 10;
+		[SerializeField] private float roundTimeSpan = 90;
 		private float nextResetTime = 0;
 
 		[SerializeField] private int width = 3;
@@ -31,8 +32,8 @@ namespace TopShooter
 
 		private bool allPlayersDead = false;
 
-		public float SimTime { get => simTime; set => simTime = value; }
 		public float MaxPlayerHealth { get => maxPlayerHealth; set => maxPlayerHealth = value; }
+		public float RoundTimeSpan { get => roundTimeSpan; set => roundTimeSpan = value; }
 
 		private void Awake()
 		{
@@ -44,13 +45,14 @@ namespace TopShooter
 			{
 				Destroy(gameObject);
 			}
+
+			geneticAlgorithm = GetComponent<GA_GeneticAlgorithm>();
 		}
 
 		private void Start()
 		{
-			nextResetTime = resetTimeSpan;
-			geneticAlgorithm = GetComponent<GA_GeneticAlgorithm>();
-			//geneticAlgorithm.Init(players);
+			nextResetTime = RoundTimeSpan;
+			geneticAlgorithm.Init(players);
 		}
 
 		private void Update()
@@ -61,9 +63,14 @@ namespace TopShooter
 			if (allPlayersDead)//Time.time > nextResetTime || 
 			{
 				Debug.Log("MARTWI AGENTSI");
-				//nextResetTime = Time.time + resetTimeSpan;
-				//geneticAlgorithm.UpdateAlgorithm();
-				//ResetWorld();
+				geneticAlgorithm.UpdateAlgorithm();
+				ResetWorld();
+				currentRound++;
+				if (simRounds==currentRound)
+				{
+					FinishCycle();
+				}
+				nextResetTime = Time.time + RoundTimeSpan;
 			}
 		}
 
@@ -89,6 +96,18 @@ namespace TopShooter
 					en.OnUpdate();
 				}
 			}
+		}
+
+		private void ResetWorld()
+		{
+			boards.ForEach(x => x.ResetMapWorld());
+			spawners.ForEach(x => x.ResetSpawnersWorld());
+			players.ForEach(x => x.Enemies.Clear());
+		}
+
+		private void FinishCycle()
+		{
+			Debug.Log("Koniec");
 		}
 
 		[EasyButtons.Button]
@@ -119,11 +138,6 @@ namespace TopShooter
 			}
 		}
 
-		private void ResetWorld()
-		{
-			boards.ForEach(x => x.ResetMapWorld());
-			spawners.ForEach(x => x.ResetSpawnersWorld());
-			players.ForEach(x => x.Enemies.Clear());
-		}
+
 	}
 }

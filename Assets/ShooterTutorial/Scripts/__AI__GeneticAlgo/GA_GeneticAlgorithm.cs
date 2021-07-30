@@ -19,18 +19,17 @@ public class GA_GeneticAlgorithm : MonoBehaviour
 
     public void Init(List<PlayerAI> players)
     {
-
+        Debug.Log("init ga");
+		foreach (var player in players)
+		{
+            player.Chromosome.InitChromosome();
+		}
     }
 
     public void InitChromosomes()//to po generacji plansz i graczy
     {
         chromosomes.ForEach(crom => crom.InitChromosome());
 	}
-
-    public void SaveToFile()
-	{
-        saverCSV.WriteToCSV(this);
-    }
 
 	public void UpdateAlgorithm()
     {
@@ -64,7 +63,12 @@ public class GA_GeneticAlgorithm : MonoBehaviour
         Chromosomes=Chromosomes.OrderBy(c => c.Fitness).ToList();
         bestResult = Chromosomes.First();
     }
-     
+
+    public void SaveToFile()
+    {
+        saverCSV.WriteToCSV(this);
+    }
+
     public void CalculateAverageResult() //todo
     {
         // i tu zapis
