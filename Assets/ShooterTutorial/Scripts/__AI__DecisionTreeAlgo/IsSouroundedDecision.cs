@@ -9,12 +9,12 @@ public class IsSouroundedDecision : DT_Decision
     {
         if (IsSourounded(player))
         {
-            Debug.Log("IsSourounded");
+            //Debug.Log("IsSourounded");
             return TrueNode.MakeDecision(player);
         }
         else
         {
-            Debug.Log("NOT IsSourounded");
+           // Debug.Log("NOT IsSourounded");
             return FalseNode.MakeDecision(player);
         }
     }
@@ -36,7 +36,7 @@ public class IsSouroundedDecision : DT_Decision
 			foreach (var en in tooCloseEnemies)
 			{
                 var dirr = (en.transform.position - player.transform.position).normalized;
-                Debug.DrawRay(player.transform.position, dirr, Color.magenta, 4);
+               // Debug.DrawRay(player.transform.position, dirr, Color.magenta, 4);
                 dirr[1] = 0;
                 var enAngle = Vector3.SignedAngle(dirAngleFurstum, dirr, Vector3.up);
                 isenemie = enAngle < maxAngle && enAngle>minAngle;
@@ -44,7 +44,7 @@ public class IsSouroundedDecision : DT_Decision
 
             if (isenemie || iswall)
             {
-                Debug.DrawRay(player.transform.position, dirAngleFurstum, Color.green, 4);
+                //Debug.DrawRay(player.transform.position, dirAngleFurstum, Color.green, 4);
                 sides.Add(true);
             }
             startAngle += angleOffset;

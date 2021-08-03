@@ -9,12 +9,12 @@ public class IsSafetyAroundDecision : DT_Decision
     {
         if (IsSafetyAround(player))
         {
-            Debug.Log("IsSafetyAround");
+            //Debug.Log("IsSafetyAround");
             return TrueNode.MakeDecision(player);
         }
         else
         {
-            Debug.Log("NOT isSafetyAround");
+            //Debug.Log("NOT isSafetyAround");
             return FalseNode.MakeDecision(player);
         }
     }

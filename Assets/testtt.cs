@@ -16,7 +16,7 @@ public class testtt : MonoBehaviour
 
     private void Update()
     {
-        Time.timeScale = 0.4f;
+        //Time.timeScale = 0.4f;
         Vector3 moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
         vel = moveInput.normalized * moveSpeed;
     }

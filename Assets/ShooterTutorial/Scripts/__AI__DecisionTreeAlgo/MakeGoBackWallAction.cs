@@ -9,7 +9,7 @@ public class MakeGoBackWallAction : DT_Action
     {
         Vector3 averageDirection = player.GetAverageDirectionByEnemies();
         float escapeDist = player.DataAI.Find(x => x.nameVal == VariableName.WallBackEscapeDist).currentVal;
-        Debug.Log("GoBackWall Act");
+        //Debug.Log("GoBackWall Act");
         //player.gobackDir = averageDirection;
         Vector3 escapePosition = player.transform.position + averageDirection * escapeDist;
         escapePosition = new Vector3(Mathf.Clamp(escapePosition.x, 0 + player.MapData.OriginPoint.x, 19.5f + player.MapData.OriginPoint.x), 0,

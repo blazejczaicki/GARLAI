@@ -18,7 +18,7 @@ public class MakeGoToSafetyPositionAction : DT_Action
             }
 		}
 
-        Debug.Log("Not Safety Act");
+        //Debug.Log("Not Safety Act");
         Queue<Vector3> road = new Queue<Vector3>();
         road.Enqueue(bestPos);
         player.DecisionUpdateTime = player.DataAI.Find(x => x.nameVal == VariableName.SafetyTimeUpdate).currentVal;

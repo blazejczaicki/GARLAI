@@ -42,10 +42,10 @@ public class MakeBreakThroughSouroundingAction : DT_Action
 			}            
             startAngle += angleOffset;
         }
-        Debug.Log("Break act");
+        //Debug.Log("Break act");
         var direction = directions.Aggregate((d1,d2)=> d1.enemies<d2.enemies?d1:d2);
         
-        Debug.DrawRay(player.transform.position, direction.dir*souroundingDistance, Color.yellow, 4);
+        //Debug.DrawRay(player.transform.position, direction.dir*souroundingDistance, Color.yellow, 4);
         var targetPos =player.transform.position +direction.dir * souroundingDistance;
         targetPos = new Vector3(Mathf.Clamp(targetPos.x, 0 + player.MapData.OriginPoint.x, 19.5f + player.MapData.OriginPoint.x), 0,
             Mathf.Clamp(targetPos.z, 0 + player.MapData.OriginPoint.z, 19.5f + player.MapData.OriginPoint.z));

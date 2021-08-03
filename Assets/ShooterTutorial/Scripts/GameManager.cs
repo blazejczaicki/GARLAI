@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TopShooter;
 using UnityEngine;
 namespace TopShooter
@@ -10,6 +11,8 @@ namespace TopShooter
 
 		[SerializeField] private MapData boardTemplate;
 		[SerializeField] private PlayerAI playerAiTemplate;
+
+		[SerializeField] private DataAiUi ui;
 
 		[SerializeField] private Transform boardsParent;
 		[SerializeField] private Transform playersParent;
@@ -51,6 +54,8 @@ namespace TopShooter
 
 		private void Start()
 		{
+			ui.InitDataUI(players.First());
+			ui.SetPlayersRef(players);
 			nextResetTime = RoundTimeSpan;
 			geneticAlgorithm.Init(players);
 		}
@@ -60,7 +65,7 @@ namespace TopShooter
 			UpdatePlayers();
 			UpdateEnemies();
 
-			if (allPlayersDead)//Time.time > nextResetTime || 
+			if (Time.time > nextResetTime ||allPlayersDead)// 
 			{
 				Debug.Log("MARTWI AGENTSI");
 				geneticAlgorithm.UpdateAlgorithm();
@@ -71,6 +76,11 @@ namespace TopShooter
 					FinishCycle();
 				}
 				nextResetTime = Time.time + RoundTimeSpan;
+			}
+
+			if (Input.GetKeyDown(KeyCode.Space))
+			{
+				Time.timeScale = Time.timeScale==1?0:1;
 			}
 		}
 
@@ -102,7 +112,7 @@ namespace TopShooter
 		{
 			boards.ForEach(x => x.ResetMapWorld());
 			spawners.ForEach(x => x.ResetSpawnersWorld());
-			players.ForEach(x => x.Enemies.Clear());
+			players.ForEach(x => x.OnNewGeneration());
 		}
 
 		private void FinishCycle()
@@ -114,6 +124,7 @@ namespace TopShooter
 		private void CreateTestWorld()
 		{
 			boards.Clear();
+			spawners.Clear();
 			players.Clear();
 			for (int i = 0; i < width; i++)
 			{

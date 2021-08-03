@@ -39,6 +39,7 @@ namespace TopShooter
         //retreat
         [SerializeField] private List<DataAI> dataAI;
 
+        public event Action<List<DataAI>> OnPlayerClick;
 
         public List<Enemy> Enemies { get => enemies; set => enemies = value; }
         public AreaManager AreaManager { get => areaManager; set => areaManager = value; }
@@ -70,6 +71,11 @@ namespace TopShooter
         public float GetAverageHealth()
         {
             return playerShooter.HealthOnSeconds;
+        }
+
+        public float GetLifeTime()
+        {
+            return playerShooter.LifeTime;
         }
 
         public void ResetPlayerWorld()
@@ -181,8 +187,18 @@ namespace TopShooter
             return averageDirection;
         }
 
+        public void OnNewGeneration()
+		{
+            Enemies.Clear();
+            playerShooter.OnNewGeneration();
+        }
 
-        public Vector3 gobackDir=Vector3.zero;
+		private void OnMouseDown()
+		{
+            OnPlayerClick(dataAI);
+		}
+
+		public Vector3 gobackDir=Vector3.zero;
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.green;
@@ -193,7 +209,7 @@ namespace TopShooter
             Handles.DrawLine(transform.position, transform.position + gobackDir, 5);
             //Gizmos.DrawRay(transform.position, gobackDir);
         }
-    }
+    }    
 
     public enum VariableName
 	{

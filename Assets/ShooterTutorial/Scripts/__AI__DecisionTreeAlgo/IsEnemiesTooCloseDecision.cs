@@ -9,12 +9,12 @@ public class IsEnemiesTooCloseDecision : DT_Decision
     {
         if (IsEnemiesTooClose(player))
         {
-            Debug.Log("IsClose");
+            //Debug.Log("IsClose");
             return TrueNode.MakeDecision(player);
         }
         else
         {
-            Debug.Log("NOT IsClose");
+            //Debug.Log("NOT IsClose");
             return FalseNode.MakeDecision(player);
         }
     }

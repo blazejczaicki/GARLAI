@@ -19,8 +19,10 @@ namespace TopShooter
         private float dataTime = 1f;
 
         private float healthOnSeconds = 0;
+        private float lifeTime = 0;
 
 		public float HealthOnSeconds { get => healthOnSeconds; set => healthOnSeconds = value; }
+		public float LifeTime { get => lifeTime; set => lifeTime = value; }
 
 		private void Awake()
         {
@@ -39,10 +41,11 @@ namespace TopShooter
             health = startingHealth;
         }
 
-        void OnNewWave(int waveNumber)
+        public void OnNewGeneration()
         {
             health = startingHealth;
-            gunController.EquipGun(waveNumber - 1);
+            LifeTime = 0;
+            stopWatch.Restart();
         }
 
         private void Update()
@@ -54,7 +57,7 @@ namespace TopShooter
             }
 
 
-                Time.timeScale = scaleeTime;
+                //Time.timeScale = scaleeTime;
 
             Vector3 moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
 
@@ -101,7 +104,8 @@ namespace TopShooter
         {
             AudioManager.instance.PlaySound("Player Death", transform.position);
             stopWatch.Stop();
-            UnityEngine.Debug.Log("Tyle przeżył: " + stopWatch.ElapsedMilliseconds);
+            LifeTime = stopWatch.ElapsedMilliseconds;
+            //UnityEngine.Debug.Log("Tyle przeżył: " + stopWatch.ElapsedMilliseconds);
             base.Die();
         }
     }

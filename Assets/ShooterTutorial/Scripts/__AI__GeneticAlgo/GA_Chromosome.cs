@@ -16,11 +16,12 @@ public class GA_Chromosome : MonoBehaviour
 
     public float Fitness { get => fitness; set => fitness = value; }
     public float MutationRate { get => mutationRate; set => mutationRate = value; }
+	public PlayerAI PlayerAI { get => playerAI; set => playerAI = value; }
 
 	private void Awake()
 	{
-        playerAI = GetComponent<PlayerAI>();
-        genes = playerAI.DataAI;
+        PlayerAI = GetComponent<PlayerAI>();
+        genes = PlayerAI.DataAI;
 	}
 
 	public void InitChromosome()
@@ -44,6 +45,6 @@ public class GA_Chromosome : MonoBehaviour
 
     public void CalculateFitness()
     {
-        fitness =(playerAI.GetAverageHealth())/(TopShooter.GameManager.instance.RoundTimeSpan * TopShooter.GameManager.instance.MaxPlayerHealth);//playerAI.LifeTime *
+        fitness =(PlayerAI.GetAverageHealth())/(TopShooter.GameManager.instance.RoundTimeSpan * TopShooter.GameManager.instance.MaxPlayerHealth);//playerAI.LifeTime *
     }
 }

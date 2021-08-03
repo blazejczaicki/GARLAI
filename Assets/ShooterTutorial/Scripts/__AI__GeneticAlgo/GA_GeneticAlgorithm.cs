@@ -14,15 +14,16 @@ public class GA_GeneticAlgorithm : MonoBehaviour
     private GA_Chromosome bestResult;
 
 	public List<GA_Chromosome> Chromosomes { get => chromosomes; set => chromosomes = value; }
+	public GA_Chromosome BestResult { get => bestResult; set => bestResult = value; }
 
-    //coœ do zapisu danych do excela np.    
-
-    public void Init(List<PlayerAI> players)
+	public void Init(List<PlayerAI> players)
     {
+        chromosomes = new List<GA_Chromosome>();
         Debug.Log("init ga");
 		foreach (var player in players)
 		{
             player.Chromosome.InitChromosome();
+            chromosomes.Add(player.Chromosome);
 		}
     }
 
@@ -61,12 +62,15 @@ public class GA_GeneticAlgorithm : MonoBehaviour
     public void AppendBestResult()
     {
         Chromosomes=Chromosomes.OrderBy(c => c.Fitness).ToList();
-        bestResult = Chromosomes.First();
+        BestResult = Chromosomes.First();
     }
 
     public void SaveToFile()
     {
-        saverCSV.WriteToCSV(this);
+		foreach (var crom in chromosomes)
+		{
+            saverCSV.WriteToCSV(this, crom.PlayerAI);
+		}
     }
 
     public void CalculateAverageResult() //todo
