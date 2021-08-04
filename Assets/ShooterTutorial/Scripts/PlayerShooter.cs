@@ -19,9 +19,10 @@ namespace TopShooter
         private float dataTime = 1f;
 
         private float healthOnSeconds = 0;
+        private float seconds = 0;
         private float lifeTime = 0;
 
-		public float HealthOnSeconds { get => healthOnSeconds; set => healthOnSeconds = value; }
+		public float HealthOnSeconds { get => healthOnSeconds/seconds; }
 		public float LifeTime { get => lifeTime; set => lifeTime = value; }
 
 		private void Awake()
@@ -41,6 +42,13 @@ namespace TopShooter
             health = startingHealth;
         }
 
+        public void OnEndGeneration()
+        {
+            var ts = stopWatch.Elapsed;
+            LifeTime = Mathf.Floor(ts.Seconds);
+            StopAllCoroutines();
+        }
+
         public void OnNewGeneration()
         {
             health = startingHealth;
@@ -54,6 +62,7 @@ namespace TopShooter
             {
                 previousUpdateTime = Time.time;
                 healthOnSeconds += health;
+                seconds++;
             }
 
 
@@ -104,7 +113,8 @@ namespace TopShooter
         {
             AudioManager.instance.PlaySound("Player Death", transform.position);
             stopWatch.Stop();
-            LifeTime = stopWatch.ElapsedMilliseconds;
+            var ts = stopWatch.Elapsed;
+            LifeTime = Mathf.Floor(ts.Seconds);
             //UnityEngine.Debug.Log("Tyle przeżył: " + stopWatch.ElapsedMilliseconds);
             base.Die();
         }

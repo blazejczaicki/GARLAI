@@ -7,56 +7,71 @@ using UnityEngine;
 
 public class SaverCSV : MonoBehaviour
 {
-	[SerializeField] private string filename;
+	[SerializeField] private string generationName;
+	[SerializeField] private string bestName;
 	//D:\Unity projekty\_MgrProj\GARLAI\Rezultaty_Pokoleniowe.csv
 
 	private void Awake()
 	{
-		filename = Application.dataPath + "\\Rezultaty_Pokoleniowe.csv";
+		generationName = Application.dataPath + "\\Rezultaty_Pokoleniowe.csv";
+		bestName = Application.dataPath + "\\Rezultaty_TheBests.csv";
 	}
 
-	public void WriteToCSV(GA_GeneticAlgorithm ga, PlayerAI playerAi)
+	public void WriteToCSVGenerations(DataChromosome bestCrom, int generation)
 	{
-		if (!File.Exists(filename))
+		if (!File.Exists(generationName))
 		{
-			CreateFile(playerAi);
-			AppendData(ga, playerAi);
+			CreateFile(bestCrom.chromosome.Genes, generationName);
+			AppendData(bestCrom, generation, generationName);
 		}
 		else
 		{
-			AppendData(ga, playerAi);
+			AppendData(bestCrom, generation, generationName);
 		}		
 	}
 
-	private void CreateFile(PlayerAI playerAi)
+	public void WriteToCSVFinal(DataChromosome bestCrom, int generation)
+	{
+		if (!File.Exists(bestName))
+		{
+			CreateFile(bestCrom.chromosome.Genes, bestName);
+			AppendData(bestCrom, generation, bestName);
+		}
+		else
+		{
+			AppendData(bestCrom, generation, bestName);
+		}
+	}
+
+	private void CreateFile(List<DataAI> data, string filename)
 	{
 		using (StreamWriter tww = File.CreateText(filename))
 		{
 			StringBuilder stringBuilderr = new StringBuilder();
-			stringBuilderr.Append("Player Name,");
-			foreach (var item in playerAi.DataAI)
+			stringBuilderr.Append("Player Name,Generation,");
+			foreach (var item in data)
 			{
 				stringBuilderr.Append(item.nameVal.ToString() + ",");
 			}
-			stringBuilderr.Append("Life Time,Health Points,Fitness");
+			stringBuilderr.Append("Life Time,Average Health,Fitness");
 			tww.WriteLine(stringBuilderr.ToString());
 			stringBuilderr.Clear();
 		}
 	}
 
-	private void AppendData(GA_GeneticAlgorithm ga, PlayerAI playerAi)
+	private void AppendData(DataChromosome dataChromosome, int generation, string filename)
 	{
 		using (StreamWriter tw = File.AppendText(filename))
 		{
 			StringBuilder stringBuilder = new StringBuilder();
-			stringBuilder.Append(playerAi.gameObject.name + ",");
-			foreach (var item in playerAi.DataAI)
+			stringBuilder.Append(dataChromosome.name + "," + generation+",");
+			foreach (var item in dataChromosome.chromosome.Genes)
 			{
 				stringBuilder.Append(item.currentVal.ToString("0.0000", System.Globalization.CultureInfo.InvariantCulture) + ",");
 			}//.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)
-			stringBuilder.Append(playerAi.GetLifeTime().ToString("0.0000", System.Globalization.CultureInfo.InvariantCulture) + ","
-				+ playerAi.GetAverageHealth().ToString("0.0000", System.Globalization.CultureInfo.InvariantCulture) + ","
-				+ ga.BestResult.Fitness.ToString("0.0000", System.Globalization.CultureInfo.InvariantCulture));
+			stringBuilder.Append(dataChromosome.lifeTime.ToString("0.0000", System.Globalization.CultureInfo.InvariantCulture) + ","
+				+ dataChromosome.averageHealth.ToString("0.0000", System.Globalization.CultureInfo.InvariantCulture) + ","
+				+ dataChromosome.fitness.ToString("0.0000", System.Globalization.CultureInfo.InvariantCulture));
 			tw.WriteLine(stringBuilder.ToString());
 		}
 	}

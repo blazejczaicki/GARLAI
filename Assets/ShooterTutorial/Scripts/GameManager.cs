@@ -68,13 +68,14 @@ namespace TopShooter
 			if (Time.time > nextResetTime ||allPlayersDead)// 
 			{
 				Debug.Log("MARTWI AGENTSI");
+				players.ForEach(p => p.OnEndGeneration());
 				geneticAlgorithm.UpdateAlgorithm();
-				ResetWorld();
 				currentRound++;
 				if (simRounds==currentRound)
 				{
 					FinishCycle();
 				}
+				ResetWorld();
 				nextResetTime = Time.time + RoundTimeSpan;
 			}
 
@@ -117,6 +118,8 @@ namespace TopShooter
 
 		private void FinishCycle()
 		{
+			geneticAlgorithm.OnEndSaveTheBest();
+			Time.timeScale = Time.timeScale == 1 ? 0 : 1;
 			Debug.Log("Koniec");
 		}
 
@@ -126,6 +129,7 @@ namespace TopShooter
 			boards.Clear();
 			spawners.Clear();
 			players.Clear();
+			int index = 0;
 			for (int i = 0; i < width; i++)
 			{
 				for (int j = 0; j < height; j++)
@@ -138,10 +142,11 @@ namespace TopShooter
 					newBoard.transform.position = new Vector3(newBoard.OriginPoint.x + newBoard.Width * 0.5f, 0, newBoard.OriginPoint.z + newBoard.Height * 0.5f);
 
 					var newPlayerAI = Instantiate(playerAiTemplate) as PlayerAI;
+					newPlayerAI.gameObject.name = "Player " + index;
 					players.Add(newPlayerAI);
 					newPlayerAI.transform.SetParent(playersParent);
 					newPlayerAI.MapData = newBoard;
-
+					index++;
 					var newSpawner = newBoard.GetComponent<NewSpawner>();
 					newSpawner.PlayerAI = newPlayerAI;
 					spawners.Add(newSpawner);

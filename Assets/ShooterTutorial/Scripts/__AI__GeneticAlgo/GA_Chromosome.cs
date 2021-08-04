@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TopShooter;
 using UnityEngine;
 
-public class GA_Chromosome : MonoBehaviour
+public class GA_Chromosome
 {
     /// <summary>
     /// all decisions of player decision tree, list should the same order, kind nad number decisions for each ai player
@@ -17,16 +17,28 @@ public class GA_Chromosome : MonoBehaviour
     public float Fitness { get => fitness; set => fitness = value; }
     public float MutationRate { get => mutationRate; set => mutationRate = value; }
 	public PlayerAI PlayerAI { get => playerAI; set => playerAI = value; }
+	public List<DataAI> Genes { get => genes; set => genes = value; }
 
-	private void Awake()
+	public GA_Chromosome(PlayerAI player)
 	{
-        PlayerAI = GetComponent<PlayerAI>();
-        genes = PlayerAI.DataAI;
-	}
+        PlayerAI = player;
+        Genes = PlayerAI.DataAI;
+    }
+    
+	public GA_Chromosome(GA_Chromosome crom)
+	{
+        Genes = crom.Genes;
+    }
+
+    public void SetData(PlayerAI player)
+	{
+        PlayerAI = player;
+        playerAI.DataAI = Genes;
+    }
 
 	public void InitChromosome()
     {
-        foreach (var gen in genes)
+        foreach (var gen in Genes)
         {
             CalculateRandomVal(gen);
         }
@@ -34,8 +46,8 @@ public class GA_Chromosome : MonoBehaviour
 
     public void Mutate()
     {
-        var index = (int)Random.Range(0, genes.Count-0.01f);
-        CalculateRandomVal(genes[index]);
+        var index = (int)Random.Range(0, Genes.Count-0.01f);
+        CalculateRandomVal(Genes[index]);
     }
 
     private void CalculateRandomVal(DataAI data)
@@ -45,6 +57,6 @@ public class GA_Chromosome : MonoBehaviour
 
     public void CalculateFitness()
     {
-        fitness =(PlayerAI.GetAverageHealth())/(TopShooter.GameManager.instance.RoundTimeSpan * TopShooter.GameManager.instance.MaxPlayerHealth);//playerAI.LifeTime *
+        fitness =(PlayerAI.GetAverageHealth()*PlayerAI.GetLifeTime())/(TopShooter.GameManager.instance.RoundTimeSpan * TopShooter.GameManager.instance.MaxPlayerHealth);//playerAI.LifeTime *
     }
 }

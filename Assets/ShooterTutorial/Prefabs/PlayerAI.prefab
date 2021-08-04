@@ -48,7 +48,6 @@ GameObject:
   - component: {fileID: 1501778884641341348}
   - component: {fileID: 1501778884641341349}
   - component: {fileID: 1501778884641341357}
-  - component: {fileID: 1501778884641341356}
   m_Layer: 0
   m_Name: PlayerAI
   m_TagString: Player
@@ -272,18 +271,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &1501778884641341356
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1501778884641341350}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2639fc8944decd84683da517f841474b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1501778885190113819
 GameObject:
   m_ObjectHideFlags: 0

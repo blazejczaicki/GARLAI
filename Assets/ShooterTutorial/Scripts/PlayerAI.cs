@@ -14,7 +14,7 @@ namespace TopShooter
         private PlayerShooter playerShooter;
         private CharacterController characterController;
         private Astar astarPathfinding;
-        private GA_Chromosome chromosome;
+        public GA_Chromosome chromosome { get; set; }
 
 
         [SerializeField] private Vector3 targetPosition;
@@ -23,7 +23,6 @@ namespace TopShooter
         [SerializeField] private Vector3 currentTarget;
         [SerializeField] private float radius = 0.1f;
         [SerializeField] private float speed = 10f;
-        public float LifeTime { get; set; }
         List<Enemy> enemiesTooClose = new List<Enemy>();
 
         [SerializeField] private Vector3 movementPosition;
@@ -49,11 +48,10 @@ namespace TopShooter
 		public CharacterController CharController { get => characterController; set => characterController = value; }
 		public List<Enemy> EnemiesTooClose { get => enemiesTooClose; set => enemiesTooClose = value; }
 		public float DecisionUpdateTime { get => decisionUpdateTime; set => decisionUpdateTime = value; }
-		public GA_Chromosome Chromosome { get => chromosome; set => chromosome = value; }
 
 		private void Awake()
         {
-            Chromosome = GetComponent<GA_Chromosome>();
+            chromosome = new GA_Chromosome(this);
             CharController = GetComponent<CharacterController>();
             decisionTree = GetComponent<DecisionTree>();
             playerShooter = GetComponent<PlayerShooter>();
@@ -73,10 +71,20 @@ namespace TopShooter
             return playerShooter.HealthOnSeconds;
         }
 
+        public float GetRestHealth()
+        {
+            return playerShooter.health;
+        }
+
         public float GetLifeTime()
         {
             return playerShooter.LifeTime;
         }
+
+        public void OnEndGeneration()
+		{
+            playerShooter.OnEndGeneration();
+		}
 
         public void ResetPlayerWorld()
 		{
@@ -189,6 +197,7 @@ namespace TopShooter
 
         public void OnNewGeneration()
 		{
+            enemiesTooClose.Clear();
             Enemies.Clear();
             playerShooter.OnNewGeneration();
         }

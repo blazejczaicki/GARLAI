@@ -8,22 +8,25 @@ public class GA_GeneticAlgorithm : MonoBehaviour
 {
     [SerializeField] private SaverCSV saverCSV;
     private List<GA_Chromosome> chromosomes;
+    private List<PlayerAI> players;
     private int chromosomeNumber = 100;
     private int genesNumber = 5;
     private float fitnessSum = 0;
-    private GA_Chromosome bestResult;
+    private DataChromosome bestResult;
+    private int generation = 0;
 
 	public List<GA_Chromosome> Chromosomes { get => chromosomes; set => chromosomes = value; }
-	public GA_Chromosome BestResult { get => bestResult; set => bestResult = value; }
+	public int Generation { get => generation; }
 
 	public void Init(List<PlayerAI> players)
     {
+        this.players = players;
         chromosomes = new List<GA_Chromosome>();
         Debug.Log("init ga");
 		foreach (var player in players)
 		{
-            player.Chromosome.InitChromosome();
-            chromosomes.Add(player.Chromosome);
+            player.chromosome.InitChromosome();
+            chromosomes.Add(player.chromosome);
 		}
     }
 
@@ -32,7 +35,7 @@ public class GA_GeneticAlgorithm : MonoBehaviour
         chromosomes.ForEach(crom => crom.InitChromosome());
 	}
 
-	public void UpdateAlgorithm()
+	public void UpdateAlgorithm() //not referencje w kolejnych iteracjach chromosomy
     {
         ComputeFitness();
         CalculateFitnessSum();
@@ -41,6 +44,8 @@ public class GA_GeneticAlgorithm : MonoBehaviour
         Selection();
         //Crossover();
         TryMutation();
+        generation++;
+        fitnessSum = 0;
     }
 
     public void ComputeFitness()
@@ -61,15 +66,18 @@ public class GA_GeneticAlgorithm : MonoBehaviour
 
     public void AppendBestResult()
     {
-        Chromosomes=Chromosomes.OrderBy(c => c.Fitness).ToList();
-        BestResult = Chromosomes.First();
+        Chromosomes=Chromosomes.OrderByDescending(c => c.Fitness).ToList();
+        var cromBest = Chromosomes.First();
+        bestResult = new DataChromosome(cromBest, cromBest.PlayerAI.name, cromBest.PlayerAI.GetAverageHealth(),
+            cromBest.PlayerAI.GetLifeTime(), cromBest.Fitness);
     }
 
     public void SaveToFile()
     {
 		foreach (var crom in chromosomes)
 		{
-            saverCSV.WriteToCSV(this, crom.PlayerAI);
+            saverCSV.WriteToCSVGenerations(new DataChromosome(crom, crom.PlayerAI.name, crom.PlayerAI.GetAverageHealth(),
+            crom.PlayerAI.GetLifeTime(), crom.Fitness), generation);
 		}
     }
 
@@ -85,6 +93,11 @@ public class GA_GeneticAlgorithm : MonoBehaviour
         {
             newChromosomes.Add(SelectParent());
         }
+		for (int i = 0; i < newChromosomes.Count; i++)
+		{
+            players[i].chromosome = newChromosomes[i];
+            newChromosomes[i].SetData(players[i]);
+		}
         Chromosomes = newChromosomes;
     }
 
@@ -98,7 +111,7 @@ public class GA_GeneticAlgorithm : MonoBehaviour
             runningSum += Chromosomes[i].Fitness;
             if (runningSum>=rand)
             {
-                return Chromosomes[i];
+                return new GA_Chromosome(Chromosomes[i]);
             }
         }
         return null;
@@ -123,6 +136,11 @@ public class GA_GeneticAlgorithm : MonoBehaviour
         }
     }
 
+    public void OnEndSaveTheBest()
+	{
+        saverCSV.WriteToCSVFinal(bestResult, generation-1);
+	}
+
     public void TerminateGA() //todo
     {
 
@@ -132,4 +150,22 @@ public class GA_GeneticAlgorithm : MonoBehaviour
     {
 
     }
+}
+
+public struct DataChromosome
+{
+    public GA_Chromosome chromosome;
+    public string name;
+    public float averageHealth;
+    public float lifeTime;
+    public float fitness;
+
+	public DataChromosome(GA_Chromosome chromosome, string name, float averageHealth, float lifeTime, float fitness)
+	{
+		this.chromosome = chromosome;
+		this.name = name;
+		this.averageHealth = averageHealth;
+		this.lifeTime = lifeTime;
+		this.fitness = fitness;
+	}
 }
