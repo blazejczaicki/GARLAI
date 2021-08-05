@@ -8,7 +8,7 @@ using UnityEngine.AI;
 
 namespace TopShooter
 {
-    public class PlayerAI : Player
+    public class PlayerAI : MonoBehaviour
     {
         private DecisionTree decisionTree;
         private PlayerShooter playerShooter;
@@ -25,28 +25,23 @@ namespace TopShooter
         [SerializeField] private float speed = 10f;
         List<Enemy> enemiesTooClose = new List<Enemy>();
 
-        [SerializeField] private Vector3 movementPosition;
         [SerializeField] private MapData mapData;
-
-        [SerializeField] private Vector3 debugTargetPos;       
+    
 
         //AI datas
         [SerializeField] private float decisionUpdateTime=0.25f;
         private float previousUpdateTime = 0;
         [SerializeField] private List<Enemy> enemies;
-        [SerializeField] private AreaManager areaManager;
         //retreat
         [SerializeField] private List<DataAI> dataAI;
 
         public event Action<List<DataAI>> OnPlayerClick;
 
         public List<Enemy> Enemies { get => enemies; set => enemies = value; }
-        public AreaManager AreaManager { get => areaManager; set => areaManager = value; }
 		public Vector3 CurrentTarget { get => currentTarget; set => currentTarget = value; }
 		public List<DataAI> DataAI { get => dataAI; set => dataAI = value; }
 		public MapData MapData { get => mapData; set => mapData = value; }
 		public CharacterController CharController { get => characterController; set => characterController = value; }
-		public List<Enemy> EnemiesTooClose { get => enemiesTooClose; set => enemiesTooClose = value; }
 		public float DecisionUpdateTime { get => decisionUpdateTime; set => decisionUpdateTime = value; }
 
 		private void Awake()
@@ -59,11 +54,6 @@ namespace TopShooter
             astarPathfinding = new Astar();
             Enemies = new List<Enemy>();
             decisionTree.CreateWalkModeTree();
-        }
-
-        private void Start()
-        {
-            movementPosition = transform.position;
         }
 
         public float GetAverageHealth()
@@ -92,9 +82,12 @@ namespace TopShooter
             targetPosition = transform.position;
             previousUpdateTime = Time.time;
             path.Clear();
-            for (int i = 0; i < astarNodes.Count; i++)
+            if (mapData.DebugMode)
             {
-                astarNodes[i].debugTile.sharedMaterial.color = Color.black;
+                for (int i = 0; i < astarNodes.Count; i++)
+                {
+                    astarNodes[i].debugTile.sharedMaterial.color = Color.black;
+                }
             }
             astarNodes.Clear();
         }
@@ -142,9 +135,12 @@ namespace TopShooter
         private void CalculatePath()
         {
             path.Clear();
-			for (int i = 0; i < astarNodes.Count; i++)
+			if (mapData.DebugMode)
 			{
-                astarNodes[i].debugTile.sharedMaterial.color = Color.black;
+			    for (int i = 0; i < astarNodes.Count; i++)
+			    {
+                    astarNodes[i].debugTile.sharedMaterial.color = Color.black;
+			    }
 			}
             astarNodes = astarPathfinding.FindPath(MapData.ConvertToMapGridPos(transform.position), MapData.ConvertToMapGridPos(targetPosition), MapData.AstarNodesMap, MapData);
             astarNodes.ForEach(x => path.Enqueue(x.position3d));
@@ -153,10 +149,13 @@ namespace TopShooter
                 CurrentTarget = path.Dequeue();
                 CurrentTarget = path.Dequeue();
 			}
-            for (int i = 0; i < astarNodes.Count; i++)
-            {
-                astarNodes[i].debugTile.sharedMaterial.color = Color.yellow;
-            }
+			if (mapData.DebugMode)
+			{
+                for (int i = 0; i < astarNodes.Count; i++)
+                {
+                    astarNodes[i].debugTile.sharedMaterial.color = Color.yellow;
+                }
+			}
         }
 
         private void MoveOnPath() //wykonuje ruch po œcie¿ce
@@ -200,6 +199,7 @@ namespace TopShooter
             enemiesTooClose.Clear();
             Enemies.Clear();
             playerShooter.OnNewGeneration();
+            gameObject.SetActive(true);
         }
 
 		private void OnMouseDown()
@@ -211,7 +211,6 @@ namespace TopShooter
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.green;
-            Gizmos.DrawSphere(movementPosition, 0.5f);
             Gizmos.color = Color.magenta;
             Handles.color = Color.magenta;
             gobackDir[1] = 0;

@@ -48,7 +48,7 @@ public class AstarNode
         f = g + h+ enemyInfluence;
     }
 
-    public void UpdateEnemyInfluence(List<Enemy> enemies, float influenceRadiusSqr, float scaler, float unitval, int enemiesCount, int booster=10)
+    public void UpdateEnemyInfluence(List<Enemy> enemies, float influenceRadiusSqr, float scaler, float unitval, int enemiesCount, bool debugMode, int booster=10)
 	{
         enemyInfluence = 0;
 		for (int i = 0; i < enemiesCount; i++)
@@ -60,8 +60,12 @@ public class AstarNode
   //          Debug.Log("xd");
 		//}
         enemyInfluence *= booster;
+        enemyInfluence *= enemyInfluence;
         float max = unitval * enemiesCount*booster;
-        debugTile.sharedMaterial.color =(debugTile.sharedMaterial.color==Color.yellow)? Color.yellow: new Color(enemyInfluence / max, 0, 0);
+        if (debugMode)
+        {
+            debugTile.sharedMaterial.color =(debugTile.sharedMaterial.color==Color.yellow)? Color.yellow: new Color(enemyInfluence / max, 0, 0);
+        }
 	}
 
     public void SetNeighbours(List<List<AstarNode>> astarNodes, MapData mapData)

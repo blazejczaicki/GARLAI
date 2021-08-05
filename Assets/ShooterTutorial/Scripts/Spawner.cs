@@ -48,8 +48,8 @@ namespace TopShooter
 
         private void Update()
         {
-            if (!isDisabled)
-            {
+            //if (!isDisabled)
+            //{
                 if (Time.time > nextCampCheckTime)
                 {
                     nextCampCheckTime = Time.time + timeBetweenCampingChecks;
@@ -78,7 +78,7 @@ namespace TopShooter
                         NextWave();
                     }
                 }
-            }
+            //}
         }
 
         IEnumerator SpawnEnemy()

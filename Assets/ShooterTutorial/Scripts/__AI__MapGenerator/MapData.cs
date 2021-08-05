@@ -17,15 +17,17 @@ public class MapData : MonoBehaviour
     private Queue<AstarNode> defaultShuffledTileCoords;
     private Queue<AstarNode> shuffledTileCoords;
 
-
+    [Header("debug height tiles")]
     [SerializeField] private Transform debugTileTemplate;
     [SerializeField] private Transform debugTileParent;
+    [SerializeField] private bool debugMode = false;
 
     public List<List<AstarNode>> AstarNodesMap { get => astarNodesMap; set => astarNodesMap = value; }
     public Vector3 OriginPoint { get => originPoint; set => originPoint = value; }
 	public int Height { get => height; set => height = value; }
 	public int Width { get => width; set => width = value; }
 	public List<Enemy> Enemies { get => enemies; set => enemies = value; }
+	public bool DebugMode { get => debugMode;}
 
 	private void Awake()
 	{
@@ -58,6 +60,10 @@ public class MapData : MonoBehaviour
                 astarNodesMap[i][j].debugTile = debugTile.GetComponent<MeshRenderer>();
                 astarNodesMap[i][j].debugTile.sharedMaterial = new Material(astarNodesMap[i][j].debugTile.sharedMaterial);
                 astarNodesMap[i][j].debugTile.sharedMaterial.color = Color.black;
+				if (!DebugMode)
+				{
+                    astarNodesMap[i][j].debugTile.gameObject.SetActive(false);
+                }
                 offsetPos.x += 1;
             }
             offsetPos.y += 1;
@@ -87,7 +93,7 @@ public class MapData : MonoBehaviour
         {
             for (int j = 0; j < Height; j++)
             {
-                astarNodesMap[i][j].UpdateEnemyInfluence(enemies, sqrRad, scaler, unitInfluenceLimit, enemies.Count);
+                astarNodesMap[i][j].UpdateEnemyInfluence(enemies, sqrRad, scaler, unitInfluenceLimit, enemies.Count, debugMode);
             }
         }
     }

@@ -46,8 +46,8 @@ public class NewSpawner : MonoBehaviour
 
     private void Update()
     {
-        if (!isDisabled)
-        {
+        //if (!isDisabled)
+        //{
             if (enemiesRemainingToSpawn > 0 && Time.time > nextSpawnTime)
             {
                 enemiesRemainingToSpawn--;
@@ -55,7 +55,7 @@ public class NewSpawner : MonoBehaviour
 
                 StartCoroutine(SpawnEnemy());
             }
-        }
+        //}
     }
 
     IEnumerator SpawnEnemy()

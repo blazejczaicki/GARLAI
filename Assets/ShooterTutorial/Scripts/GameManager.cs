@@ -12,6 +12,8 @@ namespace TopShooter
 		[SerializeField] private MapData boardTemplate;
 		[SerializeField] private PlayerAI playerAiTemplate;
 
+		[SerializeField] private Material mat;
+
 		[SerializeField] private DataAiUi ui;
 
 		[SerializeField] private Transform boardsParent;
@@ -152,8 +154,41 @@ namespace TopShooter
 					spawners.Add(newSpawner);
 				}
 			}
+			foreach (var bo in boards)
+			{
+				CombineMeshTiles(bo.transform);
+			}
 		}
 
+		public void CombineMeshTiles(Transform board)
+		{
+			var tiles = board.GetChild(0);
+			var oldPos = tiles.transform.position;
+			tiles.transform.position=Vector3.zero;
+			MeshFilter[] meshFilters = tiles.GetComponentsInChildren<MeshFilter>();
+			CombineInstance[] combine = new CombineInstance[meshFilters.Length];
 
+			int i = 0;
+			while (i < meshFilters.Length)
+			{
+				combine[i].mesh = meshFilters[i].sharedMesh;
+				combine[i].transform = meshFilters[i].transform.localToWorldMatrix;
+				meshFilters[i].gameObject.SetActive(false);
+				DestroyImmediate(meshFilters[i].gameObject);
+				i++;
+			}
+			for (int j = 0; j < 10; j++)
+			{
+				foreach (Transform tile in tiles)
+				{
+					DestroyImmediate(tile.gameObject);
+				}
+			}
+			tiles.transform.position = oldPos;
+			tiles.gameObject.AddComponent<MeshRenderer>().sharedMaterial=mat;
+			tiles.gameObject.AddComponent<MeshFilter>().sharedMesh = new Mesh();
+			tiles.GetComponent<MeshFilter>().sharedMesh.CombineMeshes(combine);
+			tiles.gameObject.SetActive(true);
+		}
 	}
 }
