@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using Unity.Profiling;
 using UnityEngine.AI;
 
 namespace TopShooter
@@ -11,10 +12,12 @@ namespace TopShooter
     public class PlayerAI : MonoBehaviour
     {
         private DecisionTree decisionTree;
+        private BayesNet bayesianNet;
         private PlayerShooter playerShooter;
         private CharacterController characterController;
         private Astar astarPathfinding;
         public GA_Chromosome chromosome { get; set; }
+        [SerializeField] private bool isBayesian = false;
 
 
         [SerializeField] private Vector3 targetPosition;
@@ -44,16 +47,21 @@ namespace TopShooter
 		public CharacterController CharController { get => characterController; set => characterController = value; }
 		public float DecisionUpdateTime { get => decisionUpdateTime; set => decisionUpdateTime = value; }
 
-		private void Awake()
+        static readonly ProfilerMarker s_PreparePerfMarker = new ProfilerMarker("MySystem.Prepare");
+        private void Awake()
         {
             chromosome = new GA_Chromosome(this);
             CharController = GetComponent<CharacterController>();
             decisionTree = GetComponent<DecisionTree>();
             playerShooter = GetComponent<PlayerShooter>();
+            bayesianNet = GetComponent<BayesNet>();
 
             astarPathfinding = new Astar();
             Enemies = new List<Enemy>();
-            decisionTree.CreateWalkModeTree();
+			if (!isBayesian)
+			{
+                decisionTree.CreateWalkModeTree();
+			}
         }
 
         public float GetAverageHealth()
@@ -104,13 +112,26 @@ namespace TopShooter
             if (Time.time-previousUpdateTime>DecisionUpdateTime)
             {
                 previousUpdateTime = Time.time;
-                var decisionQueue = decisionTree.MakeDecision(this);
-				if (decisionQueue.Count>0)
-				{
-                    targetPosition = decisionQueue.Dequeue(); 
-				}
+                if (isBayesian)
+                {
+                    var decisionQueue = bayesianNet.InferNet(this);
+                    if (decisionQueue.Count > 0)
+                    {
+                        targetPosition = decisionQueue.Dequeue();
+                    }
+                }
+                else
+                {
+                    var decisionQueue = decisionTree.MakeDecision(this);
+                    if (decisionQueue.Count > 0)
+                    {
+                        targetPosition = decisionQueue.Dequeue();
+                    }
+                }
                 //StartCoroutine(FindPath());
+                s_PreparePerfMarker.Begin();
                 FindPathh();
+                s_PreparePerfMarker.End();
             }
         }
 

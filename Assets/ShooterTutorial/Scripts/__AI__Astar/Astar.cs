@@ -9,10 +9,10 @@ public class Astar
 
     public List<AstarNode> FindPath(Vector2Int startPos, Vector2Int endPos, List<List<AstarNode>> astarNodes, MapData mapData)
     {
-		if (startPos.x>=20|| startPos.x < 0 || startPos.y >= 20 || startPos.y < 0 || endPos.x >= 20 || endPos.x < 0|| endPos.y >= 20 || endPos.x < 0)
-		{
-            Debug.Log("xd");
-		}
+		//if (startPos.x>=20|| startPos.x < 0 || startPos.y >= 20 || startPos.y < 0 || endPos.x >= 20 || endPos.x < 0|| endPos.y >= 20 || endPos.x < 0)
+		//{
+  //          Debug.Log("xd");
+		//}
 
         AstarNode start =astarNodes[startPos.y][startPos.x];
         AstarNode end = astarNodes[endPos.y][endPos.x];

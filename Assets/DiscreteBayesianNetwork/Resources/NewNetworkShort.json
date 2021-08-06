@@ -1,0 +1,29 @@
+{
+  "nodes": [{
+    "name": "enemy_distance",
+    "domain": ["Near", "Far"],
+    "parents": [],
+    "values": [0.5, 0.5]
+  }, {
+    "name": "enemy_amount",
+    "domain": ["Underwhelm", "Overwhelm"],
+    "parents": [],
+    "values": [0.5, 0.5]
+  }, {
+    "name": "run_away",
+    "domain": ["True", "False"],
+    "parents": ["enemy_amount", "enemy_distance"],
+    "values": [0.7, 0.3, 
+    	0.1, 0.9, 
+    	0.9, 0.1, 
+    	0.6, 0.4]
+  }, {
+    "name": "go_random",
+    "domain": ["True", "False"],
+    "parents": ["enemy_amount", "run_away"],
+    "values": [0.01, 0.99, 
+    	0.7, 0.3, 
+    	0.01, 0.99, 
+    	0.8, 0.2]
+  }]
+}

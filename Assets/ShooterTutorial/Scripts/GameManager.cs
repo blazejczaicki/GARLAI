@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TopShooter;
 using UnityEngine;
+using Jackyjjc.Bayesianet;
 namespace TopShooter
 {
 	public class GameManager : MonoBehaviour
@@ -11,6 +12,7 @@ namespace TopShooter
 
 		[SerializeField] private MapData boardTemplate;
 		[SerializeField] private PlayerAI playerAiTemplate;
+		[SerializeField] private PlayerAI BayesianplayerAiTemplate;
 
 		[SerializeField] private Material mat;
 
@@ -32,6 +34,11 @@ namespace TopShooter
 
 		[SerializeField] private int width = 3;
 		[SerializeField] private int height = 3;
+
+		[Header("Bayesian")]
+		[SerializeField] private bool isBayes = false;
+
+
 
 		private GA_GeneticAlgorithm geneticAlgorithm;
 
@@ -56,31 +63,45 @@ namespace TopShooter
 
 		private void Start()
 		{
-			ui.InitDataUI(players.First());
-			ui.SetPlayersRef(players);
-			nextResetTime = RoundTimeSpan;
-			geneticAlgorithm.Init(players);
+			if (isBayes)
+			{
+			}
+			else
+			{
+				ui.InitDataUI(players.First());
+				ui.SetPlayersRef(players);
+				nextResetTime = RoundTimeSpan;
+				geneticAlgorithm.Init(players);
+			}
 		}
+
 
 		private void Update()
 		{
-			UpdatePlayers();
-			UpdateEnemies();
-
-			if (Time.time > nextResetTime ||allPlayersDead)// 
+			if (isBayes)
 			{
-				Debug.Log("MARTWI AGENTSI");
-				players.ForEach(p => p.OnEndGeneration());
-				geneticAlgorithm.UpdateAlgorithm();
-				currentRound++;
-				if (simRounds==currentRound)
-				{
-					FinishCycle();
-				}
-				ResetWorld();
-				nextResetTime = Time.time + RoundTimeSpan;
+				UpdatePlayers();
+				UpdateEnemies();
 			}
+			else
+			{
+				UpdatePlayers();
+				UpdateEnemies();
 
+				if (Time.time > nextResetTime || allPlayersDead)// 
+				{
+					Debug.Log("MARTWI AGENTSI");
+					players.ForEach(p => p.OnEndGeneration());
+					geneticAlgorithm.UpdateAlgorithm();
+					currentRound++;
+					if (simRounds == currentRound)
+					{
+						FinishCycle();
+					}
+					ResetWorld();
+					nextResetTime = Time.time + RoundTimeSpan;
+				}
+			}
 			if (Input.GetKeyDown(KeyCode.Space))
 			{
 				Time.timeScale = Time.timeScale==1?0:1;
@@ -132,6 +153,8 @@ namespace TopShooter
 			spawners.Clear();
 			players.Clear();
 			int index = 0;
+
+			PlayerAI templatePlayer = isBayes ? BayesianplayerAiTemplate : playerAiTemplate;
 			for (int i = 0; i < width; i++)
 			{
 				for (int j = 0; j < height; j++)
@@ -143,7 +166,7 @@ namespace TopShooter
 																		   //newBoard.CreateBoardContent(new Vector3(j*25,0,i*25));
 					newBoard.transform.position = new Vector3(newBoard.OriginPoint.x + newBoard.Width * 0.5f, 0, newBoard.OriginPoint.z + newBoard.Height * 0.5f);
 
-					var newPlayerAI = Instantiate(playerAiTemplate) as PlayerAI;
+					var newPlayerAI = Instantiate(templatePlayer) as PlayerAI;
 					newPlayerAI.gameObject.name = "Player " + index;
 					players.Add(newPlayerAI);
 					newPlayerAI.transform.SetParent(playersParent);
