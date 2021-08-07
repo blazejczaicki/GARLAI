@@ -21,7 +21,7 @@ public class SaverCSV : MonoBehaviour
 	{
 		if (!File.Exists(generationName))
 		{
-			CreateFile(bestCrom.chromosome.Genes, generationName);
+			CreateFile(bestCrom.chromosome.PlayerAI.DataAI, generationName);
 			AppendData(bestCrom, generation, generationName);
 		}
 		else
@@ -34,7 +34,7 @@ public class SaverCSV : MonoBehaviour
 	{
 		if (!File.Exists(bestName))
 		{
-			CreateFile(bestCrom.chromosome.Genes, bestName);
+			CreateFile(bestCrom.chromosome.PlayerAI.DataAI, bestName);
 			AppendData(bestCrom, generation, bestName);
 		}
 		else
@@ -65,7 +65,7 @@ public class SaverCSV : MonoBehaviour
 		{
 			StringBuilder stringBuilder = new StringBuilder();
 			stringBuilder.Append(dataChromosome.name + "," + generation+",");
-			foreach (var item in dataChromosome.chromosome.Genes)
+			foreach (var item in dataChromosome.chromosome.PlayerAI.DataAI)
 			{
 				stringBuilder.Append(item.currentVal.ToString("0.0000", System.Globalization.CultureInfo.InvariantCulture) + ",");
 			}//.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)

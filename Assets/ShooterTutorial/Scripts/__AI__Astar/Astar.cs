@@ -34,20 +34,21 @@ public class Astar
             openList.Remove(currentNode);
             closedList.Add(currentNode);
             var neighbours = currentNode.neighbours;
-            foreach (var neighbourNode in neighbours)
+            int count = neighbours.Count;
+			for (int i = 0; i < count; i++)
             {
-                if (closedList.Exists((x) => x.position2d == neighbourNode.position2d) != true && neighbourNode.isMoveable)
+                if (closedList.Exists((x) => x.position2d == neighbours[i].position2d) != true && neighbours[i].isMoveable)
                 {
-                    int tentativeG = currentNode.g + DistanceCost(currentNode, neighbourNode);
-                    if (tentativeG < neighbourNode.g)
+                    int tentativeG = currentNode.g + DistanceCost(currentNode, neighbours[i]);
+                    if (tentativeG < neighbours[i].g)
                     {
-                        neighbourNode.previousNode = currentNode;
-                        neighbourNode.g = tentativeG;
-                        neighbourNode.h = DistanceCost(neighbourNode, end);
-                        neighbourNode.CalculateF();
-                        if (openList.Exists((x) => x.position2d == neighbourNode.position2d) != true)
+                        neighbours[i].previousNode = currentNode;
+                        neighbours[i].g = tentativeG;
+                        neighbours[i].h = DistanceCost(neighbours[i], end);
+                        neighbours[i].CalculateF();
+                        if (openList.Exists((x) => x.position2d == neighbours[i].position2d) != true)
                         {
-                            openList.Add(neighbourNode);
+                            openList.Add(neighbours[i]);
                         }
                     }
                 }
@@ -59,11 +60,12 @@ public class Astar
     private AstarNode GetLowestF(List<AstarNode> nodes)
     {
         AstarNode lowestFNode = nodes[0];
-        foreach (var node in nodes)
+        int count= nodes.Count;
+		for (int i = 0; i < count; i++)
         {
-            if (node.f < lowestFNode.f)
+            if (nodes[i].f < lowestFNode.f)
             {
-                lowestFNode = node;
+                lowestFNode = nodes[i];
             }
         }
         return lowestFNode;

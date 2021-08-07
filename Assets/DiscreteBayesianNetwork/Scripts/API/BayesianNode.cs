@@ -18,6 +18,9 @@ namespace Jackyjjc.Bayesianet
         internal List<BayesianNode> children;
         private CPT cpt;
 
+        private List<BayesianNode> parents;
+        public double[] values { get; set; }
+
         /// <summary>
         /// Construct a node
         /// </summary>
@@ -27,6 +30,11 @@ namespace Jackyjjc.Bayesianet
         /// <param name="parents">the parent nodes</param>
         public BayesianNode(string name, string[] domain, double[] values, params BayesianNode[] parents)
         {
+            this.values = new double[values.Length];
+            values.CopyTo(this.values, 0);
+            this.parents = new List<BayesianNode>();
+            parents.ToList().ForEach(x => this.parents.Add(x));
+
             this.var = new RandomVariable(name, domain);
             this.children = new List<BayesianNode>();
             foreach (BayesianNode p in parents)
@@ -43,6 +51,27 @@ namespace Jackyjjc.Bayesianet
             int numberOfValues = vars.Aggregate<RandomVariable, int>(1, (acc, next) => acc * next.tokens.Length);
             if (numberOfValues != values.Length) {
                 throw new ArgumentException ("The expect number of values for node " + name + " is " + numberOfValues + 
+                    ". The actual number of value given is " + values.Length);
+            }
+
+            this.cpt = new CPT(vars, values);
+        }
+
+        public void ResetNode(double[] values)
+        {
+            this.values = new double[values.Length];
+            values.CopyTo(this.values, 0);
+
+            RandomVariable[] vars = this.parents
+                .Select<BayesianNode, RandomVariable>(p => p.var)
+                .Concat(new RandomVariable[] { this.var })
+                .ToArray();
+
+            // Validating the node configuration
+            int numberOfValues = vars.Aggregate<RandomVariable, int>(1, (acc, next) => acc * next.tokens.Length);
+            if (numberOfValues != values.Length)
+            {
+                throw new ArgumentException("The expect number of values for node  is " + numberOfValues +
                     ". The actual number of value given is " + values.Length);
             }
 

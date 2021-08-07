@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using EasyButtons;
 using UnityEngine;
 using TopShooter;
+using System.Linq;
 
 public class BayesNet : MonoBehaviour
 {
@@ -26,6 +27,11 @@ public class BayesNet : MonoBehaviour
 		observationEnemiesDistance = new ObservationEnemiesDistance();
 		actionRunAway = new ActionRunAway();
 		actionGoRandom = new ActionGoRandom();
+	}
+
+	public List<BayesianNode> GetNodes()
+	{
+		return ve.GetNetwork().GetNodes().ToList();
 	}
 
 	[EasyButtons.Button]

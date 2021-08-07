@@ -46,19 +46,29 @@ namespace TopShooter
 		public MapData MapData { get => mapData; set => mapData = value; }
 		public CharacterController CharController { get => characterController; set => characterController = value; }
 		public float DecisionUpdateTime { get => decisionUpdateTime; set => decisionUpdateTime = value; }
+		public bool IsBayesian { get => isBayesian; set => isBayesian = value; }
+		public BayesNet BayesianNet { get => bayesianNet; set => bayesianNet = value; }
 
-        static readonly ProfilerMarker s_PreparePerfMarker = new ProfilerMarker("MySystem.Prepare");
+		static readonly ProfilerMarker s_PreparePerfMarker = new ProfilerMarker("MySystem.Prepare");
         private void Awake()
         {
-            chromosome = new GA_Chromosome(this);
+			if (IsBayesian)
+			{
+                chromosome = new GA_BayesChromosome(this);
+            }
+			else
+			{
+                chromosome = new GA_DT_Chromosome(this);
+			}
+
             CharController = GetComponent<CharacterController>();
             decisionTree = GetComponent<DecisionTree>();
             playerShooter = GetComponent<PlayerShooter>();
-            bayesianNet = GetComponent<BayesNet>();
+            BayesianNet = GetComponent<BayesNet>();
 
             astarPathfinding = new Astar();
             Enemies = new List<Enemy>();
-			if (!isBayesian)
+			if (!IsBayesian)
 			{
                 decisionTree.CreateWalkModeTree();
 			}
@@ -112,9 +122,9 @@ namespace TopShooter
             if (Time.time-previousUpdateTime>DecisionUpdateTime)
             {
                 previousUpdateTime = Time.time;
-                if (isBayesian)
+                if (IsBayesian)
                 {
-                    var decisionQueue = bayesianNet.InferNet(this);
+                    var decisionQueue = BayesianNet.InferNet(this);
                     if (decisionQueue.Count > 0)
                     {
                         targetPosition = decisionQueue.Dequeue();

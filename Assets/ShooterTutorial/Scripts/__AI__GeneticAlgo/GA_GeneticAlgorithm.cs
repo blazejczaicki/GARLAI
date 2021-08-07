@@ -81,11 +81,6 @@ public class GA_GeneticAlgorithm : MonoBehaviour
 		}
     }
 
-    public void CalculateAverageResult() //todo
-    {
-        // i tu zapis
-    }
-
     public void Selection()
     {
         List<GA_Chromosome> newChromosomes = new List<GA_Chromosome>();
@@ -93,7 +88,7 @@ public class GA_GeneticAlgorithm : MonoBehaviour
         {
             newChromosomes.Add(SelectParent());
         }
-		for (int i = 0; i < newChromosomes.Count; i++)
+		for (int i = 0; i < newChromosomes.Count; i++)//update playera 
 		{
             players[i].chromosome = newChromosomes[i];
             newChromosomes[i].SetData(players[i]);
@@ -111,7 +106,14 @@ public class GA_GeneticAlgorithm : MonoBehaviour
             runningSum += Chromosomes[i].Fitness;
             if (runningSum>=rand)
             {
-                return new GA_Chromosome(Chromosomes[i]);
+				if (Chromosomes[i].PlayerAI.IsBayesian)// update tylko genow
+				{
+                    return new GA_BayesChromosome(Chromosomes[i] as GA_BayesChromosome);
+                }
+				else
+				{
+                    return new GA_DT_Chromosome(Chromosomes[i]);
+				}
             }
         }
         return null;
@@ -140,16 +142,6 @@ public class GA_GeneticAlgorithm : MonoBehaviour
 	{
         saverCSV.WriteToCSVFinal(bestResult, generation-1);
 	}
-
-    public void TerminateGA() //todo
-    {
-
-
-    }
-    public void ResetGA() //todo
-    {
-
-    }
 }
 
 public struct DataChromosome
