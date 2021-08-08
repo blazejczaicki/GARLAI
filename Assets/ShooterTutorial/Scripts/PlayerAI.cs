@@ -112,6 +112,7 @@ namespace TopShooter
 
         public void OnUpdate()
         {
+            playerShooter.OnUpdate(Time.time);
 			UpdateDecisions();
 			MoveOnPath();
 			MoveCR();
@@ -273,5 +274,13 @@ namespace TopShooter
         public float currentVal;
         public float maxVal;
         public float minVal;
+
+		public DataAI(DataAI dataAI)
+		{
+			this.nameVal = dataAI.nameVal;
+			this.currentVal = dataAI.currentVal;
+			this.maxVal = dataAI.maxVal;
+			this.minVal = dataAI.minVal;
+		}
 	}
 }

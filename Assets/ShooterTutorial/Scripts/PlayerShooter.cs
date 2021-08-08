@@ -63,9 +63,9 @@ namespace TopShooter
             //stopWatch.Restart();
         }
 
-        private void Update()
+        public void OnUpdate(float time)
         {
-            if (Time.time - previousUpdateTime > dataTime)
+            if (time - previousUpdateTime > dataTime)
             {
                 previousUpdateTime = Time.time;
                 healthOnSeconds += health;

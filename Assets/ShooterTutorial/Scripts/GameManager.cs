@@ -85,6 +85,7 @@ namespace TopShooter
 			}
 			else
 			{
+				//tu ifa ¿e koniec
 				UpdatePlayers();
 				UpdateEnemies();
 

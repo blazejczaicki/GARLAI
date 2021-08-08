@@ -7,12 +7,13 @@ using Jackyjjc.Bayesianet;
 public class GA_BayesChromosome : GA_Chromosome
 {
     public List<double[]> bayesianGenes { get; set; }
+    public List<BayesianNode> nodes { get; set; }
 
 
 	public GA_BayesChromosome(PlayerAI player) : base(player)
 	{
         bayesianGenes = new List<double[]>();
-        var nodes = player.BayesianNet.GetNodes();
+        nodes = player.BayesianNet.GetNodes();
         foreach (var n in nodes)
         {
             bayesianGenes.Add(n.values);
@@ -21,17 +22,23 @@ public class GA_BayesChromosome : GA_Chromosome
 
 	public GA_BayesChromosome(GA_BayesChromosome crom):base(crom)
 	{
-	    
-	}
+        bayesianGenes = new List<double[]>();
+		foreach (var valArray in crom.bayesianGenes)
+		{
+            double[] arr = new double[valArray.Length];
+            valArray.CopyTo(arr,0);
+            bayesianGenes.Add(arr);
+		}
+    }
 
     public override void SetData(PlayerAI player)
     {
         base.SetData(player);
-        var nodes = player.BayesianNet.GetNodes();
+        nodes = player.BayesianNet.GetNodes();
 		for (int i = 0; i < nodes.Count; i++)
 		{
-
-		}
+            nodes[i].ResetNode(bayesianGenes[i]);
+        }
     }
 
     public override void InitChromosome()
@@ -40,9 +47,10 @@ public class GA_BayesChromosome : GA_Chromosome
         {
             CalculateRandomVal(gen);
         }
-        foreach (var gen in bayesianGenes)
+        for (int i = 0; i < nodes.Count; i++)
         {
-            CalculateRandomValBayesian(gen);
+            CalculateRandomValBayesian(bayesianGenes[i]);
+            //nodes[i].ResetNode(bayesianGenes[i]);
         }
     }
 
@@ -50,10 +58,18 @@ public class GA_BayesChromosome : GA_Chromosome
     {
         var index = (int)Random.Range(0, Genes.Count - 0.01f);
         CalculateRandomVal(Genes[index]);
+        var bayesIndex= (int)Random.Range(0, bayesianGenes.Count - 0.01f);
+        CalculateRandomValBayesian(bayesianGenes[bayesIndex]);
+        //nodes[bayesIndex].ResetNode(bayesianGenes[bayesIndex]);
     }
 
     private void CalculateRandomValBayesian(double[] values)
     {
-
+		for (int i = 0; i < values.Length; i+=2)
+		{
+            var newProbality= Random.Range(0.01f, 0.99f);
+            values[i] = newProbality;
+            values[i+1] = 1-newProbality;
+        }
     }
 }

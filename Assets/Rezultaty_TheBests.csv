@@ -1,2 +1,2 @@
-Player Name,Generation,EnemiesTooCloseDist,SafetyAroundDist,GoBackEscapeDist,WallBackEscapeDist,SouroundingDist,MinSouroundingDist,SouroundingWallDist,StayTimeUpdate,SafetyTimeUpdate,SouroundingTimeUpdate,RetreatTimeUpdate,WallRetreatTimeUpdate,Life Time,Average Health,Fitness
-Player 19,0,12.5918,7.4745,14.1725,0.6245,17.0607,17.7585,4.6818,2.5492,1.5003,1.3438,0.2962,1.2378,29.0000,20.0000,0.9667
+Player Name;Generation;EnemiesTooCloseDist;SafetyAroundDist;GoBackEscapeDist;WallBackEscapeDist;SouroundingDist;MinSouroundingDist;SouroundingWallDist;StayTimeUpdate;SafetyTimeUpdate;SouroundingTimeUpdate;RetreatTimeUpdate;WallRetreatTimeUpdate;Life Time;Average Health;Fitness
+Player 0;7;10,50072;19,92539;2,06075;1,899939;7,691432;19,55932;1,074407;1,656304;1,065077;0,1475322;0,5611296;2,488952;9;10;0,9

@@ -6,7 +6,7 @@ using UnityEngine;
 public abstract class GA_Chromosome
 {
     protected float fitness = 0;
-    protected float mutationRate = 0.05f;
+    protected float mutationRate = 0.4f;
     protected PlayerAI playerAI;
     protected List<DataAI> genes;
 
@@ -26,7 +26,9 @@ public abstract class GA_Chromosome
 
     public GA_Chromosome(GA_Chromosome crom)
     {
-        Genes = crom.Genes;
+        Genes = new List<DataAI>();
+        crom.Genes.ForEach(x => Genes.Add(new DataAI(x)));
+        //Genes = crom.Genes;
     }
 
     public virtual void SetData(PlayerAI player)

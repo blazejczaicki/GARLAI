@@ -48,12 +48,12 @@ public class SaverCSV : MonoBehaviour
 		using (StreamWriter tww = File.CreateText(filename))
 		{
 			StringBuilder stringBuilderr = new StringBuilder();
-			stringBuilderr.Append("Player Name,Generation,");
+			stringBuilderr.Append("Player Name;Generation;");
 			foreach (var item in data)
 			{
-				stringBuilderr.Append(item.nameVal.ToString() + ",");
+				stringBuilderr.Append(item.nameVal.ToString() + ";");
 			}
-			stringBuilderr.Append("Life Time,Average Health,Fitness");
+			stringBuilderr.Append("Life Time;Average Health;Fitness");
 			tww.WriteLine(stringBuilderr.ToString());
 			stringBuilderr.Clear();
 		}
@@ -64,14 +64,14 @@ public class SaverCSV : MonoBehaviour
 		using (StreamWriter tw = File.AppendText(filename))
 		{
 			StringBuilder stringBuilder = new StringBuilder();
-			stringBuilder.Append(dataChromosome.name + "," + generation+",");
+			stringBuilder.Append(dataChromosome.name + ";" + generation+";");
 			foreach (var item in dataChromosome.chromosome.PlayerAI.DataAI)
 			{
-				stringBuilder.Append(item.currentVal.ToString("0.0000", System.Globalization.CultureInfo.InvariantCulture) + ",");
+				stringBuilder.Append(item.currentVal+ ";");
 			}//.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)
-			stringBuilder.Append(dataChromosome.lifeTime.ToString("0.0000", System.Globalization.CultureInfo.InvariantCulture) + ","
-				+ dataChromosome.averageHealth.ToString("0.0000", System.Globalization.CultureInfo.InvariantCulture) + ","
-				+ dataChromosome.fitness.ToString("0.0000", System.Globalization.CultureInfo.InvariantCulture));
+			stringBuilder.Append(dataChromosome.lifeTime + ";"
+				+ dataChromosome.averageHealth + ";"
+				+ dataChromosome.fitness);
 			tw.WriteLine(stringBuilder.ToString());
 		}
 	}

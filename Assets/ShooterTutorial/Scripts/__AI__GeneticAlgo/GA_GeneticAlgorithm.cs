@@ -44,6 +44,14 @@ public class GA_GeneticAlgorithm : MonoBehaviour
         Selection();
         //Crossover();
         TryMutation();
+
+        //tu set data
+        for (int i = 0; i < Chromosomes.Count; i++)//update playera 
+        {
+            players[i].chromosome = Chromosomes[i];
+            Chromosomes[i].SetData(players[i]);
+        }
+
         generation++;
         fitnessSum = 0;
     }
@@ -88,11 +96,6 @@ public class GA_GeneticAlgorithm : MonoBehaviour
         {
             newChromosomes.Add(SelectParent());
         }
-		for (int i = 0; i < newChromosomes.Count; i++)//update playera 
-		{
-            players[i].chromosome = newChromosomes[i];
-            newChromosomes[i].SetData(players[i]);
-		}
         Chromosomes = newChromosomes;
     }
 
