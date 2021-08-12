@@ -6,7 +6,8 @@ using UnityEngine;
 
 public class MakeBreakThroughSouroundingAction : DT_Action
 {
-    public override Queue<Vector3> MakeAction(PlayerAI player)
+    private string actName = "BreakThrough";
+    public override Queue<Vector3> MakeAction(PlayerAI player, ref string actName)
     {
         float angleOffset = 45;
         float startAngle = 0;
@@ -19,7 +20,7 @@ public class MakeBreakThroughSouroundingAction : DT_Action
         List<Directions> directions = new List<Directions>();
         for (int i = 0; i < 8; i++)
         {
-            var dirAngleFurstum = Utility.DirectionFromAngle(startAngle);
+            var dirAngleFurstum = Utility.DirectionFromAngle(startAngle).normalized;
             bool iswall = Utility.IsWall(player, dirAngleFurstum, souroundingWallDist);
             int enemies = 0;
             if (!iswall)
@@ -43,6 +44,10 @@ public class MakeBreakThroughSouroundingAction : DT_Action
             startAngle += angleOffset;
         }
         //Debug.Log("Break act");
+        if (directions.Count == 0)
+		{
+            Debug.Log("XD");
+        }
         var direction = directions.Aggregate((d1,d2)=> d1.enemies<d2.enemies?d1:d2);
         
         //Debug.DrawRay(player.transform.position, direction.dir*souroundingDistance, Color.yellow, 4);
@@ -51,7 +56,7 @@ public class MakeBreakThroughSouroundingAction : DT_Action
             Mathf.Clamp(targetPos.z, 0 + player.MapData.OriginPoint.z, 19.5f + player.MapData.OriginPoint.z));
         Queue<Vector3> road = new Queue<Vector3>();
         road.Enqueue(targetPos);
-
+        actName = this.actName;
         player.DecisionUpdateTime = player.DataAI.Find(x => x.nameVal == VariableName.SouroundingTimeUpdate).currentVal;
         return road;
     }

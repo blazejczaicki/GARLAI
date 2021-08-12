@@ -94,7 +94,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3fa99c2cc55b6d4680046824513dc07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingHealth: 20
+  startingHealth: 10
   moveSpeed: 5
   scaleeTime: 1
 --- !u!114 &1501778884641341347
@@ -128,16 +128,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d866f0261f0d5e846a2bb57980f82d6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isBayesian: 0
   targetPosition: {x: 0, y: 0, z: 0}
   currentTarget: {x: 0, y: 0, z: 0}
   radius: 0.1
   speed: 4
-  movementPosition: {x: 0, y: 0, z: 0}
   mapData: {fileID: 0}
-  debugTargetPos: {x: 0, y: 0, z: 0}
   decisionUpdateTime: 2
   enemies: []
-  areaManager: {fileID: 0}
   dataAI:
   - nameVal: 0
     currentVal: 4
@@ -187,6 +185,7 @@ MonoBehaviour:
     currentVal: 2
     maxVal: 4
     minVal: 0.05
+  actionName: 
   gobackDir: {x: 0, y: 0, z: 0}
 --- !u!114 &1501778884641341349
 MonoBehaviour:

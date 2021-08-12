@@ -48,6 +48,9 @@ namespace TopShooter
 		public float DecisionUpdateTime { get => decisionUpdateTime; set => decisionUpdateTime = value; }
 		public bool IsBayesian { get => isBayesian; set => isBayesian = value; }
 		public BayesNet BayesianNet { get => bayesianNet; set => bayesianNet = value; }
+		public PlayerShooter PlayerShooter { get => playerShooter; set => playerShooter = value; }
+
+		public string actionName;
 
 		static readonly ProfilerMarker s_PreparePerfMarker = new ProfilerMarker("MySystem.Prepare");
         private void Awake()
@@ -63,7 +66,7 @@ namespace TopShooter
 
             CharController = GetComponent<CharacterController>();
             decisionTree = GetComponent<DecisionTree>();
-            playerShooter = GetComponent<PlayerShooter>();
+            PlayerShooter = GetComponent<PlayerShooter>();
             BayesianNet = GetComponent<BayesNet>();
 
             astarPathfinding = new Astar();
@@ -76,22 +79,22 @@ namespace TopShooter
 
         public float GetAverageHealth()
         {
-            return playerShooter.HealthOnSeconds;
+            return PlayerShooter.HealthOnSeconds;
         }
 
         public float GetRestHealth()
         {
-            return playerShooter.health;
+            return PlayerShooter.health;
         }
 
         public float GetLifeTime()
         {
-            return playerShooter.LifeTime;
+            return PlayerShooter.LifeTime;
         }
 
         public void OnEndGeneration()
 		{
-            playerShooter.OnEndGeneration();
+            PlayerShooter.OnEndGeneration();
 		}
 
         public void ResetPlayerWorld()
@@ -110,9 +113,9 @@ namespace TopShooter
             astarNodes.Clear();
         }
 
-        public void OnUpdate()
+        public void OnUpdate(float t)
         {
-            playerShooter.OnUpdate(Time.time);
+            PlayerShooter.OnUpdate(t);
 			UpdateDecisions();
 			MoveOnPath();
 			MoveCR();
@@ -133,7 +136,7 @@ namespace TopShooter
                 }
                 else
                 {
-                    var decisionQueue = decisionTree.MakeDecision(this);
+                    var decisionQueue = decisionTree.MakeDecision(this, ref actionName);
                     if (decisionQueue.Count > 0)
                     {
                         targetPosition = decisionQueue.Dequeue();
@@ -174,7 +177,7 @@ namespace TopShooter
                     astarNodes[i].debugTile.sharedMaterial.color = Color.black;
 			    }
 			}
-            astarNodes = astarPathfinding.FindPath(MapData.ConvertToMapGridPos(transform.position), MapData.ConvertToMapGridPos(targetPosition), MapData.AstarNodesMap, MapData);
+            astarNodes = astarPathfinding.FindPath(MapData.ConvertToMapGridPos(transform.position), MapData.ConvertToMapGridPos(targetPosition), MapData.AstarNodesMap, MapData, actionName);
             astarNodes.ForEach(x => path.Enqueue(x.position3d));
 			if (path.Count>1)
 			{
@@ -226,11 +229,11 @@ namespace TopShooter
             return averageDirection;
         }
 
-        public void OnNewGeneration()
+        public void OnNewGeneration(float t)
 		{
             enemiesTooClose.Clear();
             Enemies.Clear();
-            playerShooter.OnNewGeneration();
+            PlayerShooter.OnNewGeneration(t);
             gameObject.SetActive(true);
         }
 

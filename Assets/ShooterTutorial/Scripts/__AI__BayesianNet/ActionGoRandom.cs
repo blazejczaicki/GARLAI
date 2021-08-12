@@ -13,7 +13,7 @@ public class ActionGoRandom
 			var randomNode = player.MapData.GetRandomNode();
 			if (randomNode.enemyInfluence <= player.MapData.GetRandomNode().enemyInfluence)
 			{
-				bestPos = new Vector3(randomNode.position2d.x, 0, randomNode.position2d.y);
+				bestPos = new Vector3(randomNode.position2d.x, 0, randomNode.position2d.y);//uwaga na konwersjê
 			}
 		}
 		Queue<Vector3> road = new Queue<Vector3>();

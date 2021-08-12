@@ -6,18 +6,25 @@ using UnityEngine;
 
 public class MakeGoToSafetyPositionAction : DT_Action
 {
-    public override Queue<Vector3> MakeAction(PlayerAI player)
+    private string actName = "GoSafety";
+    public override Queue<Vector3> MakeAction(PlayerAI player, ref string actName)
     {
         Vector3 bestPos = Vector3.zero;
+        float enemyInfluence = float.MaxValue;
 		for (int i = 0; i < 4; i++)
 		{
             var randomNode = player.MapData.GetRandomNode();
-			if (randomNode.enemyInfluence <= player.MapData.GetRandomNode().enemyInfluence)
+			if (randomNode.enemyInfluence <=enemyInfluence)
 			{
                 bestPos = new Vector3(randomNode.position2d.x, 0, randomNode.position2d.y);
+                enemyInfluence = randomNode.enemyInfluence;
             }
 		}
-
+		if (bestPos==Vector3.zero)
+		{
+                Debug.Log("Not Safety Act");
+        }
+        actName = this.actName;
         //Debug.Log("Not Safety Act");
         Queue<Vector3> road = new Queue<Vector3>();
         road.Enqueue(bestPos);

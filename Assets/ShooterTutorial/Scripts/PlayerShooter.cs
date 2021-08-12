@@ -53,13 +53,19 @@ namespace TopShooter
             StopAllCoroutines();
         }
 
-        public void OnNewGeneration()
+        public void OnStart(float time)
+        {
+           previousUpdateTime = time;
+        }
+
+        public void OnNewGeneration(float time)
         {
             health = startingHealth;
+            dead = false;
             LifeTime = 0;
             seconds = 0;
             healthOnSeconds = 0;
-            previousUpdateTime = Time.time;
+            previousUpdateTime = time;
             //stopWatch.Restart();
         }
 
@@ -67,7 +73,7 @@ namespace TopShooter
         {
             if (time - previousUpdateTime > dataTime)
             {
-                previousUpdateTime = Time.time;
+                previousUpdateTime = time;
                 healthOnSeconds += health;
                 seconds++;
             }    

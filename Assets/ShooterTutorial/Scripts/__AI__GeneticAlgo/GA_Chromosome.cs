@@ -6,13 +6,11 @@ using UnityEngine;
 public abstract class GA_Chromosome
 {
     protected float fitness = 0;
-    protected float mutationRate = 0.4f;
     protected PlayerAI playerAI;
     protected List<DataAI> genes;
 
     public List<DataAI> Genes { get => genes; set => genes = value; }
     public float Fitness { get => fitness; set => fitness = value; }
-    public float MutationRate { get => mutationRate; set => mutationRate = value; }
 	public PlayerAI PlayerAI { get => playerAI; set => playerAI = value; }
 
     public GA_Chromosome()
@@ -40,6 +38,8 @@ public abstract class GA_Chromosome
     public abstract void InitChromosome();
 
     public abstract void Mutate();
+
+    public abstract void Crossover(GA_Chromosome otherCrom);
 
     public void CalculateRandomVal(DataAI data)
     {

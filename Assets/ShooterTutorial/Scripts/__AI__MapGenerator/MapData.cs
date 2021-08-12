@@ -138,6 +138,11 @@ public class MapData : MonoBehaviour
 
     public Vector2Int ConvertToMapGridPos(Vector3 position)
 	{
-        return new Vector2Int((int)(position.x - originPoint.x),(int)(position.z- originPoint.z));
+        var converted = new Vector2Int((int)(position.x - originPoint.x), (int)(position.z - originPoint.z));
+		if (converted.x>19||converted.y>19||converted.x<0||converted.y<0)
+		{
+            Debug.Log("XD");
+		}
+        return converted;
 	}
 }

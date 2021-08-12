@@ -7,13 +7,14 @@ public class Astar
     private List<AstarNode> openList;
     private List<AstarNode> closedList;
 
-    public List<AstarNode> FindPath(Vector2Int startPos, Vector2Int endPos, List<List<AstarNode>> astarNodes, MapData mapData)
+    public List<AstarNode> FindPath(Vector2Int startPos, Vector2Int endPos, List<List<AstarNode>> astarNodes, MapData mapData, string actName)
     {
-		//if (startPos.x>=20|| startPos.x < 0 || startPos.y >= 20 || startPos.y < 0 || endPos.x >= 20 || endPos.x < 0|| endPos.y >= 20 || endPos.x < 0)
-		//{
-  //          Debug.Log("xd");
-		//}
-
+		if (startPos.x >= 20 || startPos.x < 0 || startPos.y >= 20 || startPos.y < 0 || endPos.x >= 20 || endPos.x < 0 || endPos.y >= 20 || endPos.y < 0)
+		{
+			Debug.Log("xd");
+            Debug.Log(actName);
+        }
+		
         AstarNode start =astarNodes[startPos.y][startPos.x];
         AstarNode end = astarNodes[endPos.y][endPos.x];
 

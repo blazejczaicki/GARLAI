@@ -6,5 +6,5 @@ using UnityEngine;
 public interface DT_IGameTreeNode 
 {
     DT_IGameTreeNode MakeDecision(PlayerAI player);
-    Queue<Vector3> MakeAction(PlayerAI player);
+    Queue<Vector3> MakeAction(PlayerAI player, ref string actName);
 }

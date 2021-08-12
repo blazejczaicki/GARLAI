@@ -7,6 +7,10 @@ using UnityEngine;
 public class GA_GeneticAlgorithm : MonoBehaviour
 {
     [SerializeField] private SaverCSV saverCSV;
+
+    [SerializeField] private float crossoverRate = 0.4f;
+    [SerializeField] private float mutationRate = 0.05f;
+
     private List<GA_Chromosome> chromosomes;
     private List<PlayerAI> players;
     private int chromosomeNumber = 100;
@@ -42,7 +46,7 @@ public class GA_GeneticAlgorithm : MonoBehaviour
         AppendBestResult();
         SaveToFile();
         Selection();
-        //Crossover();
+        Crossover();
         TryMutation();
 
         //tu set data
@@ -122,11 +126,14 @@ public class GA_GeneticAlgorithm : MonoBehaviour
         return null;
     }
 
-    public void Crossover() //todo
+    public void Crossover() 
     {
         foreach (var crom in Chromosomes)
         {
-
+            if (Random.Range(0, 1) < crossoverRate)
+            {
+                crom.Crossover(Chromosomes[(int)Random.Range(0, Chromosomes.Count)]);
+            }
         }
     }
 
@@ -134,7 +141,7 @@ public class GA_GeneticAlgorithm : MonoBehaviour
     {
         foreach (var chrom in Chromosomes)
         {
-            if (Random.Range(0,1)<chrom.MutationRate)
+            if (Random.Range(0,1)<mutationRate)
             {
                 chrom.Mutate();
             }

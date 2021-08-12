@@ -31,6 +31,7 @@ public class GA_BayesChromosome : GA_Chromosome
 		}
     }
 
+
     public override void SetData(PlayerAI player)
     {
         base.SetData(player);
@@ -51,6 +52,21 @@ public class GA_BayesChromosome : GA_Chromosome
         {
             CalculateRandomValBayesian(bayesianGenes[i]);
             //nodes[i].ResetNode(bayesianGenes[i]);
+        }
+    }
+
+    public override void Crossover(GA_Chromosome otherCrom)
+    {
+        GA_BayesChromosome otherBayesCrom = otherCrom as GA_BayesChromosome;
+        int crossoverPoint = Random.Range(0, bayesianGenes.Count);
+		for (int i = crossoverPoint; i < bayesianGenes.Count; i++)
+		{
+            var tmpGen = new double[bayesianGenes[i].Length];
+            var tmpGenOther = new double[bayesianGenes[i].Length];
+            bayesianGenes[i].CopyTo(tmpGen, 0);
+            otherBayesCrom.bayesianGenes[i].CopyTo(tmpGenOther,0);
+            bayesianGenes[i] = tmpGenOther;
+            otherBayesCrom.bayesianGenes[i] = tmpGen;
         }
     }
 

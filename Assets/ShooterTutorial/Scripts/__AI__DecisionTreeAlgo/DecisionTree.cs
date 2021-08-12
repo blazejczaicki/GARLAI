@@ -39,9 +39,9 @@ public class DecisionTree : MonoBehaviour
         isCornerDecision.FalseNode =makeGoBackWallAct;
     }
 
-    public Queue<Vector3> MakeDecision(PlayerAI player)
+    public Queue<Vector3> MakeDecision(PlayerAI player, ref string actName)
     {
         DT_IGameTreeNode actionNode = root.MakeDecision(player);
-        return actionNode.MakeAction(player);
+        return actionNode.MakeAction(player, ref actName);
     }
 }

@@ -38,7 +38,7 @@ namespace TopShooter
 		[Header("Bayesian")]
 		[SerializeField] private bool isBayes = false;
 
-
+		private float previousUpdateTime = 0;
 
 		private GA_GeneticAlgorithm geneticAlgorithm;
 
@@ -70,8 +70,14 @@ namespace TopShooter
 			{
 				ui.InitDataUI(players.First());
 				ui.SetPlayersRef(players);
-				nextResetTime = RoundTimeSpan;
 				geneticAlgorithm.Init(players);
+				var t = Time.time;
+				//nextResetTime = RoundTimeSpan;
+				previousUpdateTime = t;
+				foreach (var player in players)
+				{
+						player.PlayerShooter.OnStart(t);
+				}
 			}
 		}
 
@@ -89,7 +95,8 @@ namespace TopShooter
 				UpdatePlayers();
 				UpdateEnemies();
 
-				if (Time.time > nextResetTime || allPlayersDead)// 
+				//if (Time.time > nextResetTime || allPlayersDead)// 
+				if (Time.time - previousUpdateTime > RoundTimeSpan)
 				{
 					Debug.Log("MARTWI AGENTSI");
 					players.ForEach(p => p.OnEndGeneration());
@@ -100,7 +107,8 @@ namespace TopShooter
 						FinishCycle();
 					}
 					ResetWorld();
-					nextResetTime = Time.time + RoundTimeSpan;
+					previousUpdateTime = Time.time;
+					//nextResetTime = Time.time + RoundTimeSpan;
 				}
 			}
 			if (Input.GetKeyDown(KeyCode.Space))
@@ -112,12 +120,13 @@ namespace TopShooter
 		private void UpdatePlayers()
 		{
 			allPlayersDead = true;
+			float t = Time.time;
 			foreach (var player in players)
 			{
 				if (player.gameObject.activeSelf)
 				{
 					allPlayersDead = false;
-					player.OnUpdate();
+					player.OnUpdate(t);
 				}
 			}
 		}
@@ -137,7 +146,8 @@ namespace TopShooter
 		{
 			boards.ForEach(x => x.ResetMapWorld());
 			spawners.ForEach(x => x.ResetSpawnersWorld());
-			players.ForEach(x => x.OnNewGeneration());
+			float t = Time.time;
+			players.ForEach(x => x.OnNewGeneration(t));
 		}
 
 		private void FinishCycle()
