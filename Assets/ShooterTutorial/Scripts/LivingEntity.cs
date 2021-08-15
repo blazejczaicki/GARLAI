@@ -8,9 +8,11 @@ namespace TopShooter
     {
         public float startingHealth;
         public float health { get; protected set; }
-        protected bool dead;
+		public bool Dead { get => dead; }
 
-        public event System.Action OnDeath;
+		protected bool dead;
+
+		public event System.Action OnDeath;
 
         protected virtual void Start()
         {
@@ -26,7 +28,7 @@ namespace TopShooter
         public virtual void TakeDamage(float damage)
         {
             health -= damage;
-            if (health <= 0 && !dead)
+            if (health <= 0 && !Dead)
             {
                 Die();
             }

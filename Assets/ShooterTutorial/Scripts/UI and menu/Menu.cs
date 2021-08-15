@@ -22,10 +22,6 @@ namespace TopShooter
             activeScreenResIndex = PlayerPrefs.GetInt("screen res index");
             bool isFullscreen = (PlayerPrefs.GetInt("fullscreen") == 1) ? true : false;
 
-            volumeSliders[0].value = AudioManager.instance.masterVolumePercent;
-            volumeSliders[1].value = AudioManager.instance.musicVolumePercent;
-            volumeSliders[2].value = AudioManager.instance.sfxVolumePercent;
-
             for (int i = 0; i < resolutionToggles.Length; i++)
             {
                 resolutionToggles[i].isOn = i == activeScreenResIndex;
@@ -34,10 +30,49 @@ namespace TopShooter
             fullscreenToggle.isOn = isFullscreen;
         }
 
+		private void Update()
+		{
+            LoadAgain();
+		}
 
-        public void Play()
+		public void LoadAgain()
+		{
+            if (SceneComunicator.instance.isChanged && SceneComunicator.instance.iterations> SceneComunicator.instance.currentIT)
+            {
+                if (SceneComunicator.instance.sceneTaker == SceneTaker.DT)
+                {
+                    DecisionTree();
+                }
+                else if (SceneComunicator.instance.sceneTaker == SceneTaker.BN)
+                {
+                    BayesNet();
+                }
+                else if (SceneComunicator.instance.sceneTaker == SceneTaker.ML)
+                {
+                    MLagents();
+                }
+            }
+		}
+
+        public void Stop()
         {
+            SceneComunicator.instance.isChanged = false;
+        }
+
+        public void DecisionTree()
+        {
+            SceneComunicator.instance.sceneTaker = SceneTaker.DT;
             SceneManager.LoadScene(1);
+        }
+
+        public void BayesNet()
+        {
+            SceneManager.LoadScene(2);
+        }
+
+        public void MLagents()
+        {
+            SceneManager.LoadScene(3);
         }
 
         public void Quit()

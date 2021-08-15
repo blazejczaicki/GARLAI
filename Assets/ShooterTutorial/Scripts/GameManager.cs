@@ -4,6 +4,7 @@ using System.Linq;
 using TopShooter;
 using UnityEngine;
 using Jackyjjc.Bayesianet;
+using UnityEngine.SceneManagement;
 namespace TopShooter
 {
 	public class GameManager : MonoBehaviour
@@ -153,8 +154,12 @@ namespace TopShooter
 		private void FinishCycle()
 		{
 			geneticAlgorithm.OnEndSaveTheBest();
-			Time.timeScale = Time.timeScale == 1 ? 0 : 1;
-			Debug.Log("Koniec");
+			SceneComunicator.instance.currentIT++;
+			SceneComunicator.instance.isChanged = true;
+			Destroy(gameObject);
+			SceneManager.LoadScene(0);
+			//Time.timeScale = Time.timeScale == 1 ? 0 : 1;
+			//Debug.Log("Koniec");
 		}
 
 		[EasyButtons.Button]

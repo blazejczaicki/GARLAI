@@ -91,6 +91,44 @@ public class GA_GeneticAlgorithm : MonoBehaviour
             saverCSV.WriteToCSVGenerations(new DataChromosome(crom, crom.PlayerAI.name, crom.PlayerAI.GetAverageHealth(),
             crom.PlayerAI.GetLifeTime(), crom.Fitness), generation);
 		}
+        SaveAverageData();
+		if (generation==0)
+		{
+            saverCSV.WriteToCSVFinal(bestResult, generation, true);
+		}
+    }
+
+    public void SaveAverageData()
+	{
+        string name = "Avg " + generation;
+        float avgHealth = 0;
+        float avLifeTime = 0;
+        float avgFitness = 0;
+        List<DataAI> data = new List<DataAI>();
+		for (int i = 0; i < chromosomes.First().PlayerAI.DataAI.Count; i++)
+		{
+            data.Add(new DataAI(chromosomes.First().PlayerAI.DataAI[i]));
+		}
+
+		foreach (var crom in chromosomes)
+		{
+            avgHealth += crom.PlayerAI.GetAverageHealth();
+            avLifeTime += crom.PlayerAI.GetLifeTime();
+            avgFitness += crom.Fitness;
+            for (int i = 0; i < crom.PlayerAI.DataAI.Count; i++)
+            {
+                data[i].currentVal +=crom.PlayerAI.DataAI[i].currentVal;
+            }
+        }
+        avgHealth /= (float)chromosomes.Count;
+        avLifeTime /= (float)chromosomes.Count;
+        avgFitness /= (float)chromosomes.Count;
+        for (int i = 0; i < data.Count; i++)
+        {
+            data[i].currentVal /= (float)chromosomes.Count;
+        }
+
+        saverCSV.WriteToCSVAvg(new DataChromosome(null, name, avgHealth,avLifeTime, avgFitness), data, generation);
     }
 
     public void Selection()

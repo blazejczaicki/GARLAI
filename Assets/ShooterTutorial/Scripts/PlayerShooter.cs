@@ -81,7 +81,6 @@ namespace TopShooter
 
         public override void Die()
         {
-            AudioManager.instance.PlaySound("Player Death", transform.position);
             //stopWatch.Stop();
             //var ts = stopWatch.Elapsed;
             //LifeTime = Mathf.Floor(ts.Seconds);
