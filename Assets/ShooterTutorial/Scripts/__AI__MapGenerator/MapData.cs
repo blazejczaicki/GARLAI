@@ -28,6 +28,7 @@ public class MapData : MonoBehaviour
 	public int Width { get => width; set => width = value; }
 	public List<Enemy> Enemies { get => enemies; set => enemies = value; }
 	public bool DebugMode { get => debugMode;}
+	public int Seed { get => seed; set => seed = value; }
 
 	private void Awake()
 	{
@@ -75,8 +76,17 @@ public class MapData : MonoBehaviour
                 astarNodesMap[i][j].SetNeighbours(astarNodesMap, this);
              }
 		}
-        shuffledTileCoords = new Queue<AstarNode>(TopShooter.Utility.ShuffleArray(AstarNodesMap.SelectMany(d => d).ToArray(), seed));
-        defaultShuffledTileCoords = new Queue<AstarNode>(shuffledTileCoords);
+        seed = (int)SceneComunicator.instance.seed;
+        if (SceneComunicator.instance.randomMode)
+        {
+            shuffledTileCoords = new Queue<AstarNode>(TopShooter.Utility.ShuffleArray(AstarNodesMap.SelectMany(d => d).ToArray(), Random.Range(0, 99999)));
+            defaultShuffledTileCoords = new Queue<AstarNode>(shuffledTileCoords);
+        }
+        else
+        {
+            shuffledTileCoords = new Queue<AstarNode>(TopShooter.Utility.ShuffleArray(AstarNodesMap.SelectMany(d => d).ToArray(), Seed));
+            defaultShuffledTileCoords = new Queue<AstarNode>(shuffledTileCoords);
+        }
     }
 
 	private void Update()
@@ -103,7 +113,14 @@ public class MapData : MonoBehaviour
         ResetMapData();
         enemies.ForEach(x => { x.StopAllCoroutines(); Destroy(x.gameObject); });
         enemies.Clear();
-        shuffledTileCoords = new Queue<AstarNode>(defaultShuffledTileCoords);
+		if (SceneComunicator.instance.randomMode)
+		{
+            shuffledTileCoords = new Queue<AstarNode>(TopShooter.Utility.ShuffleArray(AstarNodesMap.SelectMany(d => d).ToArray(), Random.Range(0, 99999)));
+        }
+		else
+		{
+            shuffledTileCoords = new Queue<AstarNode>(defaultShuffledTileCoords);
+		}
 	}
 
 	public void ResetMapData()
