@@ -1653,8 +1653,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneTaker: 0
   isChanged: 0
-  iterations: 20
-  currentIT: 5
+  iterations: 100
+  currentIT: 95
+  randomMode: 1
+  seed: 20
 --- !u!4 &715961949
 Transform:
   m_ObjectHideFlags: 0
