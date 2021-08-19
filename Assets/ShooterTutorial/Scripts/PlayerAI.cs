@@ -243,6 +243,7 @@ namespace TopShooter
 		}
 
 		public Vector3 gobackDir=Vector3.zero;
+#if UNITY_EDITOR
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.green;
@@ -252,6 +253,7 @@ namespace TopShooter
             Handles.DrawLine(transform.position, transform.position + gobackDir, 5);
             //Gizmos.DrawRay(transform.position, gobackDir);
         }
+#endif
     }    
 
     public enum VariableName

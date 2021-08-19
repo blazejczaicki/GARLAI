@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
 [ExecuteInEditMode]
 [CustomEditor(typeof(BoardsGenerator))]
 public class BoardsGeneratorEditor : Editor
@@ -19,3 +20,4 @@ public class BoardsGeneratorEditor : Editor
 
     }
 }
+#endif

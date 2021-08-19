@@ -117,7 +117,7 @@ namespace TopShooter
             Vector3 dirToTarget = (target.position - transform.position).normalized;
             Vector3 attackPosition = target.position - dirToTarget * (myCollisionRadius);
 
-            float attackSpeed = 6;
+            float attackSpeed = 3;
             float percent = 0;
 
             bool hasAppliedDamage = false;
