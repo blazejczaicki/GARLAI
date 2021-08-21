@@ -10,6 +10,11 @@ public class DataAiUi : MonoBehaviour
 	private List<DataPanel> dataAIpanels=new List<DataPanel>();
 	[SerializeField] private GameObject panel;
 
+	[SerializeField] private TextMeshProUGUI currentGeneration;
+	[SerializeField] private TextMeshProUGUI generationLimit;
+	[SerializeField] private TextMeshProUGUI currentIteration;
+	[SerializeField] private TextMeshProUGUI iterationLimit;
+
 	private void Awake()
 	{
 		canvas = GetComponent<Canvas>();
@@ -39,6 +44,14 @@ public class DataAiUi : MonoBehaviour
 			var txtPro = newPanel.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
 			dataAIpanels.Add(new DataPanel(player.DataAI[i].nameVal, txtPro));
 		}
+	}
+
+	public void ShowSimData(int genLimit, int genCurrent, int itLimit, int itCurrent)
+	{
+		currentGeneration.text = genCurrent.ToString();
+		generationLimit.text = genLimit.ToString();
+		currentIteration.text = itCurrent.ToString();
+		iterationLimit.text = itLimit.ToString();
 	}
 
 	public void SetPlayersRef(List<PlayerAI> players)

@@ -33,13 +33,16 @@ namespace TopShooter
         float myCollisionRadius;
         float targetCollisionRadius;
 
+        public float attackSpeed = 3;
+
         bool hasTarget;
 
         public PlayerAI PlayerAI { get => playerAI; set => playerAI = value; }
+		public NavMeshAgent Pathfinder { get => pathfinder; set => pathfinder = value; }
 
-        private void Awake()
+		private void Awake()
         {
-            pathfinder = GetComponent<NavMeshAgent>();
+            Pathfinder = GetComponent<NavMeshAgent>();
             myCollisionRadius = GetComponent<CapsuleCollider>().radius;
             hasTarget = true;
         }
@@ -110,14 +113,14 @@ namespace TopShooter
 
         IEnumerator Attack()
         {
-            pathfinder.enabled = false;
+            Pathfinder.enabled = false;
             currentState = State.Attacking;
 
             Vector3 originalPosition = transform.position;
             Vector3 dirToTarget = (target.position - transform.position).normalized;
             Vector3 attackPosition = target.position - dirToTarget * (myCollisionRadius);
 
-            float attackSpeed = 3;
+            
             float percent = 0;
 
             bool hasAppliedDamage = false;
@@ -138,7 +141,7 @@ namespace TopShooter
             }
             skinMaterial.color = originalColor;
             currentState = State.Chasing;
-            pathfinder.enabled = true;
+            Pathfinder.enabled = true;
         }
 
         public override void TakeHit(float damage, Vector3 hitPoint, Vector3 hitDirection)
@@ -163,7 +166,7 @@ namespace TopShooter
                     Vector3 targetPosition = target.position - dirToTarget * (myCollisionRadius + targetCollisionRadius + distanceThreshold);
                     if (!Dead)
                     {
-                        pathfinder.SetDestination(targetPosition);
+                        Pathfinder.SetDestination(targetPosition);
                     }
                 }
                 yield return new WaitForSeconds(refreshRate);

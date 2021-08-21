@@ -80,6 +80,18 @@ namespace TopShooter
 						player.PlayerShooter.OnStart(t);
 				}
 			}
+			simRounds = SceneComunicator.instance.generationLimits;
+			ui.ShowSimData((int)simRounds, (int)currentRound, SceneComunicator.instance.iterations, SceneComunicator.instance.currentIT);
+
+			foreach (var p in players)
+			{
+				p.PlayerShooter.moveSpeed = SceneComunicator.instance.playerSpeed;
+			}
+			foreach (var s in spawners)
+			{
+				s.enemySpeed = SceneComunicator.instance.enemySpeed;
+				s.enemyAttackSpeed = SceneComunicator.instance.attackSpeed;
+			}
 		}
 
 
@@ -109,6 +121,7 @@ namespace TopShooter
 					}
 					ResetWorld();
 					previousUpdateTime = Time.time;
+					ui.ShowSimData((int)simRounds, (int)currentRound, SceneComunicator.instance.iterations, SceneComunicator.instance.currentIT);
 					//nextResetTime = Time.time + RoundTimeSpan;
 				}
 			}

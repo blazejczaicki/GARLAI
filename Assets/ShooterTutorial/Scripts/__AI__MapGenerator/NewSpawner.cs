@@ -22,6 +22,9 @@ public class NewSpawner : MonoBehaviour
 
     private bool isDisabled;
 
+    public float enemySpeed { get; set; }
+    public float enemyAttackSpeed { get; set; }
+
 	public PlayerAI PlayerAI { get => playerAI; set => playerAI = value; }
 
 	public event System.Action<int> OnNewWave;
@@ -77,6 +80,10 @@ public class NewSpawner : MonoBehaviour
         }
         Destroy(spawnTile.gameObject);
         Enemy spawnedEnemy = Instantiate(enemyTemplate, spawnTile.position + Vector3.up, Quaternion.identity) as Enemy;
+
+        spawnedEnemy.Pathfinder.speed = enemySpeed;
+        spawnedEnemy.attackSpeed = enemyAttackSpeed;
+        
         spawnedEnemy.SetTarget(playerAI);
         PlayerAI.Enemies.Add(spawnedEnemy);
         mapData.Enemies.Add(spawnedEnemy);

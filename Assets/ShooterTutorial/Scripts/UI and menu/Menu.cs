@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -16,6 +18,17 @@ namespace TopShooter
         public Toggle fullscreenToggle;
         public int[] screenWidths;
         int activeScreenResIndex;
+        
+        [SerializeField] private TMP_InputField IterationLimit;
+        [SerializeField] private TMP_InputField StartIteration;
+        [SerializeField] private TMP_InputField GenerationLimit;
+        [SerializeField] private TMP_InputField enemySpeed;
+        [SerializeField] private TMP_InputField attackSpeed;
+        [SerializeField] private TMP_InputField playerSpeed;
+        
+        [SerializeField] private Toggle RandomGenerationMode;
+
+        [SerializeField] private TextMeshProUGUI info;
 
         void Start()
         {
@@ -41,7 +54,8 @@ namespace TopShooter
             {
                 if (SceneComunicator.instance.sceneTaker == SceneTaker.DT)
                 {
-                    DecisionTree();
+                    SceneComunicator.instance.sceneTaker = SceneTaker.DT;
+                    SceneManager.LoadScene(1);
                 }
                 else if (SceneComunicator.instance.sceneTaker == SceneTaker.BN)
                 {
@@ -59,20 +73,40 @@ namespace TopShooter
             SceneComunicator.instance.isChanged = false;
         }
 
+        public void Play()
+        {
+			try
+			{
+                SceneComunicator.instance.iterations = int.Parse(IterationLimit.text);
+                SceneComunicator.instance.currentIT = int.Parse(StartIteration.text);
+                SceneComunicator.instance.generationLimits = int.Parse(GenerationLimit.text);
+                SceneComunicator.instance.playerSpeed = float.Parse(playerSpeed.text);
+                SceneComunicator.instance.enemySpeed = float.Parse(enemySpeed.text);
+                SceneComunicator.instance.attackSpeed = float.Parse(attackSpeed.text);
+                SceneComunicator.instance.randomMode = RandomGenerationMode.isOn;
+
+                SceneComunicator.instance.sceneTaker = SceneTaker.DT;
+                SceneManager.LoadScene(1);
+			}
+            catch(FormatException e)
+			{
+                info.text = "Not number values";
+			}
+        } 
+        
         public void DecisionTree()
         {
-            SceneComunicator.instance.sceneTaker = SceneTaker.DT;
-            SceneManager.LoadScene(1);
+            
         }
 
         public void BayesNet()
         {
-            SceneManager.LoadScene(2);
+            //SceneManager.LoadScene(2);
         }
 
         public void MLagents()
         {
-            SceneManager.LoadScene(3);
+            //SceneManager.LoadScene(3);
         }
 
         public void Quit()

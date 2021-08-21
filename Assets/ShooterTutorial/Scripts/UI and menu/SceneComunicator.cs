@@ -10,6 +10,11 @@ public class SceneComunicator : MonoBehaviour
 	public int iterations = 15;
 	public int currentIT = 0;
 
+	public int generationLimits = 0;
+	public float playerSpeed = 0;
+	public float enemySpeed = 0;
+	public float attackSpeed = 0;
+
 	public bool randomMode = false;
 	public float seed = 20;
 
