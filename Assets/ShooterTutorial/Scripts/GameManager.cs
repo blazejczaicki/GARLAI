@@ -81,6 +81,7 @@ namespace TopShooter
 				}
 			}
 			simRounds = SceneComunicator.instance.generationLimits;
+			roundTimeSpan = SceneComunicator.instance.time;
 			ui.ShowSimData((int)simRounds, (int)currentRound, SceneComunicator.instance.iterations, SceneComunicator.instance.currentIT);
 
 			foreach (var p in players)
@@ -97,6 +98,7 @@ namespace TopShooter
 
 		private void Update()
 		{
+			ui.ShowTime(Time.time - previousUpdateTime);
 			if (isBayes)
 			{
 				UpdatePlayers();

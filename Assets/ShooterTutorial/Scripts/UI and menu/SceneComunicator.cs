@@ -14,6 +14,7 @@ public class SceneComunicator : MonoBehaviour
 	public float playerSpeed = 0;
 	public float enemySpeed = 0;
 	public float attackSpeed = 0;
+	public float time = 0;
 
 	public bool randomMode = false;
 	public float seed = 20;

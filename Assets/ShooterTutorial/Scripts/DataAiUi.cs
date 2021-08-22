@@ -14,6 +14,7 @@ public class DataAiUi : MonoBehaviour
 	[SerializeField] private TextMeshProUGUI generationLimit;
 	[SerializeField] private TextMeshProUGUI currentIteration;
 	[SerializeField] private TextMeshProUGUI iterationLimit;
+	[SerializeField] private TextMeshProUGUI timeCurrent;
 
 	private void Awake()
 	{
@@ -52,6 +53,11 @@ public class DataAiUi : MonoBehaviour
 		generationLimit.text = genLimit.ToString();
 		currentIteration.text = itCurrent.ToString();
 		iterationLimit.text = itLimit.ToString();
+	}
+
+	public void ShowTime(float t)
+	{
+		timeCurrent.text = t.ToString();
 	}
 
 	public void SetPlayersRef(List<PlayerAI> players)

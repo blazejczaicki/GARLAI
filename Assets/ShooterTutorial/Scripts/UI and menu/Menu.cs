@@ -25,6 +25,7 @@ namespace TopShooter
         [SerializeField] private TMP_InputField enemySpeed;
         [SerializeField] private TMP_InputField attackSpeed;
         [SerializeField] private TMP_InputField playerSpeed;
+        [SerializeField] private TMP_InputField time;
         
         [SerializeField] private Toggle RandomGenerationMode;
 
@@ -83,6 +84,7 @@ namespace TopShooter
                 SceneComunicator.instance.playerSpeed = float.Parse(playerSpeed.text);
                 SceneComunicator.instance.enemySpeed = float.Parse(enemySpeed.text);
                 SceneComunicator.instance.attackSpeed = float.Parse(attackSpeed.text);
+                SceneComunicator.instance.time = float.Parse(time.text);
                 SceneComunicator.instance.randomMode = RandomGenerationMode.isOn;
 
                 SceneComunicator.instance.sceneTaker = SceneTaker.DT;
