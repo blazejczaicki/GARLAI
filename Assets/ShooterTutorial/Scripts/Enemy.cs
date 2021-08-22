@@ -25,13 +25,16 @@ namespace TopShooter
 
         Color originalColor;
 
-        float attackDistanceThreshold = 0.5f;
+        float attackDistanceThreshold = 1f;
         float distanceThreshold = 0.3f;
         float damage = 1f;
         float nextAttackTime;
         float timeBetweenAttacks = 1;
         float myCollisionRadius;
         float targetCollisionRadius;
+
+
+        float attactDist=1f;
 
         public float attackSpeed = 3;
 
@@ -102,11 +105,14 @@ namespace TopShooter
             if (Time.time > nextAttackTime)
             {
                 float sqrDstToTarget = (target.position - transform.position).sqrMagnitude;
-                if (sqrDstToTarget <= Mathf.Pow(attackDistanceThreshold + myCollisionRadius + targetCollisionRadius, 2))
-                {
-                        nextAttackTime = Time.time + timeBetweenAttacks;
-                        StartCoroutine(Attack());
-                }
+                    //if (sqrDstToTarget < attactDist)
+                    //{
+                        if (sqrDstToTarget <= Mathf.Pow(attackDistanceThreshold + myCollisionRadius + targetCollisionRadius, 2))
+                        {
+                            nextAttackTime = Time.time + timeBetweenAttacks;
+                            StartCoroutine(Attack());
+                        }
+                    //}
             }
             }
         }

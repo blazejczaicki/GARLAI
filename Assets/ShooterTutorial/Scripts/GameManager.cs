@@ -109,7 +109,7 @@ namespace TopShooter
 				UpdateEnemies();
 
 				//if (Time.time > nextResetTime || allPlayersDead)// 
-				if (Time.time - previousUpdateTime > RoundTimeSpan)
+				if (Time.time - previousUpdateTime > RoundTimeSpan || allPlayersDead)
 				{
 					Debug.Log("MARTWI AGENTSI");
 					players.ForEach(p => p.OnEndGeneration());
@@ -122,6 +122,7 @@ namespace TopShooter
 					ResetWorld();
 					previousUpdateTime = Time.time;
 					ui.ShowSimData((int)simRounds, (int)currentRound, SceneComunicator.instance.iterations, SceneComunicator.instance.currentIT);
+					allPlayersDead = false;
 					//nextResetTime = Time.time + RoundTimeSpan;
 				}
 			}
