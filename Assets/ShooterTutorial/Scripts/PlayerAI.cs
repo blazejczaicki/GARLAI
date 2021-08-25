@@ -55,19 +55,11 @@ namespace TopShooter
 		static readonly ProfilerMarker s_PreparePerfMarker = new ProfilerMarker("MySystem.Prepare");
         private void Awake()
         {
-			if (IsBayesian)
-			{
-                chromosome = new GA_BayesChromosome(this);
-            }
-			else
-			{
-                chromosome = new GA_DT_Chromosome(this);
-			}
-
+            BayesianNet = GetComponent<BayesNet>();
             CharController = GetComponent<CharacterController>();
             decisionTree = GetComponent<DecisionTree>();
             PlayerShooter = GetComponent<PlayerShooter>();
-            BayesianNet = GetComponent<BayesNet>();
+            
 
             astarPathfinding = new Astar();
             Enemies = new List<Enemy>();
@@ -77,7 +69,19 @@ namespace TopShooter
 			}
         }
 
-        public float GetAverageHealth()
+		private void Start()
+		{
+            if (IsBayesian)
+            {
+                chromosome = new GA_BayesChromosome(this);
+            }
+            else
+            {
+                chromosome = new GA_DT_Chromosome(this);
+            }
+        }
+
+		public float GetAverageHealth()
         {
             return PlayerShooter.HealthOnSeconds;
         }

@@ -128,6 +128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d866f0261f0d5e846a2bb57980f82d6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isBayesian: 1
   targetPosition: {x: 0, y: 0, z: 0}
   currentTarget: {x: 0, y: 0, z: 0}
   radius: 0.1
@@ -184,6 +185,7 @@ MonoBehaviour:
     currentVal: 2
     maxVal: 4
     minVal: 0.05
+  actionName: 
   gobackDir: {x: 0, y: 0, z: 0}
 --- !u!143 &1501778884641341357
 CharacterController:
@@ -217,6 +219,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   amountEnemies: 0
   enemiesDist: 6
+  wallDist: 6
 --- !u!1 &1501778885190113819
 GameObject:
   m_ObjectHideFlags: 0
