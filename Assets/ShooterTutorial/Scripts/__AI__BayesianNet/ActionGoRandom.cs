@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ActionGoRandom
 {
-	public Queue<Vector3> ReleaseAction(PlayerAI player)
+	public Queue<Vector3> GoRandom(PlayerAI player)
 	{
 		Vector3 bestPos = Vector3.zero;
 		float enemyInfluence = float.MaxValue;

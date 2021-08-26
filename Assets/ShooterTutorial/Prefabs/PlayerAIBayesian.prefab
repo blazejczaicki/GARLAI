@@ -94,7 +94,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3fa99c2cc55b6d4680046824513dc07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingHealth: 20
+  startingHealth: 10
   moveSpeed: 5
   scaleeTime: 1
 --- !u!114 &1501778884641341347
@@ -134,57 +134,9 @@ MonoBehaviour:
   radius: 0.1
   speed: 4
   mapData: {fileID: 0}
-  decisionUpdateTime: 2
+  decisionUpdateTime: 0.5
   enemies: []
-  dataAI:
-  - nameVal: 0
-    currentVal: 4
-    maxVal: 20
-    minVal: 0
-  - nameVal: 1
-    currentVal: 2
-    maxVal: 20
-    minVal: 0
-  - nameVal: 2
-    currentVal: 4
-    maxVal: 20
-    minVal: 0
-  - nameVal: 3
-    currentVal: 8
-    maxVal: 20
-    minVal: 0
-  - nameVal: 4
-    currentVal: 8
-    maxVal: 20
-    minVal: 0
-  - nameVal: 5
-    currentVal: 4
-    maxVal: 20
-    minVal: 0
-  - nameVal: 6
-    currentVal: 8
-    maxVal: 8
-    minVal: 0
-  - nameVal: 7
-    currentVal: 0.1
-    maxVal: 4
-    minVal: 0.05
-  - nameVal: 8
-    currentVal: 2
-    maxVal: 4
-    minVal: 0.05
-  - nameVal: 9
-    currentVal: 4
-    maxVal: 4
-    minVal: 0.05
-  - nameVal: 10
-    currentVal: 0.1
-    maxVal: 4
-    minVal: 0.05
-  - nameVal: 11
-    currentVal: 2
-    maxVal: 4
-    minVal: 0.05
+  dataAI: []
   actionName: 
   gobackDir: {x: 0, y: 0, z: 0}
 --- !u!143 &1501778884641341357

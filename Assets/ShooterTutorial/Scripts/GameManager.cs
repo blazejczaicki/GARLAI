@@ -64,12 +64,25 @@ namespace TopShooter
 
 		private void Start()
 		{
+			foreach (var p in players)
+			{
+				p.OnStart();
+			}
 			if (isBayes)
 			{
+				//ui.InitDataUI(players.First(), players.First().chromosome as GA_BayesChromosome);
+				geneticAlgorithm.Init(players);
+				var t = Time.time;
+				//nextResetTime = RoundTimeSpan;
+				previousUpdateTime = t;
+				foreach (var player in players)
+				{
+					player.PlayerShooter.OnStart(t);
+				}
 			}
 			else
 			{
-				ui.InitDataUI(players.First());
+				//ui.InitDataUI(players.First(), players.First().chromosome);
 				ui.SetPlayersRef(players);
 				geneticAlgorithm.Init(players);
 				var t = Time.time;
@@ -101,8 +114,44 @@ namespace TopShooter
 			ui.ShowTime(Time.time - previousUpdateTime);
 			if (isBayes)
 			{
-				UpdatePlayers();
-				UpdateEnemies();
+				if (SceneComunicator.instance.manual)
+				{
+					UpdatePlayers();
+					UpdateEnemies();
+					if (Time.time - previousUpdateTime > RoundTimeSpan || allPlayersDead)
+					{
+						SaverCSV saver = new SaverCSV();
+						var pl = players.First();
+						pl.chromosome.CalculateFitness();
+						var bestResult = new DataChromosome(pl.chromosome, pl.name, pl.GetAverageHealth(),
+						pl.GetLifeTime(), pl.chromosome.Fitness);
+						saver.WriteManualResults(bestResult, "\\BN_manual_results.csv");
+						Destroy(gameObject);
+						SceneManager.LoadScene(0);
+					}
+				}
+				else
+				{
+					UpdatePlayers();
+					UpdateEnemies();
+
+					if (Time.time - previousUpdateTime > RoundTimeSpan || allPlayersDead)
+					{
+						Debug.Log("MARTWI AGENTSI");
+						players.ForEach(p => p.OnEndGeneration());
+						geneticAlgorithm.UpdateAlgorithm(isBayes);
+						currentRound++;
+						if (simRounds == currentRound)
+						{
+							FinishCycle();
+						}
+						ResetWorld();
+						previousUpdateTime = Time.time;
+						ui.ShowSimData((int)simRounds, (int)currentRound, SceneComunicator.instance.iterations, SceneComunicator.instance.currentIT);
+						allPlayersDead = false;
+						//nextResetTime = Time.time + RoundTimeSpan;
+					}
+				}
 			}
 			else
 			{
@@ -115,7 +164,7 @@ namespace TopShooter
 				{
 					Debug.Log("MARTWI AGENTSI");
 					players.ForEach(p => p.OnEndGeneration());
-					geneticAlgorithm.UpdateAlgorithm();
+					geneticAlgorithm.UpdateAlgorithm(isBayes);
 					currentRound++;
 					if (simRounds == currentRound)
 					{

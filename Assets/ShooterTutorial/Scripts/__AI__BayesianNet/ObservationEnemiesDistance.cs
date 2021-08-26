@@ -11,12 +11,12 @@ public class ObservationEnemiesDistance
 
 	public string GetEnemyDistance(PlayerAI player, float v)
 	{
-		//float minDist = 100;
-		float minDist = v;
-		//if (player.Enemies.Count>0)
-		//{
-		//	minDist = player.Enemies.Min(x=>Vector3.Distance(x.transform.position, player.transform.position));
-		//}
+		float minDist = 100;
+		//float minDist = v;
+		if (player.Enemies.Count > 0)
+		{
+			minDist = player.Enemies.Min(x => Vector3.Distance(x.transform.position, player.transform.position));
+		}
 
 		string result;
 		if (minDist >= 4) result = far;

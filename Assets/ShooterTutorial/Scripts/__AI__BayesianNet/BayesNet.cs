@@ -17,8 +17,10 @@ public class BayesNet : MonoBehaviour
 	private ObservationEnemiesAmount observationEnemiesAmount;
 	private ObservationEnemiesDistance observationEnemiesDistance;
 	private ObservationWalls observationWalls;
-	private ActionRunAway actionRunAway;
 	private ActionGoRandom actionGoRandom;
+	private ActionGoBack actionGoBack;
+	private ActionGoPass actionGoPass;
+	private ActionBreakSurrounding actionBreakSurr;
 
 	private string enAmount= "enemy_amount";
 	private string enDist= "enemy_distance";
@@ -39,8 +41,10 @@ public class BayesNet : MonoBehaviour
 		observationEnemiesAmount = new ObservationEnemiesAmount();
 		observationEnemiesDistance = new ObservationEnemiesDistance();
 		observationWalls = new ObservationWalls();
-		actionRunAway = new ActionRunAway();
 		actionGoRandom = new ActionGoRandom();
+		actionGoBack = new ActionGoBack();
+		actionGoPass = new ActionGoPass();
+		actionBreakSurr = new ActionBreakSurrounding();
 	}
 
 	public List<BayesianNode> GetNodes()
@@ -83,6 +87,13 @@ public class BayesNet : MonoBehaviour
 		double[] gobackNodeDistribution = ve.Infer(gobackNode, runwayProp, surrProp, wallDistProp);
 		bool isgoBack = ve.PickOne(gobackNodeDistribution) == gobackNode.var.GetTokenIndex(trueStr);
 
+		if (enemyAmountProp.value=="None")
+		{
+			Queue<Vector3> targetpos = new Queue<Vector3>();
+			targetpos.Enqueue(player.transform.position);
+			return targetpos;
+		}
+
 		return ReleaseDecisions(isgoRandom, isgoBack, isbreakSurrounding, isPassEnemies, player);
 	}
 
@@ -108,29 +119,28 @@ public class BayesNet : MonoBehaviour
 		if (isbreakSurrounding)
 		{
 			Debug.Log("surrr");
-			//targetpos=actionRunAway.ReleaseAction(player);
+			targetpos=actionBreakSurr.BreakSurr(player);
 		}
 		else if (isPassEnemies)
 		{
 			Debug.Log("pass");
-			//targetpos=actionGoRandom.ReleaseAction(player);
+			targetpos=actionGoPass.GoPass(player);
 		}
 		else if (isgoBack)
 		{
 			Debug.Log("go back");
-			//targetpos=actionGoRandom.ReleaseAction(player);
+			targetpos=actionGoBack.Goback(player);
 		}
 		else if (isgoRandom)
 		{
 			Debug.Log("go random");
-			//targetpos=actionGoRandom.ReleaseAction(player);
+			targetpos=actionGoRandom.GoRandom(player);
 		}
 		else
 		{
 			Debug.Log("Stay here");
-			//targetpos.Enqueue(player.transform.position);
+			targetpos.Enqueue(player.transform.position);
 		}
-		targetpos.Enqueue(player.transform.position);
 		return targetpos;
 	}
 }

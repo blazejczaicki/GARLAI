@@ -50,7 +50,10 @@ public class GA_BayesChromosome : GA_Chromosome
         }
         for (int i = 0; i < nodes.Count; i++)
         {
-            CalculateRandomValBayesian(bayesianGenes[i]);
+			if (nodes[i].Name!="enemy_distance" && nodes[i].Name != "wall_distance" && nodes[i].Name != "enemy_amount")
+            {
+                CalculateRandomValBayesian(bayesianGenes[i]);
+			}
             //nodes[i].ResetNode(bayesianGenes[i]);
         }
     }
@@ -58,7 +61,7 @@ public class GA_BayesChromosome : GA_Chromosome
     public override void Crossover(GA_Chromosome otherCrom)
     {
         GA_BayesChromosome otherBayesCrom = otherCrom as GA_BayesChromosome;
-        int crossoverPoint = Random.Range(0, bayesianGenes.Count);
+        int crossoverPoint = Random.Range(4, bayesianGenes.Count);
 		for (int i = crossoverPoint; i < bayesianGenes.Count; i++)
 		{
             var tmpGen = new double[bayesianGenes[i].Length];
@@ -72,9 +75,9 @@ public class GA_BayesChromosome : GA_Chromosome
 
     public override void Mutate()
     {
-        var index = (int)Random.Range(0, Genes.Count - 0.01f);
-        CalculateRandomVal(Genes[index]);
-        var bayesIndex= (int)Random.Range(0, bayesianGenes.Count - 0.01f);
+        //var index = (int)Random.Range(0, Genes.Count - 0.01f);
+        //CalculateRandomVal(Genes[index]);
+        var bayesIndex= (int)Random.Range(3, bayesianGenes.Count - 0.01f);
         CalculateRandomValBayesian(bayesianGenes[bayesIndex]);
         //nodes[bayesIndex].ResetNode(bayesianGenes[bayesIndex]);
     }

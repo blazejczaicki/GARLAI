@@ -11,8 +11,8 @@ public class ObservationEnemiesAmount
 
 	public string GetEnemyAmount(PlayerAI player, float v)
 	{
-		//var enemyAmount = player.Enemies.Count;
-		var enemyAmount = v;
+		var enemyAmount = player.Enemies.Count;
+		//var enemyAmount = v;
 		string result;
 		if (enemyAmount == 0) result = none;
 		else if (enemyAmount <= 3) result = underWhelm;

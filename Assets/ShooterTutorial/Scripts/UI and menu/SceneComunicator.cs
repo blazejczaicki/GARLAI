@@ -16,7 +16,10 @@ public class SceneComunicator : MonoBehaviour
 	public float attackSpeed = 0;
 	public float time = 0;
 
+	public int manualIndex = 0;
+
 	public bool randomMode = false;
+	public bool manual = false;
 	public float seed = 20;
 
 	private void Awake()

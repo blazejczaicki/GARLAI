@@ -41,6 +41,9 @@ namespace TopShooter
         [SerializeField] private Toggle RandomGenerationMode;
         [SerializeField] private Toggle RandomGenerationModeBN;
 
+        [SerializeField] private TMP_InputField manualIndexBN;
+        [SerializeField] private Toggle manualBN;
+
         [SerializeField] private TextMeshProUGUI info;
 
         void Start()
@@ -72,7 +75,8 @@ namespace TopShooter
                 }
                 else if (SceneComunicator.instance.sceneTaker == SceneTaker.BN)
                 {
-                    BayesNet();
+                    SceneComunicator.instance.sceneTaker = SceneTaker.BN;
+                    SceneManager.LoadScene(2);
                 }
                 else if (SceneComunicator.instance.sceneTaker == SceneTaker.ML)
                 {
@@ -115,7 +119,19 @@ namespace TopShooter
                     SceneComunicator.instance.randomMode = RandomGenerationModeBN.isOn;
 
                     SceneComunicator.instance.sceneTaker = SceneTaker.BN;
-                    SceneManager.LoadScene(2);
+
+                    SceneComunicator.instance.manualIndex = int.Parse(manualIndexBN.text);
+
+                    var isManual =manualBN.isOn;
+                    SceneComunicator.instance.manual = isManual;
+					if (isManual)
+					{
+                        SceneManager.LoadScene(3);
+                    }
+                    else
+					{
+                        SceneManager.LoadScene(2);
+					}
                 }
 			}
             catch(FormatException e)

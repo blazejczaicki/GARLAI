@@ -59,7 +59,9 @@ namespace TopShooter
             CharController = GetComponent<CharacterController>();
             decisionTree = GetComponent<DecisionTree>();
             PlayerShooter = GetComponent<PlayerShooter>();
-            
+
+            decisionUpdateTime= UnityEngine.Random.Range(decisionUpdateTime-0.3f, decisionUpdateTime+0.3f);
+
 
             astarPathfinding = new Astar();
             Enemies = new List<Enemy>();
@@ -69,7 +71,7 @@ namespace TopShooter
 			}
         }
 
-		private void Start()
+		public void OnStart()
 		{
             if (IsBayesian)
             {
