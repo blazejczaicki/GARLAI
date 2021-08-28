@@ -35,7 +35,7 @@ public class BayesNet : MonoBehaviour
 
 	private void Awake()
 	{
-		string networkJson = (Resources.Load("NewNetworkShort") as TextAsset).text;
+		string networkJson = (Resources.Load("NewNetworkShortMain") as TextAsset).text;
 		ve = new VariableElimination(new BayesianJsonParser().Parse(networkJson));
 
 		observationEnemiesAmount = new ObservationEnemiesAmount();
@@ -89,6 +89,7 @@ public class BayesNet : MonoBehaviour
 
 		if (enemyAmountProp.value=="None")
 		{
+			Debug.Log("xdd");
 			Queue<Vector3> targetpos = new Queue<Vector3>();
 			targetpos.Enqueue(player.transform.position);
 			return targetpos;
@@ -116,31 +117,35 @@ public class BayesNet : MonoBehaviour
 	private Queue<Vector3> ReleaseDecisions(bool isgoRandom, bool isgoBack, bool isbreakSurrounding, bool isPassEnemies, PlayerAI player)
 	{
 		Queue<Vector3> targetpos = new Queue<Vector3>();
+		//string str = "";
 		if (isbreakSurrounding)
 		{
-			Debug.Log("surrr");
+			//str = "surrr";
 			targetpos=actionBreakSurr.BreakSurr(player);
 		}
 		else if (isPassEnemies)
 		{
-			Debug.Log("pass");
+			//str = "pass";
 			targetpos=actionGoPass.GoPass(player);
 		}
 		else if (isgoBack)
 		{
-			Debug.Log("go back");
+			//str = "go back";
 			targetpos=actionGoBack.Goback(player);
 		}
 		else if (isgoRandom)
 		{
-			Debug.Log("go random");
+			//str = "go random";
 			targetpos=actionGoRandom.GoRandom(player);
 		}
 		else
 		{
-			Debug.Log("Stay here");
+			//str="Stay here";
 			targetpos.Enqueue(player.transform.position);
 		}
+		//var val = targetpos.Dequeue();
+		//Debug.Log(str + val);
+		//targetpos.Enqueue(val);
 		return targetpos;
 	}
 }
