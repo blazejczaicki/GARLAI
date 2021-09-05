@@ -25,7 +25,7 @@ namespace TopShooter
 
         Color originalColor;
 
-        float attackDistanceThreshold = 1f;
+        public float attackDistanceThreshold = 1f;
         float distanceThreshold = 0.3f;
         float damage = 1f;
         float nextAttackTime;

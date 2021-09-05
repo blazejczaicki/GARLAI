@@ -13,7 +13,7 @@ public class SceneComunicator : MonoBehaviour
 	public int generationLimits = 0;
 	public float playerSpeed = 0;
 	public float enemySpeed = 0;
-	public float attackSpeed = 0;
+	public float attackDistanceThreshold = 0;
 	public float time = 0;
 
 	public int manualIndex = 0;

@@ -48,6 +48,6 @@ public abstract class GA_Chromosome
 
     public void CalculateFitness()
     {
-        fitness = (PlayerAI.GetAverageHealth() * PlayerAI.GetLifeTime()) / ((TopShooter.GameManager.instance.RoundTimeSpan) * TopShooter.GameManager.instance.MaxPlayerHealth);//playerAI.LifeTime *
+        fitness = (PlayerAI.GetAverageHealth() * PlayerAI.GetLifeTime()) / ((TopShooter.GameManager.instance.RoundTimeSpan-1) * TopShooter.GameManager.instance.MaxPlayerHealth);//playerAI.LifeTime *
     }
 }

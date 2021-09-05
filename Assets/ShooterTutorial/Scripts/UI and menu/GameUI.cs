@@ -19,11 +19,11 @@ namespace TopShooter
         public RectTransform healthBar;
 
         Spawner spawner;
-        PlayerShooter player;
+        PlayerEntity player;
 
         void Start()
         {
-            player = FindObjectOfType<PlayerShooter>();
+            player = FindObjectOfType<PlayerEntity>();
             player.OnDeath += OnGameOver;
         }
 

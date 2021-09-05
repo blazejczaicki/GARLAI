@@ -77,7 +77,7 @@ namespace TopShooter
 				previousUpdateTime = t;
 				foreach (var player in players)
 				{
-					player.PlayerShooter.OnStart(t);
+					player.PlayerEnt.OnStart(t);
 				}
 			}
 			else
@@ -90,7 +90,7 @@ namespace TopShooter
 				previousUpdateTime = t;
 				foreach (var player in players)
 				{
-						player.PlayerShooter.OnStart(t);
+						player.PlayerEnt.OnStart(t);
 				}
 			}
 			simRounds = SceneComunicator.instance.generationLimits;
@@ -99,12 +99,12 @@ namespace TopShooter
 
 			foreach (var p in players)
 			{
-				p.PlayerShooter.moveSpeed = SceneComunicator.instance.playerSpeed;
+				p.Speed = SceneComunicator.instance.playerSpeed;
 			}
 			foreach (var s in spawners)
 			{
 				s.enemySpeed = SceneComunicator.instance.enemySpeed;
-				s.enemyAttackSpeed = SceneComunicator.instance.attackSpeed;
+				s.attackDistanceThreshold = SceneComunicator.instance.attackDistanceThreshold;
 			}
 		}
 

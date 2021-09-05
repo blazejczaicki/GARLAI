@@ -23,7 +23,7 @@ namespace TopShooter
         [SerializeField] private TMP_InputField StartIteration;
         [SerializeField] private TMP_InputField GenerationLimit;
         [SerializeField] private TMP_InputField enemySpeed;
-        [SerializeField] private TMP_InputField attackSpeed;
+        [SerializeField] private TMP_InputField attackDistanceThreshold;
         [SerializeField] private TMP_InputField playerSpeed;
         [SerializeField] private TMP_InputField time;        
 
@@ -31,7 +31,7 @@ namespace TopShooter
         [SerializeField] private TMP_InputField StartIterationBN;
         [SerializeField] private TMP_InputField GenerationLimitBN;
         [SerializeField] private TMP_InputField enemySpeedBN;
-        [SerializeField] private TMP_InputField attackSpeedBN;
+        [SerializeField] private TMP_InputField attackDistanceThresholdBN;
         [SerializeField] private TMP_InputField playerSpeedBN;
         [SerializeField] private TMP_InputField timeBN;
 
@@ -101,7 +101,7 @@ namespace TopShooter
                     SceneComunicator.instance.generationLimits = int.Parse(GenerationLimit.text);
                     SceneComunicator.instance.playerSpeed = float.Parse(playerSpeed.text);
                     SceneComunicator.instance.enemySpeed = float.Parse(enemySpeed.text);
-                    SceneComunicator.instance.attackSpeed = float.Parse(attackSpeed.text);
+                    SceneComunicator.instance.attackDistanceThreshold = float.Parse(attackDistanceThreshold.text);
                     SceneComunicator.instance.time = float.Parse(time.text);
                     SceneComunicator.instance.randomMode = RandomGenerationMode.isOn;
                     SceneComunicator.instance.sceneTaker = SceneTaker.DT;
@@ -114,7 +114,7 @@ namespace TopShooter
                     SceneComunicator.instance.generationLimits = int.Parse(GenerationLimitBN.text);
                     SceneComunicator.instance.playerSpeed = float.Parse(playerSpeedBN.text);
                     SceneComunicator.instance.enemySpeed = float.Parse(enemySpeedBN.text);
-                    SceneComunicator.instance.attackSpeed = float.Parse(attackSpeedBN.text);
+                    SceneComunicator.instance.attackDistanceThreshold = float.Parse(attackDistanceThresholdBN.text);
                     SceneComunicator.instance.time = float.Parse(timeBN.text);
                     SceneComunicator.instance.randomMode = RandomGenerationModeBN.isOn;
 

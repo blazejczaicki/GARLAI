@@ -11,7 +11,7 @@ namespace TopShooter
         public bool devMode;
         public Wave[] waves;
         public Enemy enemy;
-        public PlayerShooter player;
+        public PlayerEntity player;
         LivingEntity playerEntity;
         Transform playerT;
 
@@ -35,7 +35,7 @@ namespace TopShooter
 
         private void Start()
         {
-            playerEntity = FindObjectOfType<PlayerShooter>();
+            playerEntity = FindObjectOfType<PlayerEntity>();
             playerT = playerEntity.transform;
 
             nextCampCheckTime = timeBetweenCampingChecks + Time.time;

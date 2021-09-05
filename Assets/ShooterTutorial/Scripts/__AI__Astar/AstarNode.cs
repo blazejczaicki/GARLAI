@@ -62,6 +62,7 @@ public class AstarNode
         enemyInfluence *= booster;
         enemyInfluence *= enemyInfluence;
         float max = unitval * enemiesCount*booster;
+        max *= max;
         if (debugMode)
         {
             debugTile.sharedMaterial.color =(debugTile.sharedMaterial.color==Color.yellow)? Color.yellow: new Color(enemyInfluence / max, 0, 0);

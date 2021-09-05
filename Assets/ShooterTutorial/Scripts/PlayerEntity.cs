@@ -5,9 +5,8 @@ using System.Diagnostics;
 
 namespace TopShooter
 {
-    public class PlayerShooter : LivingEntity
+    public class PlayerEntity : LivingEntity
     {
-        public float moveSpeed = 5;
         public float scaleeTime = 0.2f;
 
         Camera viewCamera;

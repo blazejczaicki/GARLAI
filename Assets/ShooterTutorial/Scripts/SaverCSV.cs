@@ -96,7 +96,7 @@ public class SaverCSV : MonoBehaviour
 			}//.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)
 			stringBuilder.Append(dataChromosome.lifeTime + ";"
 				+ dataChromosome.averageHealth + ";"
-				+ dataChromosome.fitness + ";"+dataChromosome.chromosome.PlayerAI.PlayerShooter.Dead.ToString());
+				+ dataChromosome.fitness + ";"+dataChromosome.chromosome.PlayerAI.PlayerEnt.Dead.ToString());
 			tw.WriteLine(stringBuilder.ToString());
 		}
 	}
@@ -113,7 +113,7 @@ public class SaverCSV : MonoBehaviour
 			}//.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)
 			stringBuilder.Append(dataChromosome.lifeTime + ";"
 				+ dataChromosome.averageHealth + ";"
-				+ dataChromosome.fitness + ";"+dataChromosome.chromosome.PlayerAI.PlayerShooter.Dead.ToString());
+				+ dataChromosome.fitness + ";"+dataChromosome.chromosome.PlayerAI.PlayerEnt.Dead.ToString());
 			tw.WriteLine(stringBuilder.ToString());
 		}
 	}
@@ -181,7 +181,7 @@ public class SaverCSV : MonoBehaviour
 			stringBuilder.Append(dataChromosome.name + ";" + SceneComunicator.instance.manualIndex + ";");
 			stringBuilder.Append(dataChromosome.lifeTime + ";"
 				+ dataChromosome.averageHealth + ";"
-				+ dataChromosome.fitness + ";" + dataChromosome.chromosome.PlayerAI.PlayerShooter.Dead.ToString());
+				+ dataChromosome.fitness + ";" + dataChromosome.chromosome.PlayerAI.PlayerEnt.Dead.ToString());
 			tw.WriteLine(stringBuilder.ToString());
 		}
 	}
