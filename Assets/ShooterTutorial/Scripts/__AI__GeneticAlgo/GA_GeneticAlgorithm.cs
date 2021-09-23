@@ -19,7 +19,9 @@ public class GA_GeneticAlgorithm : MonoBehaviour
     private DataChromosome bestResult;
     private int generation = 0;
 
-	public List<GA_Chromosome> Chromosomes { get => chromosomes; set => chromosomes = value; }
+    private GA_Chromosome cromBest;
+
+    public List<GA_Chromosome> Chromosomes { get => chromosomes; set => chromosomes = value; }
 	public int Generation { get => generation; }
 
 	public void Init(List<PlayerAI> players)
@@ -39,12 +41,16 @@ public class GA_GeneticAlgorithm : MonoBehaviour
         chromosomes.ForEach(crom => crom.InitChromosome());
 	}
 
-	public void UpdateAlgorithm() //not referencje w kolejnych iteracjach chromosomy
+	public void UpdateAlgorithm(bool isBayes) //not referencje w kolejnych iteracjach chromosomy
     {
         ComputeFitness();
         CalculateFitnessSum();
         AppendBestResult();
         SaveToFile();
+		if (isBayes)
+		{
+            SaveBNdata();
+		}
         Selection();
         Crossover();
         TryMutation();
@@ -58,6 +64,67 @@ public class GA_GeneticAlgorithm : MonoBehaviour
 
         generation++;
         fitnessSum = 0;
+    }
+
+    private void SaveBNdata()
+	{
+        var avgGenerationData= CalculateAvgBN();
+        var first = chromosomes.First() as GA_BayesChromosome;
+        List<string> names = new List<string>();
+		for (int i = 2; i < first.nodes.Count; i++)
+		{
+            names.Add(first.nodes[i].Name);
+        }
+        saverCSV.SaveBayesianGenes(avgGenerationData, names, true, generation);
+
+		if (generation==0 || generation==2 || generation==5 || generation==7 || generation==9)
+		{
+            var best = cromBest as GA_BayesChromosome;
+            var bestData = best.bayesianGenes;
+            names = new List<string>();
+            for (int i = 2; i < first.nodes.Count; i++)
+            {
+                names.Add(best.nodes[i].Name);
+            }
+            List<double[]> bestbestData = new List<double[]>();
+            for (int i = 2; i < bestData.Count; i++)
+            {
+                bestbestData.Add(bestData[i]);
+            }
+            saverCSV.SaveBayesianGenes(bestbestData, names, false, generation);
+        }
+	}
+
+    private List<double[]> CalculateAvgBN()
+    {
+        List<double[]> res = new List<double[]>();
+        var first = chromosomes.First() as GA_BayesChromosome;
+
+        for (int i = 2; i < first.bayesianGenes.Count; i++)
+        {
+            res.Add(new double[first.bayesianGenes[i].Length]);
+        }
+        for (int i = 0; i < chromosomes.Count; i++)
+        {
+            var cr = chromosomes[i] as GA_BayesChromosome;
+            int kind = 0;
+            for (int k = 2; k < cr.bayesianGenes.Count; k++)
+            {
+                for (int j = 0; j < cr.bayesianGenes[k].Length; j++)
+                {
+                    res[kind][j] += cr.bayesianGenes[k][j];
+                }
+                kind++;
+            }
+        }
+        for (int k = 0; k < res.Count; k++)
+        {
+            for (int j = 0; j < res[k].Length; j++)
+            {
+                res[k][j] = res[k][j] / (double)chromosomes.Count;
+            }
+        }
+        return res;
     }
 
     public void ComputeFitness()
@@ -79,7 +146,7 @@ public class GA_GeneticAlgorithm : MonoBehaviour
     public void AppendBestResult()
     {
         Chromosomes=Chromosomes.OrderByDescending(c => c.Fitness).ToList();
-        var cromBest = Chromosomes.First();
+        cromBest = Chromosomes.First();
         bestResult = new DataChromosome(cromBest, cromBest.PlayerAI.name, cromBest.PlayerAI.GetAverageHealth(),
             cromBest.PlayerAI.GetLifeTime(), cromBest.Fitness);
     }
@@ -91,6 +158,44 @@ public class GA_GeneticAlgorithm : MonoBehaviour
             saverCSV.WriteToCSVGenerations(new DataChromosome(crom, crom.PlayerAI.name, crom.PlayerAI.GetAverageHealth(),
             crom.PlayerAI.GetLifeTime(), crom.Fitness), generation);
 		}
+        SaveAverageData();
+		if (generation==0)
+		{
+            saverCSV.WriteToCSVFinal(bestResult, generation, true);
+		}
+    }
+
+    public void SaveAverageData()
+	{
+        string name = "Avg " + generation;
+        float avgHealth = 0;
+        float avLifeTime = 0;
+        float avgFitness = 0;
+        List<DataAI> data = new List<DataAI>();
+		for (int i = 0; i < chromosomes.First().PlayerAI.DataAI.Count; i++)
+		{
+            data.Add(new DataAI(chromosomes.First().PlayerAI.DataAI[i]));
+		}
+
+		foreach (var crom in chromosomes)
+		{
+            avgHealth += crom.PlayerAI.GetAverageHealth();
+            avLifeTime += crom.PlayerAI.GetLifeTime();
+            avgFitness += crom.Fitness;
+            for (int i = 0; i < crom.PlayerAI.DataAI.Count; i++)
+            {
+                data[i].currentVal +=crom.PlayerAI.DataAI[i].currentVal;
+            }
+        }
+        avgHealth /= (float)chromosomes.Count;
+        avLifeTime /= (float)chromosomes.Count;
+        avgFitness /= (float)chromosomes.Count;
+        for (int i = 0; i < data.Count; i++)
+        {
+            data[i].currentVal /= (float)chromosomes.Count;
+        }
+
+        saverCSV.WriteToCSVAvg(new DataChromosome(null, name, avgHealth,avLifeTime, avgFitness), data, generation);
     }
 
     public void Selection()

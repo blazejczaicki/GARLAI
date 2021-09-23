@@ -13,7 +13,7 @@ namespace TopShooter
     {
         private DecisionTree decisionTree;
         private BayesNet bayesianNet;
-        private PlayerShooter playerShooter;
+        private PlayerEntity playerEntity;
         private CharacterController characterController;
         private Astar astarPathfinding;
         public GA_Chromosome chromosome { get; set; }
@@ -48,26 +48,21 @@ namespace TopShooter
 		public float DecisionUpdateTime { get => decisionUpdateTime; set => decisionUpdateTime = value; }
 		public bool IsBayesian { get => isBayesian; set => isBayesian = value; }
 		public BayesNet BayesianNet { get => bayesianNet; set => bayesianNet = value; }
-		public PlayerShooter PlayerShooter { get => playerShooter; set => playerShooter = value; }
+		public PlayerEntity PlayerEnt { get => playerEntity; set => playerEntity = value; }
+		public float Speed { get => speed; set => speed = value; }
 
 		public string actionName;
 
 		static readonly ProfilerMarker s_PreparePerfMarker = new ProfilerMarker("MySystem.Prepare");
         private void Awake()
         {
-			if (IsBayesian)
-			{
-                chromosome = new GA_BayesChromosome(this);
-            }
-			else
-			{
-                chromosome = new GA_DT_Chromosome(this);
-			}
-
+            BayesianNet = GetComponent<BayesNet>();
             CharController = GetComponent<CharacterController>();
             decisionTree = GetComponent<DecisionTree>();
-            PlayerShooter = GetComponent<PlayerShooter>();
-            BayesianNet = GetComponent<BayesNet>();
+            PlayerEnt = GetComponent<PlayerEntity>();
+
+            decisionUpdateTime= UnityEngine.Random.Range(decisionUpdateTime-0.3f, decisionUpdateTime+0.3f);
+
 
             astarPathfinding = new Astar();
             Enemies = new List<Enemy>();
@@ -77,24 +72,36 @@ namespace TopShooter
 			}
         }
 
-        public float GetAverageHealth()
+		public void OnStart()
+		{
+            if (IsBayesian)
+            {
+                chromosome = new GA_BayesChromosome(this);
+            }
+            else
+            {
+                chromosome = new GA_DT_Chromosome(this);
+            }
+        }
+
+		public float GetAverageHealth()
         {
-            return PlayerShooter.HealthOnSeconds;
+            return PlayerEnt.HealthOnSeconds;
         }
 
         public float GetRestHealth()
         {
-            return PlayerShooter.health;
+            return PlayerEnt.health;
         }
 
         public float GetLifeTime()
         {
-            return PlayerShooter.LifeTime;
+            return PlayerEnt.LifeTime;
         }
 
         public void OnEndGeneration()
 		{
-            PlayerShooter.OnEndGeneration();
+            PlayerEnt.OnEndGeneration();
 		}
 
         public void ResetPlayerWorld()
@@ -115,7 +122,7 @@ namespace TopShooter
 
         public void OnUpdate(float t)
         {
-            PlayerShooter.OnUpdate(t);
+            PlayerEnt.OnUpdate(t);
 			UpdateDecisions();
 			MoveOnPath();
 			MoveCR();
@@ -203,7 +210,7 @@ namespace TopShooter
 
         private void MoveCR()
 		{
-            var moveVec = (currentTarget - transform.position).normalized * speed;// * Time.deltaTime;
+            var moveVec = (currentTarget - transform.position).normalized * Speed;// * Time.deltaTime;
             CharController.SimpleMove(new Vector3(moveVec.x,0,moveVec.z));
 		}
 
@@ -233,7 +240,7 @@ namespace TopShooter
 		{
             enemiesTooClose.Clear();
             Enemies.Clear();
-            PlayerShooter.OnNewGeneration(t);
+            PlayerEnt.OnNewGeneration(t);
             gameObject.SetActive(true);
         }
 
@@ -243,6 +250,7 @@ namespace TopShooter
 		}
 
 		public Vector3 gobackDir=Vector3.zero;
+#if UNITY_EDITOR
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.green;
@@ -252,6 +260,7 @@ namespace TopShooter
             Handles.DrawLine(transform.position, transform.position + gobackDir, 5);
             //Gizmos.DrawRay(transform.position, gobackDir);
         }
+#endif
     }    
 
     public enum VariableName

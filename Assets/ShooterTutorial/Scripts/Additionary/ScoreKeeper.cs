@@ -14,7 +14,7 @@ namespace TopShooter
         void Start()
         {
             Enemy.OnDeathStatic += OnEnemyKilled;
-            FindObjectOfType<PlayerShooter>().OnDeath += OnPlayerDeath;
+            FindObjectOfType<PlayerEntity>().OnDeath += OnPlayerDeath;
         }
 
         void OnEnemyKilled()

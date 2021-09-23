@@ -5,6 +5,7 @@ using UnityEditor;
 
 namespace TopShooter
 {
+#if UNITY_EDITOR
     [CustomEditor(typeof(TopShooter.MapGenerator))]
     public class MapEditor : Editor
     {
@@ -23,4 +24,5 @@ namespace TopShooter
             }
         }
     }
+#endif
 }

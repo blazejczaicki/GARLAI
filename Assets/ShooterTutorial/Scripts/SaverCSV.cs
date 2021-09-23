@@ -9,16 +9,27 @@ public class SaverCSV : MonoBehaviour
 {
 	[SerializeField] private string generationName;
 	[SerializeField] private string bestName;
+	[SerializeField] private string bestFirstName;
+	[SerializeField] private string avgName;
+
+	[SerializeField] private string avgBay;
+	[SerializeField] private string generBay;
 	//D:\Unity projekty\_MgrProj\GARLAI\Rezultaty_Pokoleniowe.csv
 
 	private void Awake()
 	{
 		generationName = Application.dataPath + "\\Rezultaty_Pokoleniowe.csv";
 		bestName = Application.dataPath + "\\Rezultaty_TheBests.csv";
+		bestFirstName = Application.dataPath + "\\Rezultaty_TheBestsFirs.csv";
+		avgName = Application.dataPath + "\\Rezultaty_Srednie.csv";
+
+		avgBay = Application.dataPath + "\\Rezultaty_BN_Srednie.csv"; ;
+		generBay = Application.dataPath + "\\bnRes\\"; ;
 	}
 
 	public void WriteToCSVGenerations(DataChromosome bestCrom, int generation)
 	{
+		generationName= Application.dataPath + "\\RezultatyGeneracji\\Rezultaty_Pokoleniowe" + SceneComunicator.instance.currentIT +".csv";
 		if (!File.Exists(generationName))
 		{
 			CreateFile(bestCrom.chromosome.PlayerAI.DataAI, generationName);
@@ -30,16 +41,30 @@ public class SaverCSV : MonoBehaviour
 		}		
 	}
 
-	public void WriteToCSVFinal(DataChromosome bestCrom, int generation)
+	public void WriteToCSVFinal(DataChromosome bestCrom, int generation, bool isFirst=false)
 	{
-		if (!File.Exists(bestName))
+		string nam = isFirst ?bestFirstName:bestName;
+		if (!File.Exists(nam))
 		{
-			CreateFile(bestCrom.chromosome.PlayerAI.DataAI, bestName);
-			AppendData(bestCrom, generation, bestName);
+			CreateFileAvg(bestCrom.chromosome.PlayerAI.DataAI, nam);
+			AppendDataFinalFirst(bestCrom, generation, nam);
 		}
 		else
 		{
-			AppendData(bestCrom, generation, bestName);
+			AppendDataFinalFirst(bestCrom, generation, nam);
+		}
+	}
+
+	public void WriteToCSVAvg(DataChromosome avgCrom, List<DataAI> dataAi, int generation)
+	{
+		if (!File.Exists(avgName))
+		{
+			CreateFileAvg(dataAi, avgName);
+			AppendDataAvg(avgCrom, dataAi, generation, avgName);
+		}
+		else
+		{
+			AppendDataAvg(avgCrom, dataAi, generation, avgName);
 		}
 	}
 
@@ -53,7 +78,7 @@ public class SaverCSV : MonoBehaviour
 			{
 				stringBuilderr.Append(item.nameVal.ToString() + ";");
 			}
-			stringBuilderr.Append("Life Time;Average Health;Fitness");
+			stringBuilderr.Append("Life Time;Average Health;Fitness;IsDead");
 			tww.WriteLine(stringBuilderr.ToString());
 			stringBuilderr.Clear();
 		}
@@ -71,7 +96,92 @@ public class SaverCSV : MonoBehaviour
 			}//.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)
 			stringBuilder.Append(dataChromosome.lifeTime + ";"
 				+ dataChromosome.averageHealth + ";"
+				+ dataChromosome.fitness + ";"+dataChromosome.chromosome.PlayerAI.PlayerEnt.Dead.ToString());
+			tw.WriteLine(stringBuilder.ToString());
+		}
+	}
+
+	private void AppendDataFinalFirst(DataChromosome dataChromosome, int generation, string filename)
+	{
+		using (StreamWriter tw = File.AppendText(filename))
+		{
+			StringBuilder stringBuilder = new StringBuilder();
+			stringBuilder.Append(dataChromosome.name + ";" + SceneComunicator.instance.currentIT + ";" + generation+";");
+			foreach (var item in dataChromosome.chromosome.PlayerAI.DataAI)
+			{
+				stringBuilder.Append(item.currentVal+ ";");
+			}//.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)
+			stringBuilder.Append(dataChromosome.lifeTime + ";"
+				+ dataChromosome.averageHealth + ";"
+				+ dataChromosome.fitness + ";"+dataChromosome.chromosome.PlayerAI.PlayerEnt.Dead.ToString());
+			tw.WriteLine(stringBuilder.ToString());
+		}
+	}
+
+	private void CreateFileAvg(List<DataAI> data, string filename)
+	{
+		using (StreamWriter tww = File.CreateText(filename))
+		{
+			StringBuilder stringBuilderr = new StringBuilder();
+			stringBuilderr.Append("Player Name;Iteration;Generation;");
+			foreach (var item in data)
+			{
+				stringBuilderr.Append(item.nameVal.ToString() + ";");
+			}
+			stringBuilderr.Append("Life Time;Average Health;Fitness;IsDead");
+			tww.WriteLine(stringBuilderr.ToString());
+			stringBuilderr.Clear();
+		}
+	}
+	
+	private void AppendDataAvg(DataChromosome dataChromosome, List<DataAI> dataAIs, int generation, string filename)
+	{
+		using (StreamWriter tw = File.AppendText(filename))
+		{
+			StringBuilder stringBuilder = new StringBuilder();
+			stringBuilder.Append(dataChromosome.name + ";" + SceneComunicator.instance.currentIT +";" + generation +";");
+			foreach (var item in dataAIs)
+			{
+				stringBuilder.Append(item.currentVal+ ";");
+			}//.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)
+			stringBuilder.Append(dataChromosome.lifeTime + ";"
+				+ dataChromosome.averageHealth + ";"
 				+ dataChromosome.fitness);
+			tw.WriteLine(stringBuilder.ToString());
+		}
+	}
+
+	public void SaveBayesianGenes(List<double[]> genes, List<string> names, bool isAvg, int generation)
+	{
+		string filename=isAvg?avgBay:generBay+ "Rezultaty_BN_" + SceneComunicator.instance.currentIT + ".csv";
+
+		using (StreamWriter tw = File.AppendText(filename))
+		{
+			StringBuilder stringBuilder = new StringBuilder();
+			stringBuilder.Append("Generation: ;" + generation + ";\n");
+			for (int i = 0; i < genes.Count; i++)
+			{
+				stringBuilder.Append(names[i] + ";\n");
+				for (int j = 0; j < genes[i].Length; j+=2)
+				{
+					stringBuilder.Append(genes[i][j].ToString()+";" +genes[i][j+1].ToString() + ";\n");
+				}
+			}
+			stringBuilder.Append("\n");
+			tw.WriteLine(stringBuilder.ToString());
+		}
+	}
+
+	public void WriteManualResults(DataChromosome dataChromosome, string fname)
+	{
+		var filename = Application.dataPath + fname;
+		using (StreamWriter tw = File.AppendText(filename))
+		{
+			StringBuilder stringBuilder = new StringBuilder();
+			stringBuilder.Append(dataChromosome.name + ";" + SceneComunicator.instance.manualIndex + ";");
+			stringBuilder.Append(dataChromosome.lifeTime + ";"
+				+ dataChromosome.averageHealth + ";"
+				+ dataChromosome.fitness + ";" + dataChromosome.chromosome.PlayerAI.PlayerEnt.Dead.ToString());
 			tw.WriteLine(stringBuilder.ToString());
 		}
 	}

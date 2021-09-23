@@ -10,17 +10,50 @@ public class DataAiUi : MonoBehaviour
 	private List<DataPanel> dataAIpanels=new List<DataPanel>();
 	[SerializeField] private GameObject panel;
 
+	[SerializeField] private TextMeshProUGUI currentGeneration;
+	[SerializeField] private TextMeshProUGUI generationLimit;
+	[SerializeField] private TextMeshProUGUI currentIteration;
+	[SerializeField] private TextMeshProUGUI iterationLimit;
+	[SerializeField] private TextMeshProUGUI timeCurrent;
+
 	private void Awake()
 	{
 		canvas = GetComponent<Canvas>();
 	}
 
-	public void InitDataUI(PlayerAI player)
+	//public void InitDataUI(PlayerAI player)
+	//{
+	//	float offset = 40;
+	//	var panRect = panel.GetComponent<RectTransform>();
+	//	float tmpRect = panRect.anchoredPosition.y;
+	//	for (int i = 0; i < player.DataAI.Count; i++)
+	//	{
+	//		var newPanel = Instantiate(panel);
+	//		newPanel.SetActive(true);
+	//		newPanel.transform.SetParent(panel.transform.parent);
+	//		var rect = newPanel.GetComponent<RectTransform>();
+
+	//		rect.anchorMin = panRect.anchorMin;
+	//		rect.anchorMax = panRect.anchorMax;
+	//		rect.anchoredPosition = new Vector2(panRect.anchoredPosition.x, tmpRect - offset);
+	//		rect.sizeDelta = panRect.sizeDelta;
+	//		rect.localScale = panRect.localScale;
+	//		//rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, tmpRect- offset);
+	//		tmpRect = rect.anchoredPosition.y;
+
+	//		newPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text= player.DataAI[i].nameVal.ToString();
+	//		var txtPro = newPanel.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+	//		dataAIpanels.Add(new DataPanel(player.DataAI[i].nameVal, txtPro));
+	//	}
+	//}
+
+	public void InitDataUI(PlayerAI player, GA_BayesChromosome bncrom)
 	{
 		float offset = 40;
 		var panRect = panel.GetComponent<RectTransform>();
 		float tmpRect = panRect.anchoredPosition.y;
-		for (int i = 0; i < player.DataAI.Count; i++)
+
+		for (int i = 0; i < bncrom.nodes.Count; i++)
 		{
 			var newPanel = Instantiate(panel);
 			newPanel.SetActive(true);
@@ -35,22 +68,44 @@ public class DataAiUi : MonoBehaviour
 			//rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, tmpRect- offset);
 			tmpRect = rect.anchoredPosition.y;
 
-			newPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text= player.DataAI[i].nameVal.ToString();
+			newPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text=bncrom.nodes[i].Name;
 			var txtPro = newPanel.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
-			dataAIpanels.Add(new DataPanel(player.DataAI[i].nameVal, txtPro));
+
+			//dataAIpanels.Add(new DataPanel(player.DataAI[i].nameVal, txtPro));
 		}
+	}
+
+	public void ShowSimData(int genLimit, int genCurrent, int itLimit, int itCurrent)
+	{
+		currentGeneration.text = genCurrent.ToString();
+		generationLimit.text = genLimit.ToString();
+		currentIteration.text = itCurrent.ToString();
+		iterationLimit.text = itLimit.ToString();
+	}
+
+	public void ShowTime(float t)
+	{
+		timeCurrent.text = t.ToString();
 	}
 
 	public void SetPlayersRef(List<PlayerAI> players)
 	{
-		foreach (var p in players)
+		//foreach (var p in players)
+		//{
+		//	p.OnPlayerClick += ShowDataBN;
+		//	//p.OnPlayerClick += ShowData;
+		//}
+	}
+
+	public void ShowDataBN(List<DataAI> data)
+	{
+		foreach (var p in dataAIpanels)
 		{
-			p.OnPlayerClick += ShowData;
+			p.text.text = data[(int)p.name].currentVal.ToString();
 		}
 	}
 
-
-    public void ShowData(List<DataAI> data)
+	public void ShowData(List<DataAI> data)
 	{
 		foreach (var p in dataAIpanels)
 		{

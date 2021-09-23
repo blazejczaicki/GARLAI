@@ -22,6 +22,9 @@ public class NewSpawner : MonoBehaviour
 
     private bool isDisabled;
 
+    public float enemySpeed { get; set; }
+    public float attackDistanceThreshold { get; set; }
+
 	public PlayerAI PlayerAI { get => playerAI; set => playerAI = value; }
 
 	public event System.Action<int> OnNewWave;
@@ -29,7 +32,7 @@ public class NewSpawner : MonoBehaviour
     private void Start()
     {
         enemiesRemainingToSpawn = enemiesToSpawn;
-        playerEntity = PlayerAI.GetComponent<PlayerShooter>();
+        playerEntity = PlayerAI.GetComponent<PlayerEntity>();
         playerT = playerEntity.transform;
 
         playerEntity.OnDeath += OnPlayerDeath;
@@ -77,6 +80,10 @@ public class NewSpawner : MonoBehaviour
         }
         Destroy(spawnTile.gameObject);
         Enemy spawnedEnemy = Instantiate(enemyTemplate, spawnTile.position + Vector3.up, Quaternion.identity) as Enemy;
+
+        spawnedEnemy.Pathfinder.speed = enemySpeed;
+        spawnedEnemy.attackDistanceThreshold = attackDistanceThreshold;
+        
         spawnedEnemy.SetTarget(playerAI);
         PlayerAI.Enemies.Add(spawnedEnemy);
         mapData.Enemies.Add(spawnedEnemy);

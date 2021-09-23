@@ -47,9 +47,9 @@ namespace TopShooter
                 newSfx2Dsource.transform.parent = transform;
 
                 audioListener = FindObjectOfType<AudioListener>().transform;
-                if (FindObjectOfType<PlayerShooter>() != null)
+                if (FindObjectOfType<PlayerEntity>() != null)
                 {
-                    playerT = FindObjectOfType<PlayerShooter>().transform;
+                    playerT = FindObjectOfType<PlayerEntity>().transform;
                 }
 
                 masterVolumePercent = PlayerPrefs.GetFloat("master vol", 1);
@@ -70,9 +70,9 @@ namespace TopShooter
         {
             if (playerT == null)
             {
-                if (FindObjectOfType<PlayerShooter>() != null)
+                if (FindObjectOfType<PlayerEntity>() != null)
                 {
-                    playerT = FindObjectOfType<PlayerShooter>().transform;
+                    playerT = FindObjectOfType<PlayerEntity>().transform;
                 }
             }
         }

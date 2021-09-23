@@ -4,5 +4,17 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/ShooterTutorial/MenuScene.unity
+    guid: dd1a9b6eef1768c44a4ee8f260f5ad9e
+  - enabled: 1
+    path: Assets/ShooterTutorial/TopDownShooter.unity
+    guid: bec7c80cfc16c8b45ad537690401b34b
+  - enabled: 1
+    path: Assets/ShooterTutorial/BNscene2.unity
+    guid: 6d31e9c57a4882a41927fa956f1c3c01
+  - enabled: 1
+    path: Assets/ShooterTutorial/BNmanual.unity
+    guid: a987ac3dbef35d7468b32c7f91754651
   m_configObjects: {}

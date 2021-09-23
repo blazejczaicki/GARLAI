@@ -25,7 +25,7 @@ namespace TopShooter
 
         Color originalColor;
 
-        float attackDistanceThreshold = 0.5f;
+        public float attackDistanceThreshold = 1f;
         float distanceThreshold = 0.3f;
         float damage = 1f;
         float nextAttackTime;
@@ -33,13 +33,19 @@ namespace TopShooter
         float myCollisionRadius;
         float targetCollisionRadius;
 
+
+        float attactDist=1f;
+
+        public float attackSpeed = 3;
+
         bool hasTarget;
 
         public PlayerAI PlayerAI { get => playerAI; set => playerAI = value; }
+		public NavMeshAgent Pathfinder { get => pathfinder; set => pathfinder = value; }
 
-        private void Awake()
+		private void Awake()
         {
-            pathfinder = GetComponent<NavMeshAgent>();
+            Pathfinder = GetComponent<NavMeshAgent>();
             myCollisionRadius = GetComponent<CapsuleCollider>().radius;
             hasTarget = true;
         }
@@ -66,7 +72,7 @@ namespace TopShooter
 
         public void SetCharacteristics(float moveSpeed, int hitsToKillPlayer, float enemyHealth, Color skinColour)
         {
-            pathfinder.speed = moveSpeed;
+            //pathfinder.speed = moveSpeed;
 
             if (hasTarget)
             {
@@ -99,26 +105,28 @@ namespace TopShooter
             if (Time.time > nextAttackTime)
             {
                 float sqrDstToTarget = (target.position - transform.position).sqrMagnitude;
-                if (sqrDstToTarget <= Mathf.Pow(attackDistanceThreshold + myCollisionRadius + targetCollisionRadius, 2))
-                {
-                        nextAttackTime = Time.time + timeBetweenAttacks;
-                        AudioManager.instance.PlaySound("Enemy Attack", transform.position);
-                        StartCoroutine(Attack());
-                }
+                    //if (sqrDstToTarget < attactDist)
+                    //{
+                        if (sqrDstToTarget <= Mathf.Pow(attackDistanceThreshold + myCollisionRadius + targetCollisionRadius, 2))
+                        {
+                            nextAttackTime = Time.time + timeBetweenAttacks;
+                            StartCoroutine(Attack());
+                        }
+                    //}
             }
             }
         }
 
         IEnumerator Attack()
         {
-            pathfinder.enabled = false;
+            Pathfinder.enabled = false;
             currentState = State.Attacking;
 
             Vector3 originalPosition = transform.position;
             Vector3 dirToTarget = (target.position - transform.position).normalized;
             Vector3 attackPosition = target.position - dirToTarget * (myCollisionRadius);
 
-            float attackSpeed = 3;
+            
             float percent = 0;
 
             bool hasAppliedDamage = false;
@@ -139,16 +147,14 @@ namespace TopShooter
             }
             skinMaterial.color = originalColor;
             currentState = State.Chasing;
-            pathfinder.enabled = true;
+            Pathfinder.enabled = true;
         }
 
         public override void TakeHit(float damage, Vector3 hitPoint, Vector3 hitDirection)
         {
-            AudioManager.instance.PlaySound("Impact", transform.position);
-            if ((damage >= health && !dead))
+            if ((damage >= health && !Dead))
             {
                 OnDeathStatic?.Invoke();
-                AudioManager.instance.PlaySound("Enemy Death", transform.position);
                 Destroy(Instantiate(deathEffect.gameObject, hitPoint, Quaternion.FromToRotation(Vector3.forward, hitDirection)) as GameObject,  deathEffect.main.startLifetimeMultiplier);
             }
             base.TakeHit(damage, hitPoint, hitDirection);
@@ -164,9 +170,9 @@ namespace TopShooter
                 {
                     Vector3 dirToTarget = (target.position - transform.position).normalized;
                     Vector3 targetPosition = target.position - dirToTarget * (myCollisionRadius + targetCollisionRadius + distanceThreshold);
-                    if (!dead)
+                    if (!Dead)
                     {
-                        pathfinder.SetDestination(targetPosition);
+                        Pathfinder.SetDestination(targetPosition);
                     }
                 }
                 yield return new WaitForSeconds(refreshRate);

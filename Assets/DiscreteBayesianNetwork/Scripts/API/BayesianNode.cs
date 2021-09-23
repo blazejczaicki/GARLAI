@@ -20,6 +20,7 @@ namespace Jackyjjc.Bayesianet
 
         private List<BayesianNode> parents;
         public double[] values { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Construct a node
@@ -30,6 +31,7 @@ namespace Jackyjjc.Bayesianet
         /// <param name="parents">the parent nodes</param>
         public BayesianNode(string name, string[] domain, double[] values, params BayesianNode[] parents)
         {
+            Name = name;
             this.values = new double[values.Length];
             values.CopyTo(this.values, 0);
             this.parents = new List<BayesianNode>();

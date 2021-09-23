@@ -4,6 +4,7 @@ using System.Linq;
 using TopShooter;
 using UnityEngine;
 using Jackyjjc.Bayesianet;
+using UnityEngine.SceneManagement;
 namespace TopShooter
 {
 	public class GameManager : MonoBehaviour
@@ -63,12 +64,25 @@ namespace TopShooter
 
 		private void Start()
 		{
+			foreach (var p in players)
+			{
+				p.OnStart();
+			}
 			if (isBayes)
 			{
+				//ui.InitDataUI(players.First(), players.First().chromosome as GA_BayesChromosome);
+				geneticAlgorithm.Init(players);
+				var t = Time.time;
+				//nextResetTime = RoundTimeSpan;
+				previousUpdateTime = t;
+				foreach (var player in players)
+				{
+					player.PlayerEnt.OnStart(t);
+				}
 			}
 			else
 			{
-				ui.InitDataUI(players.First());
+				//ui.InitDataUI(players.First(), players.First().chromosome);
 				ui.SetPlayersRef(players);
 				geneticAlgorithm.Init(players);
 				var t = Time.time;
@@ -76,18 +90,68 @@ namespace TopShooter
 				previousUpdateTime = t;
 				foreach (var player in players)
 				{
-						player.PlayerShooter.OnStart(t);
+						player.PlayerEnt.OnStart(t);
 				}
+			}
+			simRounds = SceneComunicator.instance.generationLimits;
+			roundTimeSpan = SceneComunicator.instance.time;
+			ui.ShowSimData((int)simRounds, (int)currentRound, SceneComunicator.instance.iterations, SceneComunicator.instance.currentIT);
+
+			foreach (var p in players)
+			{
+				p.Speed = SceneComunicator.instance.playerSpeed;
+			}
+			foreach (var s in spawners)
+			{
+				s.enemySpeed = SceneComunicator.instance.enemySpeed;
+				s.attackDistanceThreshold = SceneComunicator.instance.attackDistanceThreshold;
 			}
 		}
 
 
 		private void Update()
 		{
+			ui.ShowTime(Time.time - previousUpdateTime);
 			if (isBayes)
 			{
-				UpdatePlayers();
-				UpdateEnemies();
+				if (SceneComunicator.instance.manual)
+				{
+					UpdatePlayers();
+					UpdateEnemies();
+					if (Time.time - previousUpdateTime > RoundTimeSpan || allPlayersDead)
+					{
+						SaverCSV saver = new SaverCSV();
+						var pl = players.First();
+						pl.chromosome.CalculateFitness();
+						var bestResult = new DataChromosome(pl.chromosome, pl.name, pl.GetAverageHealth(),
+						pl.GetLifeTime(), pl.chromosome.Fitness);
+						saver.WriteManualResults(bestResult, "\\BN_manual_results.csv");
+						Destroy(gameObject);
+						SceneManager.LoadScene(0);
+					}
+				}
+				else
+				{
+					UpdatePlayers();
+					UpdateEnemies();
+
+					if (Time.time - previousUpdateTime > RoundTimeSpan || allPlayersDead)
+					{
+						Debug.Log("MARTWI AGENTSI");
+						players.ForEach(p => p.OnEndGeneration());
+						geneticAlgorithm.UpdateAlgorithm(isBayes);
+						currentRound++;
+						if (simRounds == currentRound)
+						{
+							FinishCycle();
+						}
+						ResetWorld();
+						previousUpdateTime = Time.time;
+						ui.ShowSimData((int)simRounds, (int)currentRound, SceneComunicator.instance.iterations, SceneComunicator.instance.currentIT);
+						allPlayersDead = false;
+						//nextResetTime = Time.time + RoundTimeSpan;
+					}
+				}
 			}
 			else
 			{
@@ -96,11 +160,11 @@ namespace TopShooter
 				UpdateEnemies();
 
 				//if (Time.time > nextResetTime || allPlayersDead)// 
-				if (Time.time - previousUpdateTime > RoundTimeSpan)
+				if (Time.time - previousUpdateTime > RoundTimeSpan || allPlayersDead)
 				{
 					Debug.Log("MARTWI AGENTSI");
 					players.ForEach(p => p.OnEndGeneration());
-					geneticAlgorithm.UpdateAlgorithm();
+					geneticAlgorithm.UpdateAlgorithm(isBayes);
 					currentRound++;
 					if (simRounds == currentRound)
 					{
@@ -108,6 +172,8 @@ namespace TopShooter
 					}
 					ResetWorld();
 					previousUpdateTime = Time.time;
+					ui.ShowSimData((int)simRounds, (int)currentRound, SceneComunicator.instance.iterations, SceneComunicator.instance.currentIT);
+					allPlayersDead = false;
 					//nextResetTime = Time.time + RoundTimeSpan;
 				}
 			}
@@ -153,8 +219,12 @@ namespace TopShooter
 		private void FinishCycle()
 		{
 			geneticAlgorithm.OnEndSaveTheBest();
-			Time.timeScale = Time.timeScale == 1 ? 0 : 1;
-			Debug.Log("Koniec");
+			SceneComunicator.instance.currentIT++;
+			SceneComunicator.instance.isChanged = true;
+			Destroy(gameObject);
+			SceneManager.LoadScene(0);
+			//Time.timeScale = Time.timeScale == 1 ? 0 : 1;
+			//Debug.Log("Koniec");
 		}
 
 		[EasyButtons.Button]

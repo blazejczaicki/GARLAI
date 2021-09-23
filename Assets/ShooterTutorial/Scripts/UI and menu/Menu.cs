@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -16,15 +18,38 @@ namespace TopShooter
         public Toggle fullscreenToggle;
         public int[] screenWidths;
         int activeScreenResIndex;
+        
+        [SerializeField] private TMP_InputField IterationLimit;
+        [SerializeField] private TMP_InputField StartIteration;
+        [SerializeField] private TMP_InputField GenerationLimit;
+        [SerializeField] private TMP_InputField enemySpeed;
+        [SerializeField] private TMP_InputField attackDistanceThreshold;
+        [SerializeField] private TMP_InputField playerSpeed;
+        [SerializeField] private TMP_InputField time;        
+
+        [SerializeField] private TMP_InputField IterationLimitBN;
+        [SerializeField] private TMP_InputField StartIterationBN;
+        [SerializeField] private TMP_InputField GenerationLimitBN;
+        [SerializeField] private TMP_InputField enemySpeedBN;
+        [SerializeField] private TMP_InputField attackDistanceThresholdBN;
+        [SerializeField] private TMP_InputField playerSpeedBN;
+        [SerializeField] private TMP_InputField timeBN;
+
+        [SerializeField] private GameObject panelDT;
+        [SerializeField] private GameObject panelBN;
+        
+        [SerializeField] private Toggle RandomGenerationMode;
+        [SerializeField] private Toggle RandomGenerationModeBN;
+
+        [SerializeField] private TMP_InputField manualIndexBN;
+        [SerializeField] private Toggle manualBN;
+
+        [SerializeField] private TextMeshProUGUI info;
 
         void Start()
         {
             activeScreenResIndex = PlayerPrefs.GetInt("screen res index");
             bool isFullscreen = (PlayerPrefs.GetInt("fullscreen") == 1) ? true : false;
-
-            volumeSliders[0].value = AudioManager.instance.masterVolumePercent;
-            volumeSliders[1].value = AudioManager.instance.musicVolumePercent;
-            volumeSliders[2].value = AudioManager.instance.sfxVolumePercent;
 
             for (int i = 0; i < resolutionToggles.Length; i++)
             {
@@ -34,10 +59,102 @@ namespace TopShooter
             fullscreenToggle.isOn = isFullscreen;
         }
 
+		private void Update()
+		{
+            LoadAgain();
+		}
+
+		public void LoadAgain()
+		{
+            if (SceneComunicator.instance.isChanged && SceneComunicator.instance.iterations> SceneComunicator.instance.currentIT)
+            {
+                if (SceneComunicator.instance.sceneTaker == SceneTaker.DT)
+                {
+                    SceneComunicator.instance.sceneTaker = SceneTaker.DT;
+                    SceneManager.LoadScene(1);
+                }
+                else if (SceneComunicator.instance.sceneTaker == SceneTaker.BN)
+                {
+                    SceneComunicator.instance.sceneTaker = SceneTaker.BN;
+                    SceneManager.LoadScene(2);
+                }
+                else if (SceneComunicator.instance.sceneTaker == SceneTaker.ML)
+                {
+                    MLagents();
+                }
+            }
+		}
+
+        public void Stop()
+        {
+            SceneComunicator.instance.isChanged = false;
+        }
 
         public void Play()
         {
-            SceneManager.LoadScene(1);
+			try
+			{
+				if (panelDT.activeSelf)
+				{
+                    SceneComunicator.instance.iterations = int.Parse(IterationLimit.text);
+                    SceneComunicator.instance.currentIT = int.Parse(StartIteration.text);
+                    SceneComunicator.instance.generationLimits = int.Parse(GenerationLimit.text);
+                    SceneComunicator.instance.playerSpeed = float.Parse(playerSpeed.text);
+                    SceneComunicator.instance.enemySpeed = float.Parse(enemySpeed.text);
+                    SceneComunicator.instance.attackDistanceThreshold = float.Parse(attackDistanceThreshold.text);
+                    SceneComunicator.instance.time = float.Parse(time.text);
+                    SceneComunicator.instance.randomMode = RandomGenerationMode.isOn;
+                    SceneComunicator.instance.sceneTaker = SceneTaker.DT;
+                    SceneManager.LoadScene(1);
+                }
+				else if (panelBN.activeSelf)
+				{
+                    SceneComunicator.instance.iterations = int.Parse(IterationLimitBN.text);
+                    SceneComunicator.instance.currentIT = int.Parse(StartIterationBN.text);
+                    SceneComunicator.instance.generationLimits = int.Parse(GenerationLimitBN.text);
+                    SceneComunicator.instance.playerSpeed = float.Parse(playerSpeedBN.text);
+                    SceneComunicator.instance.enemySpeed = float.Parse(enemySpeedBN.text);
+                    SceneComunicator.instance.attackDistanceThreshold = float.Parse(attackDistanceThresholdBN.text);
+                    SceneComunicator.instance.time = float.Parse(timeBN.text);
+                    SceneComunicator.instance.randomMode = RandomGenerationModeBN.isOn;
+
+                    SceneComunicator.instance.sceneTaker = SceneTaker.BN;
+
+                    SceneComunicator.instance.manualIndex = int.Parse(manualIndexBN.text);
+
+                    var isManual =manualBN.isOn;
+                    SceneComunicator.instance.manual = isManual;
+					if (isManual)
+					{
+                        SceneManager.LoadScene(3);
+                    }
+                    else
+					{
+                        SceneManager.LoadScene(2);
+					}
+                }
+			}
+            catch(FormatException e)
+			{
+                info.text = "Not number values";
+			}
+        } 
+        
+        public void DecisionTree()
+        {
+            panelBN.SetActive(false);
+            panelDT.SetActive(true);
+        }
+
+        public void BayesNet()
+        {
+            panelBN.SetActive(true);
+            panelDT.SetActive(false);
+        }
+
+        public void MLagents()
+        {
+            //SceneManager.LoadScene(3);
         }
 
         public void Quit()
