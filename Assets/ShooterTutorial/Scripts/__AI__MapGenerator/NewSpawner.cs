@@ -6,6 +6,7 @@ using UnityEngine;
 public class NewSpawner : MonoBehaviour
 {
     [SerializeField] private PlayerAI playerAI;
+    [SerializeField] private PlayerMLA playerMLA;
     [SerializeField] private MapData mapData;
     [SerializeField] private Transform tileSpawnTemplate;
     [SerializeField] private Enemy enemyTemplate;
@@ -26,13 +27,23 @@ public class NewSpawner : MonoBehaviour
     public float attackDistanceThreshold { get; set; }
 
 	public PlayerAI PlayerAI { get => playerAI; set => playerAI = value; }
+	public PlayerMLA PlayerMLA { get => playerMLA; set => playerMLA = value; }
 
 	public event System.Action<int> OnNewWave;
 
     private void Start()
     {
         enemiesRemainingToSpawn = enemiesToSpawn;
-        playerEntity = PlayerAI.GetComponent<PlayerEntity>();
+
+		if (playerAI==null)
+		{
+            playerEntity = PlayerMLA.PlayerEnt;
+        }
+		else
+		{
+            playerEntity = PlayerAI.GetComponent<PlayerEntity>();
+        }
+        
         playerT = playerEntity.transform;
 
         playerEntity.OnDeath += OnPlayerDeath;
@@ -41,10 +52,20 @@ public class NewSpawner : MonoBehaviour
 
     private void ResetPlayerPosition()
     {
-        playerAI.CharController.enabled = false;
-        PlayerAI.transform.position = mapData.GetMapCenter();
-        PlayerAI.CurrentTarget = playerT.position;
-        playerAI.CharController.enabled = true;
+        if (playerAI == null)
+        {
+            PlayerMLA.CharController.enabled = false;
+            PlayerMLA.transform.position = mapData.GetMapCenter();
+            //PlayerMLA.CurrentTarget = playerT.position;
+            PlayerMLA.CharController.enabled = true;
+        }
+        else
+        {
+            playerAI.CharController.enabled = false;
+            PlayerAI.transform.position = mapData.GetMapCenter();
+            PlayerAI.CurrentTarget = playerT.position;
+            playerAI.CharController.enabled = true;
+        }
     }
 
     private void Update()
@@ -83,11 +104,21 @@ public class NewSpawner : MonoBehaviour
 
         spawnedEnemy.Pathfinder.speed = enemySpeed;
         spawnedEnemy.attackDistanceThreshold = attackDistanceThreshold;
-        
-        spawnedEnemy.SetTarget(playerAI);
-        PlayerAI.Enemies.Add(spawnedEnemy);
-        mapData.Enemies.Add(spawnedEnemy);
-        spawnedEnemy.PlayerAI = PlayerAI;
+
+        if (playerAI == null)
+        {
+            spawnedEnemy.SetTarget(playerMLA.transform);
+            //playerMLA.Enemies.Add(spawnedEnemy);
+            mapData.Enemies.Add(spawnedEnemy);
+            //spawnedEnemy.PlayerAI = PlayerAI;
+        }
+        else
+        {
+            spawnedEnemy.SetTarget(playerAI.transform);
+            PlayerAI.Enemies.Add(spawnedEnemy);
+            mapData.Enemies.Add(spawnedEnemy);
+            spawnedEnemy.PlayerAI = PlayerAI;
+        }
         spawnedEnemy.OnDeath += OnEnemyDeath;
         spawnedEnemy.SetCharacteristics(currentWave.moveSpeed, currentWave.hitsToKillPlayer, currentWave.enemyHealth, currentWave.skinColour);
     }
@@ -98,7 +129,14 @@ public class NewSpawner : MonoBehaviour
         nextSpawnTime = Time.time + currentWave.timeBetweenSpawns;
         enemiesRemainingToSpawn = enemiesToSpawn;
         ResetPlayerPosition();
-        playerAI.ResetPlayerWorld();
+        if (playerAI == null)
+        {
+            playerMLA.ResetPlayerWorld();
+        }
+        else
+        {
+            playerAI.ResetPlayerWorld();
+        }        
     }
 
     void OnPlayerDeath()

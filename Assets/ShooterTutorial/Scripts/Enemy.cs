@@ -50,7 +50,7 @@ namespace TopShooter
             hasTarget = true;
         }
 
-        public void SetTarget(PlayerAI target)
+        public void SetTarget(Transform target)
 		{
             this.target = target.transform;
             livingEntityTarget = target.GetComponent<LivingEntity>();
