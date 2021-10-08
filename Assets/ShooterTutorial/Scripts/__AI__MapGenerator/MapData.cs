@@ -22,6 +22,9 @@ public class MapData : MonoBehaviour
     [SerializeField] private Transform debugTileParent;
     [SerializeField] private bool debugMode = false;
 
+    private Enemy[] enemiesMLA = new Enemy[10];
+    public Enemy[] EnemiesMLA { get => enemiesMLA; }
+
     public List<List<AstarNode>> AstarNodesMap { get => astarNodesMap; set => astarNodesMap = value; }
     public Vector3 OriginPoint { get => originPoint; set => originPoint = value; }
 	public int Height { get => height; set => height = value; }
@@ -113,7 +116,8 @@ public class MapData : MonoBehaviour
         ResetMapData();
         enemies.ForEach(x => { x.StopAllCoroutines(); Destroy(x.gameObject); });
         enemies.Clear();
-		if (SceneComunicator.instance.randomMode)
+        enemiesMLA = new Enemy[10];
+        if (SceneComunicator.instance.randomMode)
 		{
             shuffledTileCoords = new Queue<AstarNode>(TopShooter.Utility.ShuffleArray(AstarNodesMap.SelectMany(d => d).ToArray(), Random.Range(0, 99999)));
         }

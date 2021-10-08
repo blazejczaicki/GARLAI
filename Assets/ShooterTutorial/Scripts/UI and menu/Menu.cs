@@ -35,11 +35,21 @@ namespace TopShooter
         [SerializeField] private TMP_InputField playerSpeedBN;
         [SerializeField] private TMP_InputField timeBN;
 
+        [SerializeField] private TMP_InputField IterationLimitMLA;
+        [SerializeField] private TMP_InputField StartIterationMLA;
+        [SerializeField] private TMP_InputField GenerationLimitMLA;
+        [SerializeField] private TMP_InputField enemySpeedMLA;
+        [SerializeField] private TMP_InputField attackDistanceThresholdMLA;
+        [SerializeField] private TMP_InputField playerSpeedMLA;
+        [SerializeField] private TMP_InputField timeMLA;
+
         [SerializeField] private GameObject panelDT;
         [SerializeField] private GameObject panelBN;
+        [SerializeField] private GameObject panelMLA;
         
         [SerializeField] private Toggle RandomGenerationMode;
         [SerializeField] private Toggle RandomGenerationModeBN;
+        [SerializeField] private Toggle RandomGenerationModeMLA;
 
         [SerializeField] private TMP_InputField manualIndexBN;
         [SerializeField] private Toggle manualBN;
@@ -80,7 +90,7 @@ namespace TopShooter
                 }
                 else if (SceneComunicator.instance.sceneTaker == SceneTaker.ML)
                 {
-                    MLagents();
+
                 }
             }
 		}
@@ -94,8 +104,8 @@ namespace TopShooter
         {
 			try
 			{
-				if (panelDT.activeSelf)
-				{
+                if (panelDT.activeSelf)
+                {
                     SceneComunicator.instance.iterations = int.Parse(IterationLimit.text);
                     SceneComunicator.instance.currentIT = int.Parse(StartIteration.text);
                     SceneComunicator.instance.generationLimits = int.Parse(GenerationLimit.text);
@@ -107,8 +117,8 @@ namespace TopShooter
                     SceneComunicator.instance.sceneTaker = SceneTaker.DT;
                     SceneManager.LoadScene(1);
                 }
-				else if (panelBN.activeSelf)
-				{
+                else if (panelBN.activeSelf)
+                {
                     SceneComunicator.instance.iterations = int.Parse(IterationLimitBN.text);
                     SceneComunicator.instance.currentIT = int.Parse(StartIterationBN.text);
                     SceneComunicator.instance.generationLimits = int.Parse(GenerationLimitBN.text);
@@ -122,18 +132,31 @@ namespace TopShooter
 
                     SceneComunicator.instance.manualIndex = int.Parse(manualIndexBN.text);
 
-                    var isManual =manualBN.isOn;
+                    var isManual = manualBN.isOn;
                     SceneComunicator.instance.manual = isManual;
-					if (isManual)
-					{
+                    if (isManual)
+                    {
                         SceneManager.LoadScene(3);
                     }
                     else
-					{
+                    {
                         SceneManager.LoadScene(2);
-					}
+                    }
                 }
-			}
+                else if (panelMLA.activeSelf)
+                {
+                    SceneComunicator.instance.iterations = int.Parse(IterationLimitMLA.text);
+                    SceneComunicator.instance.currentIT = int.Parse(StartIterationMLA.text);
+                    SceneComunicator.instance.generationLimits = int.Parse(GenerationLimitMLA.text);
+                    SceneComunicator.instance.playerSpeed = float.Parse(playerSpeedMLA.text);
+                    SceneComunicator.instance.enemySpeed = float.Parse(enemySpeedMLA.text);
+                    SceneComunicator.instance.attackDistanceThreshold = float.Parse(attackDistanceThresholdMLA.text);
+                    SceneComunicator.instance.time = float.Parse(timeMLA.text);
+                    SceneComunicator.instance.randomMode = RandomGenerationModeMLA.isOn;
+                    SceneComunicator.instance.sceneTaker = SceneTaker.ML;
+                    SceneManager.LoadScene(4);
+                }
+            }
             catch(FormatException e)
 			{
                 info.text = "Not number values";
@@ -144,17 +167,21 @@ namespace TopShooter
         {
             panelBN.SetActive(false);
             panelDT.SetActive(true);
+            panelMLA.SetActive(false);
         }
 
         public void BayesNet()
         {
             panelBN.SetActive(true);
             panelDT.SetActive(false);
+            panelMLA.SetActive(false);
         }
 
         public void MLagents()
         {
-            //SceneManager.LoadScene(3);
+            panelBN.SetActive(false);
+            panelDT.SetActive(false);
+            panelMLA.SetActive(true);
         }
 
         public void Quit()

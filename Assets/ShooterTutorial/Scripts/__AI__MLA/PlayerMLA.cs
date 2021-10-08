@@ -74,8 +74,19 @@ public class PlayerMLA : Agent
 	public override void CollectObservations(VectorSensor sensor)
 	{
 		base.CollectObservations(sensor);
+        sensor.AddObservation(transform.position);
 
-        //if enemie null then vector 0 else pozycja
+        for (int i = 0; i < 10; i++)
+		{
+		    if (mapData.EnemiesMLA[i]!=null)
+		    {
+                sensor.AddObservation(mapData.EnemiesMLA[i].transform.position);
+            }
+		    else
+		    {
+                sensor.AddObservation(Vector3.zero);
+		    }
+		}
 
         Debug.Log("Collect call");
 	}

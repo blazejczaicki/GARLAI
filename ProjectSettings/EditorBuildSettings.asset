@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/ShooterTutorial/BNmanual.unity
     guid: a987ac3dbef35d7468b32c7f91754651
+  - enabled: 1
+    path: Assets/ShooterTutorial/MLagentsScene.unity
+    guid: 44a75d0b092035d46adc45f99834bbba
   m_configObjects: {}

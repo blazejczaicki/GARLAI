@@ -15,6 +15,8 @@ public class NewSpawner : MonoBehaviour
     private LivingEntity playerEntity;
     private Transform playerT;
 
+    private int spawnEnInd = 0;
+
     [SerializeField] private Wave currentWave;
     private int currentWaveNumber;
  
@@ -110,6 +112,8 @@ public class NewSpawner : MonoBehaviour
             spawnedEnemy.SetTarget(playerMLA.transform);
             //playerMLA.Enemies.Add(spawnedEnemy);
             mapData.Enemies.Add(spawnedEnemy);
+            mapData.EnemiesMLA[spawnEnInd] = spawnedEnemy;
+            spawnEnInd++;
             //spawnedEnemy.PlayerAI = PlayerAI;
         }
         else
@@ -128,6 +132,7 @@ public class NewSpawner : MonoBehaviour
         this.StopAllCoroutines();
         nextSpawnTime = Time.time + currentWave.timeBetweenSpawns;
         enemiesRemainingToSpawn = enemiesToSpawn;
+        spawnEnInd = 0;
         ResetPlayerPosition();
         if (playerAI == null)
         {
