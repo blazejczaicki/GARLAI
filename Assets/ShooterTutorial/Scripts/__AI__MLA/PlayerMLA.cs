@@ -55,21 +55,24 @@ public class PlayerMLA : Agent
     public void OnUpdate(float t)
     {
         PlayerEnt.OnUpdate(t);
-        MoveCR();
     }
 
-    private void MoveCR()
-    {
-        //var moveVec = (currentTarget - transform.position).normalized * Speed;// * Time.deltaTime;
-        //CharController.SimpleMove(new Vector3(moveVec.x, 0, moveVec.z));
-    }
+
+	public override void OnEpisodeBegin()
+	{
+		base.OnEpisodeBegin();
+
+	}
 
 	public override void OnActionReceived(ActionBuffers actions)
 	{
 		base.OnActionReceived(actions);
+        float x = actions.ContinuousActions[0];
+        float z = actions.ContinuousActions[1];
 
-
-	}
+        var moveVec = new Vector3(x,0,z) * Speed;
+        CharController.SimpleMove(moveVec);
+    }   
 
 	public override void CollectObservations(VectorSensor sensor)
 	{
@@ -91,9 +94,15 @@ public class PlayerMLA : Agent
         Debug.Log("Collect call");
 	}
 
+    public void RewardPlayer()
+	{
+        SetReward(-1);
+	}
 
 	public void OnNewGeneration(float t)
     {
+        EndEpisode();
+
         PlayerEnt.OnNewGeneration(t);
         gameObject.SetActive(true);
     }

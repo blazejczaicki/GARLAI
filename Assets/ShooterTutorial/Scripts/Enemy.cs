@@ -14,6 +14,7 @@ namespace TopShooter
         State currentState;
 
         [SerializeField] private PlayerAI playerAI;
+        [SerializeField] private PlayerMLA playerMLA;
 
         public ParticleSystem deathEffect;
         public static event System.Action OnDeathStatic;
@@ -42,6 +43,7 @@ namespace TopShooter
 
         public PlayerAI PlayerAI { get => playerAI; set => playerAI = value; }
 		public NavMeshAgent Pathfinder { get => pathfinder; set => pathfinder = value; }
+		public PlayerMLA PlayerMLA { get => playerMLA; set => playerMLA = value; }
 
 		private void Awake()
         {
@@ -121,6 +123,8 @@ namespace TopShooter
         {
             Pathfinder.enabled = false;
             currentState = State.Attacking;
+
+            playerMLA.RewardPlayer();
 
             Vector3 originalPosition = transform.position;
             Vector3 dirToTarget = (target.position - transform.position).normalized;
