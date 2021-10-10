@@ -38,6 +38,8 @@ public class GameManagerMLA : MonoBehaviour
 	private float previousUpdateTime = 0;
 	private bool allPlayersDead = false;
 
+	public float tt =0;
+
 	public float MaxPlayerHealth { get => maxPlayerHealth; set => maxPlayerHealth = value; }
 	public float RoundTimeSpan { get => roundTimeSpan; set => roundTimeSpan = value; }
 
@@ -89,22 +91,28 @@ public class GameManagerMLA : MonoBehaviour
 			UpdatePlayers();
 			UpdateEnemies();
 
-			//if (Time.time > nextResetTime || allPlayersDead)// 
-			if (Time.time - previousUpdateTime > RoundTimeSpan || allPlayersDead)
+			if (Time.time> RoundTimeSpan* simRounds)
 			{
-				Debug.Log("MARTWI AGENTSI");
-				players.ForEach(p => p.OnEndGeneration());
-				currentRound++;
-				if (simRounds == currentRound)
-				{
-					FinishCycle();
-				}
-				ResetWorld();
-				previousUpdateTime = Time.time;
-				ui.ShowSimData((int)simRounds, (int)currentRound, SceneComunicator.instance.iterations, SceneComunicator.instance.currentIT);
-				allPlayersDead = false;
-				//nextResetTime = Time.time + RoundTimeSpan;
+				Debug.Log("Koniec");
+				FinishCycle();
 			}
+				//if (Time.time > nextResetTime || allPlayersDead)// 
+			//	if (Time.time - previousUpdateTime > RoundTimeSpan || allPlayersDead)
+			//{
+			//	Debug.Log("MARTWI AGENTSI");
+			//	players.ForEach(p => p.OnEndGeneration());
+			//	currentRound++;
+			//	if (simRounds == currentRound)
+			//	{
+			//		FinishCycle();
+			//	}
+			//	previousUpdateTime = Time.time;
+			//	ui.ShowSimData((int)simRounds, (int)currentRound, SceneComunicator.instance.iterations, SceneComunicator.instance.currentIT);
+			//	allPlayersDead = false;
+			//	float tt = Time.time;
+			//	players.ForEach(x => x.OnNewGeneration());
+			//	//nextResetTime = Time.time + RoundTimeSpan;
+			//}
 		}
 		if (Input.GetKeyDown(KeyCode.Space))
 		{
@@ -118,11 +126,12 @@ public class GameManagerMLA : MonoBehaviour
 		float t = Time.time;
 		foreach (var player in players)
 		{
-			if (player.gameObject.activeSelf)
-			{
-				allPlayersDead = false;
-				player.OnUpdate(t);
-			}
+			player.OnUpdate(t);
+			//if (player.gameObject.activeSelf)
+			//{
+			//	allPlayersDead = false;
+				
+			//}
 		}
 	}
 
@@ -137,12 +146,10 @@ public class GameManagerMLA : MonoBehaviour
 		}
 	}
 
-	private void ResetWorld()
+	public void ResetWorld()
 	{
 		boards.ForEach(x => x.ResetMapWorld());
 		spawners.ForEach(x => x.ResetSpawnersWorld());
-		float t = Time.time;
-		players.ForEach(x => x.OnNewGeneration(t));
 	}
 
 	private void FinishCycle()
@@ -184,6 +191,8 @@ public class GameManagerMLA : MonoBehaviour
 				var newSpawner = newBoard.GetComponent<NewSpawner>();
 				newSpawner.PlayerMLA = newPlayerAI;
 				spawners.Add(newSpawner);
+
+				newBoard.newSpawner = newSpawner;
 			}
 		}
 		foreach (var bo in boards)

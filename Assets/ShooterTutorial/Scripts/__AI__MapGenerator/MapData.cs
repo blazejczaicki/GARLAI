@@ -22,6 +22,8 @@ public class MapData : MonoBehaviour
     [SerializeField] private Transform debugTileParent;
     [SerializeField] private bool debugMode = false;
 
+    public NewSpawner newSpawner;
+
     private Enemy[] enemiesMLA = new Enemy[10];
     public Enemy[] EnemiesMLA { get => enemiesMLA; }
 
@@ -114,6 +116,7 @@ public class MapData : MonoBehaviour
     public void ResetMapWorld()
 	{
         ResetMapData();
+        newSpawner.ResetSpawnersWorld();
         enemies.ForEach(x => { x.StopAllCoroutines(); Destroy(x.gameObject); });
         enemies.Clear();
         enemiesMLA = new Enemy[10];

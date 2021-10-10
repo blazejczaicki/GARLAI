@@ -114,6 +114,7 @@ public class NewSpawner : MonoBehaviour
             mapData.Enemies.Add(spawnedEnemy);
             mapData.EnemiesMLA[spawnEnInd] = spawnedEnemy;
             spawnEnInd++;
+            spawnedEnemy.PlayerMLA = playerMLA;
             //spawnedEnemy.PlayerAI = PlayerAI;
         }
         else
@@ -134,11 +135,7 @@ public class NewSpawner : MonoBehaviour
         enemiesRemainingToSpawn = enemiesToSpawn;
         spawnEnInd = 0;
         ResetPlayerPosition();
-        if (playerAI == null)
-        {
-            playerMLA.ResetPlayerWorld();
-        }
-        else
+        if (playerAI != null)
         {
             playerAI.ResetPlayerWorld();
         }        

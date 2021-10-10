@@ -25,6 +25,8 @@ public class PlayerMLA : Agent
     {
         CharController = GetComponent<CharacterController>();
         PlayerEnt = GetComponent<PlayerEntity>();
+
+        PlayerEnt.OnDeath += OnNewGeneration;
     }
 
     public float GetAverageHealth()
@@ -61,14 +63,19 @@ public class PlayerMLA : Agent
 	public override void OnEpisodeBegin()
 	{
 		base.OnEpisodeBegin();
-
-	}
+        mapData.ResetMapWorld();
+        PlayerEnt.OnNewGeneration(GameManagerMLA.instance.tt);
+        OnEndGeneration();
+        //gameObject.SetActive(true);
+    }
 
 	public override void OnActionReceived(ActionBuffers actions)
 	{
 		base.OnActionReceived(actions);
         float x = actions.ContinuousActions[0];
         float z = actions.ContinuousActions[1];
+
+        AddReward(0.1f);
 
         var moveVec = new Vector3(x,0,z) * Speed;
         CharController.SimpleMove(moveVec);
@@ -91,7 +98,7 @@ public class PlayerMLA : Agent
 		    }
 		}
 
-        Debug.Log("Collect call");
+       // Debug.Log("Collect call");
 	}
 
     public void RewardPlayer()
@@ -99,11 +106,8 @@ public class PlayerMLA : Agent
         SetReward(-1);
 	}
 
-	public void OnNewGeneration(float t)
+	public void OnNewGeneration()
     {
         EndEpisode();
-
-        PlayerEnt.OnNewGeneration(t);
-        gameObject.SetActive(true);
     }
 }

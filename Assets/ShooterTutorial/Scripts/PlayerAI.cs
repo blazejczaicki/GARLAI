@@ -63,6 +63,7 @@ namespace TopShooter
 
             decisionUpdateTime= UnityEngine.Random.Range(decisionUpdateTime-0.3f, decisionUpdateTime+0.3f);
 
+            PlayerEnt.OnDeath += OnDeadPlayer;
 
             astarPathfinding = new Astar();
             Enemies = new List<Enemy>();
@@ -82,6 +83,12 @@ namespace TopShooter
             {
                 chromosome = new GA_DT_Chromosome(this);
             }
+        }
+
+        public void OnDeadPlayer()
+		{
+            StopAllCoroutines();
+            gameObject.SetActive(false);
         }
 
 		public float GetAverageHealth()

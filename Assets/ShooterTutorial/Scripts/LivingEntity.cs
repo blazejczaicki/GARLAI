@@ -27,7 +27,10 @@ namespace TopShooter
 
         public virtual void TakeDamage(float damage)
         {
-            health -= damage;
+			if (health>0)
+			{
+                health -= damage;
+			}
             if (health <= 0 && !Dead)
             {
                 Die();
@@ -39,9 +42,7 @@ namespace TopShooter
         {
             dead = true;
             OnDeath?.Invoke();
-            //Destroy(gameObject);
-            StopAllCoroutines();
-            gameObject.SetActive(false);
+            //Destroy(gameObject);            
         }
     }
 }

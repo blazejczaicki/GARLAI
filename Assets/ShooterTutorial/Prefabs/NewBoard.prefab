@@ -23509,6 +23509,92 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &4496157707220804790
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7310916667247199272}
+  - component: {fileID: 1858416929913562584}
+  - component: {fileID: 5932100876123790042}
+  - component: {fileID: 4592582716884355809}
+  - component: {fileID: 440643932439753277}
+  m_Layer: 0
+  m_Name: Colliders
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7310916667247199272
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4496157707220804790}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2888604738913219347}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1858416929913562584
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4496157707220804790}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 20.835426, y: 2.899928, z: 1.2619209}
+  m_Center: {x: -0.29447556, y: 0.94996405, z: 10.558735}
+--- !u!65 &5932100876123790042
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4496157707220804790}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 20.95272, y: 2.7304788, z: 1.5557537}
+  m_Center: {x: -0.15346527, y: 0.8652396, z: -10.703864}
+--- !u!65 &4592582716884355809
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4496157707220804790}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.8054695, y: 2.6552663, z: 21.713638}
+  m_Center: {x: 10.359922, y: 0.8276336, z: -0.3318596}
+--- !u!65 &440643932439753277
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4496157707220804790}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.0230255, y: 2.5219402, z: 20.530796}
+  m_Center: {x: -10.393354, y: 0.76097035, z: -0.060667038}
 --- !u!1 &4499456655716312083
 GameObject:
   m_ObjectHideFlags: 0
@@ -29701,6 +29787,7 @@ Transform:
   - {fileID: 857300118782672574}
   - {fileID: 9151231035332401989}
   - {fileID: 1500910872}
+  - {fileID: 7310916667247199272}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -29724,6 +29811,8 @@ MonoBehaviour:
   unitInfluenceLimit: 25
   debugTileTemplate: {fileID: 7425016246348203177, guid: e8c60d0cbe25aa242ab6f8285d51b41e, type: 3}
   debugTileParent: {fileID: 1500910872}
+  debugMode: 0
+  newSpawner: {fileID: 0}
 --- !u!114 &6894719256789927861
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29737,10 +29826,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerAI: {fileID: 0}
+  playerMLA: {fileID: 0}
   mapData: {fileID: 7102117550276662901}
   tileSpawnTemplate: {fileID: 7425016246348203177, guid: e8c60d0cbe25aa242ab6f8285d51b41e, type: 3}
   enemyTemplate: {fileID: 808130400482571157, guid: 9686cadad25c4d444a7c0ecb25324671, type: 3}
-  enemiesRemainingToSpawn: 2
+  enemiesToSpawn: 10
   currentWave:
     infinite: 0
     enemyCount: 10
