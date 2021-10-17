@@ -143,7 +143,7 @@ public class MapData : MonoBehaviour
 
 	public Vector3 GetMapCenter()
     {
-        return new Vector3(OriginPoint.x + Width * 0.5f, 0, OriginPoint.z + Height * 0.5f);
+        return new Vector3(OriginPoint.x + Width * 0.5f, 1.01f, OriginPoint.z + Height * 0.5f);
     }
 
     public Vector3 GetRandomPlace()

@@ -170,6 +170,8 @@ public class GameManagerMLA : MonoBehaviour
 		players.Clear();
 		int index = 0;
 
+		int offsetDistance = 50;
+
 		PlayerMLA templatePlayer =  playerMLATemplate;
 		for (int i = 0; i < width; i++)
 		{
@@ -178,7 +180,7 @@ public class GameManagerMLA : MonoBehaviour
 				var newBoard = Instantiate(boardTemplate) as MapData;
 				boards.Add(newBoard);
 				newBoard.transform.SetParent(boardsParent);
-				newBoard.OriginPoint = new Vector3(j * 25, 0, i * 25); //j to x, i to z
+				newBoard.OriginPoint = new Vector3(j * offsetDistance, 0, i * offsetDistance); //j to x, i to z
 																	   //newBoard.CreateBoardContent(new Vector3(j*25,0,i*25));
 				newBoard.transform.position = new Vector3(newBoard.OriginPoint.x + newBoard.Width * 0.5f, 0, newBoard.OriginPoint.z + newBoard.Height * 0.5f);
 

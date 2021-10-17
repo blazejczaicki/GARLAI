@@ -124,7 +124,11 @@ namespace TopShooter
             Pathfinder.enabled = false;
             currentState = State.Attacking;
 
-            playerMLA.RewardPlayer();
+			if (SceneComunicator.instance.sceneTaker==SceneTaker.ML)
+			{
+                playerMLA.RewardPlayer();
+                Debug.Log("mla enemi");
+            }
 
             Vector3 originalPosition = transform.position;
             Vector3 dirToTarget = (target.position - transform.position).normalized;

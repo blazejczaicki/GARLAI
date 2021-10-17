@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 3627344905564451848}
   - component: {fileID: 3627344905564451851}
   - component: {fileID: 4115099296497402304}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: PlayerMLA
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -167,7 +167,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 33
+    VectorObservationSize: 45
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 2
@@ -226,7 +226,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3627344905688441493}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: weaponHold
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -14,6 +14,11 @@ public class PlayerMLA : Agent
     [SerializeField] private float radius = 0.1f;
     [SerializeField] private float speed = 10f;
 
+    int mask = 1 << 10;
+
+    private float previousUpdateTime = 0;
+    private float roundTimeSpan = 1;
+
     [SerializeField] private MapData mapData;
 
     public MapData MapData { get => mapData; set => mapData = value; }
@@ -75,33 +80,81 @@ public class PlayerMLA : Agent
         float x = actions.ContinuousActions[0];
         float z = actions.ContinuousActions[1];
 
-        AddReward(0.1f);
-
-        var moveVec = new Vector3(x,0,z) * Speed;
-        CharController.SimpleMove(moveVec);
-    }   
-
-	public override void CollectObservations(VectorSensor sensor)
-	{
-		base.CollectObservations(sensor);
-        sensor.AddObservation(transform.position);
-
-        for (int i = 0; i < 10; i++)
-		{
-		    if (mapData.EnemiesMLA[i]!=null)
-		    {
-                sensor.AddObservation(mapData.EnemiesMLA[i].transform.position);
-            }
-		    else
-		    {
-                sensor.AddObservation(Vector3.zero);
-		    }
+		if (Time.time - previousUpdateTime > roundTimeSpan)
+        {
+            previousUpdateTime = Time.time;
+            SetReward(1f);
 		}
 
-       // Debug.Log("Collect call");
+        var moveVec = new Vector3(x,0,z) * Speed*Time.deltaTime;
+        CharController.Move(moveVec);
+    }
+
+    public override void CollectObservations(VectorSensor sensor)
+    {
+        base.CollectObservations(sensor);
+        sensor.AddObservation(transform.position);
+        RaycastHit hit;
+		if (Physics.Raycast(transform.position, Vector3.forward, out hit, 21, mask))
+		{
+			//Debug.Log(hit.point);
+			sensor.AddObservation(hit.point);
+			//forward = hit.point;
+		}
+		else
+		{
+			sensor.AddObservation(Vector3.zero);
+		}
+		if (Physics.Raycast(transform.position, Vector3.back, out hit, 21, mask))
+		{
+			// Debug.Log(hit.point);
+			sensor.AddObservation(hit.point);
+			//back = hit.point;
+		}
+		else
+		{
+			sensor.AddObservation(Vector3.zero);
+		}
+		if (Physics.Raycast(transform.position, Vector3.right, out hit, 21, mask))
+		{
+			//Debug.Log(hit.point);
+			sensor.AddObservation(hit.point);
+		}
+		else
+		{
+			sensor.AddObservation(Vector3.zero);
+		}
+		if (Physics.Raycast(transform.position, Vector3.left, out hit, 21, mask))
+		{
+			//Debug.Log(hit.point);
+			sensor.AddObservation(hit.point);
+		}
+		else
+		{
+			sensor.AddObservation(Vector3.zero);
+		}
+
+		// Debug.Log("Collect call");
+		for (int i = 0; i < 10; i++)
+        {
+            if (mapData.EnemiesMLA[i] != null)
+            {
+                sensor.AddObservation(mapData.EnemiesMLA[i].transform.position);
+            }
+            else
+            {
+                sensor.AddObservation(Vector3.zero);
+            }
+        }
+
+    }
+
+	private void OnCollisionEnter(Collision collision)
+	{
+        SetReward(-0.5f);
 	}
 
-    public void RewardPlayer()
+	public void RewardPlayer()
 	{
         SetReward(-1);
 	}
@@ -110,4 +163,15 @@ public class PlayerMLA : Agent
     {
         EndEpisode();
     }
+
+    Vector3 right, left, forward, back;
+	//private void OnDrawGizmos()
+	//{
+ //       Gizmos.color = Color.blue;
+ //       Gizmos.DrawLine(transform.position, forward);
+
+ //       Gizmos.color = Color.yellow;
+ //       Gizmos.DrawLine(transform.position, back);
+
+ //   }
 }
