@@ -151,7 +151,7 @@ public class PlayerMLA : Agent
 
 	private void OnCollisionEnter(Collision collision)
 	{
-        SetReward(-0.5f);
+        SetReward(-2f);
 	}
 
 	public void RewardPlayer()

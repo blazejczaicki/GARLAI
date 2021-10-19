@@ -127,7 +127,7 @@ namespace TopShooter
 			if (SceneComunicator.instance.sceneTaker==SceneTaker.ML)
 			{
                 playerMLA.RewardPlayer();
-                Debug.Log("mla enemi");
+               // Debug.Log("mla enemi");
             }
 
             Vector3 originalPosition = transform.position;
