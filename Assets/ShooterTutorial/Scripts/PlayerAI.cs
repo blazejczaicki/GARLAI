@@ -85,6 +85,17 @@ namespace TopShooter
             }
         }
 
+        public void OnManualStart()
+		{
+			if (!isBayesian && SceneComunicator.instance.manual)
+			{
+				for (int i = 0; i < dataAI.Count; i++)
+				{
+                    dataAI[i].currentVal = SceneComunicator.instance.datas[i];
+				}
+			}
+		}
+
         public void OnDeadPlayer()
 		{
             StopAllCoroutines();

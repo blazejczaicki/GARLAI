@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TopShooter;
 using UnityEngine;
 
 public class SceneComunicator : MonoBehaviour
@@ -21,6 +22,8 @@ public class SceneComunicator : MonoBehaviour
 	public bool randomMode = false;
 	public bool manual = false;
 	public float seed = 20;
+
+	public List<float> datas = new List<float>();
 
 	private void Awake()
 	{

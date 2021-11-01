@@ -53,8 +53,28 @@ namespace TopShooter
 
         [SerializeField] private TMP_InputField manualIndexBN;
         [SerializeField] private Toggle manualBN;
+        [SerializeField] private TMP_InputField manualIndexDT;
+        [SerializeField] private Toggle manualDT;
 
         [SerializeField] private TextMeshProUGUI info;
+
+        [Header("DT manual")]
+        [SerializeField] private TMP_InputField enToClose;
+        [SerializeField] private TMP_InputField safArDist;
+        [SerializeField] private TMP_InputField GoBackDist;
+        [SerializeField] private TMP_InputField WallBackDist;
+        [SerializeField] private TMP_InputField SpurDist;
+        [SerializeField] private TMP_InputField MinSourDist;
+        [SerializeField] private TMP_InputField SourWallDist;
+        [SerializeField] private TMP_InputField StayTimeUpdt;
+        [SerializeField] private TMP_InputField SafetyTimeUpdt;
+        [SerializeField] private TMP_InputField SourTimeUpd;
+        [SerializeField] private TMP_InputField RetTimeUpdt;
+        [SerializeField] private TMP_InputField WallRetreatTimUpdt;
+
+        [SerializeField] private Transform panelManualDT;
+
+
 
         void Start()
         {
@@ -115,7 +135,34 @@ namespace TopShooter
                     SceneComunicator.instance.time = float.Parse(time.text);
                     SceneComunicator.instance.randomMode = RandomGenerationMode.isOn;
                     SceneComunicator.instance.sceneTaker = SceneTaker.DT;
-                    SceneManager.LoadScene(1);
+                    
+
+                    
+
+                    var isManual = manualDT.isOn;
+                    SceneComunicator.instance.manual = isManual;
+                    if (isManual)
+                    {
+                        SceneComunicator.instance.manualIndex = int.Parse(manualIndexDT.text);
+                        SceneComunicator.instance.datas.Add(float.Parse(enToClose.text));
+                        SceneComunicator.instance.datas.Add(float.Parse(safArDist.text));
+                        SceneComunicator.instance.datas.Add(float.Parse(GoBackDist.text));
+                        SceneComunicator.instance.datas.Add(float.Parse(WallBackDist.text));
+                        SceneComunicator.instance.datas.Add(float.Parse(SpurDist.text));
+                        SceneComunicator.instance.datas.Add(float.Parse(MinSourDist.text));
+                        SceneComunicator.instance.datas.Add(float.Parse(SourWallDist.text));
+                        SceneComunicator.instance.datas.Add(float.Parse(StayTimeUpdt.text));
+                        SceneComunicator.instance.datas.Add(float.Parse(SafetyTimeUpdt.text));
+                        SceneComunicator.instance.datas.Add(float.Parse(SourTimeUpd.text));
+                        SceneComunicator.instance.datas.Add(float.Parse(RetTimeUpdt.text));
+                        SceneComunicator.instance.datas.Add(float.Parse(WallRetreatTimUpdt.text));
+
+                        SceneManager.LoadScene(5);
+                    }
+                    else
+                    {
+                        SceneManager.LoadScene(1);
+                    }
                 }
                 else if (panelBN.activeSelf)
                 {
@@ -161,8 +208,16 @@ namespace TopShooter
 			{
                 info.text = "Not number values";
 			}
-        } 
-        
+        }
+
+
+
+        public void ManualActiveDT()
+		{
+            panelManualDT.gameObject.SetActive(!panelManualDT.gameObject.activeSelf);
+		}
+
+
         public void DecisionTree()
         {
             panelBN.SetActive(false);

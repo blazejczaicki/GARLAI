@@ -156,7 +156,7 @@ public class PlayerMLA : Agent
 
 	public void RewardPlayer()
 	{
-        SetReward(-1);
+        SetReward(-5);
 	}
 
 	public void OnNewGeneration()

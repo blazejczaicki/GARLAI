@@ -91,6 +91,7 @@ namespace TopShooter
 				foreach (var player in players)
 				{
 						player.PlayerEnt.OnStart(t);
+					player.OnManualStart();
 				}
 			}
 			simRounds = SceneComunicator.instance.generationLimits;
@@ -155,27 +156,47 @@ namespace TopShooter
 			}
 			else
 			{
-				//tu ifa ¿e koniec
-				UpdatePlayers();
-				UpdateEnemies();
-
-				//if (Time.time > nextResetTime || allPlayersDead)// 
-				if (Time.time - previousUpdateTime > RoundTimeSpan || allPlayersDead)
+				if (SceneComunicator.instance.manual)
 				{
-					Debug.Log("MARTWI AGENTSI");
-					players.ForEach(p => p.OnEndGeneration());
-					geneticAlgorithm.UpdateAlgorithm(isBayes);
-					currentRound++;
-					if (simRounds == currentRound)
+					UpdatePlayers();
+					UpdateEnemies();
+
+					//if (Time.time > nextResetTime || allPlayersDead)// 
+					if (Time.time - previousUpdateTime > RoundTimeSpan || allPlayersDead)
 					{
-						FinishCycle();
+						SaverCSV saver = new SaverCSV();
+						var pl = players.First();
+						pl.chromosome.CalculateFitness();
+						var bestRes = new DataChromosome(pl.chromosome, pl.name, pl.GetAverageHealth(),
+						pl.GetLifeTime(), pl.chromosome.Fitness); ;
+						saver.WriteManualResults(bestRes, "\\DT_manual_results.csv");
+						Destroy(gameObject);
+						SceneManager.LoadScene(0);
 					}
-					ResetWorld();
-					previousUpdateTime = Time.time;
-					ui.ShowSimData((int)simRounds, (int)currentRound, SceneComunicator.instance.iterations, SceneComunicator.instance.currentIT);
-					allPlayersDead = false;
-					//nextResetTime = Time.time + RoundTimeSpan;
 				}
+				else
+				{
+					UpdatePlayers();
+					UpdateEnemies();
+
+					//if (Time.time > nextResetTime || allPlayersDead)// 
+					if (Time.time - previousUpdateTime > RoundTimeSpan || allPlayersDead)
+					{
+						Debug.Log("MARTWI AGENTSI");
+						players.ForEach(p => p.OnEndGeneration());
+						geneticAlgorithm.UpdateAlgorithm(isBayes);
+						currentRound++;
+						if (simRounds == currentRound)
+						{
+							FinishCycle();
+						}
+						ResetWorld();
+						previousUpdateTime = Time.time;
+						ui.ShowSimData((int)simRounds, (int)currentRound, SceneComunicator.instance.iterations, SceneComunicator.instance.currentIT);
+						allPlayersDead = false;
+						//nextResetTime = Time.time + RoundTimeSpan;
+					}
+				}				
 			}
 			if (Input.GetKeyDown(KeyCode.Space))
 			{
@@ -256,6 +277,7 @@ namespace TopShooter
 					var newSpawner = newBoard.GetComponent<NewSpawner>();
 					newSpawner.PlayerAI = newPlayerAI;
 					spawners.Add(newSpawner);
+					newBoard.newSpawner = newSpawner;
 				}
 			}
 			foreach (var bo in boards)
